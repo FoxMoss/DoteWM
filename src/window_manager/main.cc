@@ -1,5 +1,7 @@
 #include <GL/glew.h>
 #include <GL/glx.h>
+
+// x11 has conflicts with grpc
 #include <X11/X.h>
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
@@ -7,14 +9,26 @@
 #include <X11/extensions/Xcomposite.h>
 #include <X11/extensions/Xfixes.h>
 #include <X11/extensions/shape.h>
+
+#undef Status
+#undef Bool
+#undef True
+#undef False
+#undef None
+#undef Always
+#undef Success
+
+#include <grpcpp/grpcpp.h>
 #include <sys/time.h>
 #include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <cstdio>
 #include <optional>
 #include <unordered_map>
 #include <vector>
+#include "../protobuf/windowmanager.grpc.pb.h"
 
 #define GLX_CONTEXT_MAJOR_VERSION_ARB 0x2091
 #define GLX_CONTEXT_MINOR_VERSION_ARB 0x2092
@@ -22,7 +36,7 @@
 typedef GLXContext (*glXCreateContextAttribsARB_t)(Display*,
                                                    GLXFBConfig,
                                                    GLXContext,
-                                                   Bool,
+                                                   bool,
                                                    const int*);
 
 typedef void (*glXBindTexImageEXT_t)(Display*, GLXDrawable, int, const int*);
@@ -31,6 +45,48 @@ typedef void (*glXReleaseTexImageEXT_t)(Display*, GLXDrawable, int);
 typedef void (*glXSwapIntervalEXT_t)(Display*, GLXDrawable, int);
 
 #define NAME "noko"
+
+static void gl_compile_shader_and_check_for_errors /* lmao */ (
+    GLuint shader,
+    const char* source) {
+  glShaderSource(shader, 1, &source, 0);
+  glCompileShader(shader);
+
+  GLint log_length;
+  glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_length);
+
+  char* log_buffer =
+      (char*)malloc(log_length);  // 'log_length' includes null character
+  glGetShaderInfoLog(shader, log_length, NULL, log_buffer);
+
+  if (log_length) {
+    fprintf(stderr, "[SHADER_ERROR] %s\n", log_buffer);
+    exit(1);  // no real need to free 'log_buffer' here
+  }
+
+  free(log_buffer);
+}
+
+GLuint gl_create_shader_program(const char* vertex_source,
+                                const char* fragment_source) {
+  GLuint program = glCreateProgram();
+
+  GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+  GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+  gl_compile_shader_and_check_for_errors(vertex_shader, vertex_source);
+  gl_compile_shader_and_check_for_errors(fragment_shader, fragment_source);
+
+  glAttachShader(program, vertex_shader);
+  glAttachShader(program, fragment_shader);
+
+  glLinkProgram(program);
+
+  glDeleteShader(vertex_shader);
+  glDeleteShader(fragment_shader);
+
+  return program;
+}
 
 void gl_create_vao_vbo_ibo(GLuint* vao, GLuint* vbo, GLuint* ibo) {
   glGenVertexArrays(1, vao);
@@ -43,6 +99,7 @@ void gl_create_vao_vbo_ibo(GLuint* vao, GLuint* vbo, GLuint* ibo) {
   glEnableVertexAttribArray(0);
 
   glGenBuffers(1, ibo);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *ibo);  // Bind index buffer here
 }
 
 void gl_set_vao_vbo_ibo_data(GLuint vao,
@@ -60,6 +117,11 @@ void gl_set_vao_vbo_ibo_data(GLuint vao,
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, ibo_size, ibo_data, GL_STATIC_DRAW);
 }
+
+#define glXGetFBConfigAttribChecked(a, b, attr, c)                        \
+  if (glXGetFBConfigAttrib((a), (b), (attr), (c))) {                      \
+    fprintf(stderr, "WARNING Cannot get FBConfig attribute " #attr "\n"); \
+  }
 
 int x11_error_handler(Display* display, XErrorEvent* event) {
   if (!event->resourceid)
@@ -87,6 +149,7 @@ struct NokoWindow {
   Pixmap x_pixmap;
   GLXPixmap pixmap;
 
+  int index_count;
   GLuint vao, vbo, ibo;
 };
 
@@ -265,6 +328,46 @@ class NokoWindowManager {
     if (glewInit() != GLEW_OK)
       return {};
 
+    const char* vertex_shader_source =
+        "#version 330\n"
+        "layout(location = 0) in vec2 vertex_position;"
+        "out vec2 local_position;"
+
+        "uniform float depth;"
+        "uniform vec2 position;"
+        "uniform vec2 size;"
+
+        "void main(void) {"
+        "   local_position = vertex_position;"
+        "   gl_Position = vec4(vertex_position * (size/2) + position, depth, "
+        "1.0);"
+        "}";
+
+    const char* fragment_shader_source =
+        "#version 330\n"
+        "in vec2 local_position;"
+        "out vec4 fragment_colour;"
+
+        "uniform float opacity;"
+        "uniform sampler2D texture_sampler;"
+
+        "void main(void) {"
+        "   vec4 colour = texture(texture_sampler, local_position * vec2(0.5, "
+        "-0.5) + vec2(0.5));"
+        "   float alpha = opacity * colour.a;"
+        "   fragment_colour = vec4(colour.rgb, alpha);"
+        "}";
+
+    ret->shader =
+        gl_create_shader_program(vertex_shader_source, fragment_shader_source);
+    ret->texture_uniform = glGetUniformLocation(ret->shader, "texture_sampler");
+
+    ret->opacity_uniform = glGetUniformLocation(ret->shader, "opacity");
+    ret->depth_uniform = glGetUniformLocation(ret->shader, "depth");
+
+    ret->position_uniform = glGetUniformLocation(ret->shader, "position");
+    ret->size_uniform = glGetUniformLocation(ret->shader, "size");
+
     // blacklist the overlay and output windows for events
     ret->blacklisted_windows.push_back(ret->overlay_window);
     ret->blacklisted_windows.push_back(ret->output_window);
@@ -275,16 +378,20 @@ class NokoWindowManager {
   }
 
   void run() {
-    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     while (true) {
-      // glClearColor(0.4, 0.2, 0.4, 1.0);
-      // gruvbox background colour (#292828)
-      glClearColor(1, 1, 1, 1.);
+      while (process_events())
+        ;
+      glClearColor(1, 1, 1, 1);
 
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+      for (auto window : windows) {
+        render_window(window.second.window);
+      }
 
       glXSwapBuffers(display, output_window);
 
@@ -312,14 +419,21 @@ class NokoWindowManager {
   Window output_window;
   Atom client_list_atom;
 
-  size_t global_window_ticker = 0;
-
   std::vector<Window> blacklisted_windows;
   std::unordered_map<Window, NokoWindow> windows;
 
   GLXFBConfig* glx_configs;
   int glx_config_count;
   GLXContext glx_context;
+
+  GLuint shader;
+  GLuint texture_uniform;
+
+  GLuint opacity_uniform;
+  GLuint depth_uniform;
+
+  GLuint position_uniform;
+  GLuint size_uniform;
 
   glXBindTexImageEXT_t glXBindTexImageEXT;
   glXReleaseTexImageEXT_t glXReleaseTexImageEXT;
@@ -329,7 +443,7 @@ class NokoWindowManager {
 
   struct timeval previous_time;
 
-  void process_events() {
+  bool process_events() {
     int events_left = XPending(display);
 
     if (events_left) {
@@ -341,7 +455,7 @@ class NokoWindowManager {
       if (type == CreateNotify) {
         Window x_window = event.xcreatewindow.window;
         if (std::find(blacklisted_windows.begin(), blacklisted_windows.end(),
-                      x_window) == blacklisted_windows.end())
+                      x_window) != blacklisted_windows.end())
           goto done;
 
         windows[x_window] = {};
@@ -361,6 +475,24 @@ class NokoWindowManager {
         XGrabButton(display, AnyButton, AnyModifier, x_window, 1,
                     ButtonPressMask | ButtonReleaseMask | ButtonMotionMask,
                     GrabModeSync, GrabModeSync, 0, 0);
+
+        printf("created a window!\n");
+
+      } else if (type == PropertyNotify) {
+        printf("a\n");
+
+        Window x_window = event.xproperty.window;
+
+        if (event.xproperty.atom != XA_WM_CLASS)
+          goto done;
+
+        printf("b\n");
+        XClassHint hint;
+        XGetClassHint(display, x_window, &hint);
+
+        if (hint.res_class != NULL) {
+          printf("%s\n", hint.res_class);
+        }
       } else if (type == ConfigureNotify ||
                  type == MapNotify /* show window */ ||
                  type == UnmapNotify /* hide window */) {
@@ -374,13 +506,15 @@ class NokoWindowManager {
           x_window = event.xunmap.window;
 
         if (std::find(blacklisted_windows.begin(), blacklisted_windows.end(),
-                      x_window) == blacklisted_windows.end())
+                      x_window) != blacklisted_windows.end())
           goto done;
 
         if (windows.find(x_window) == windows.end())
           goto done;
 
         NokoWindow* window = &windows[x_window];
+
+        window->window = x_window;
 
         int was_visible = window->visible;
 
@@ -397,8 +531,15 @@ class NokoWindowManager {
         window->width = attributes.width;
         window->height = attributes.height;
 
-        // if window wasn't visible before but is now, center it to the cursor
-        // position
+        char* name = NULL;
+
+        if (XFetchName(display, x_window, &name) > 0) {
+          printf("%s\n", name);
+          XFree(name);
+        }
+
+        // if window wasn't visible before but is now, center it to the
+        // cursor position
 
         if (window->visible && !was_visible && !window->x && !window->y) {
           __attribute__((unused)) Window rw, cw;  // root_return, child_return
@@ -426,21 +567,164 @@ class NokoWindowManager {
           window->pixmap = 0;
         }
 
-        GLfloat vertex_positions[4];
-        GLubyte indices[3];
+        GLfloat vertex_positions[4 * 2] = {
+            -1, -1, 1, -1, 1, 1, -1, 1,
+        };
+        GLubyte indices[6] = {// top tri
+                              0, 1, 2,
+                              // bottom tri
+                              0, 2, 3};
 
-        if (wm->modify_event_callback) {
-          wm->modify_event_callback(
-              thing, window_index, window->visible,
-              wm_x_coordinate_to_float(wm, window->x + window->width / 2),
-              wm_y_coordinate_to_float(wm, window->y + window->height / 2),
-              wm_width_dimension_to_float(wm, window->width),
-              wm_height_dimension_to_float(wm, window->height));
-        }
+        window->index_count = 6;
+        gl_set_vao_vbo_ibo_data(window->vao, window->vbo,
+                                sizeof(vertex_positions), vertex_positions,
+                                window->ibo, sizeof(indices), indices);
       }
     }
   done:
-    return;
+    return events_left;
+  }
+
+  void render_window(unsigned window_id) {
+    NokoWindow* window = &windows[window_id];
+
+    if (!window->exists)
+      return;
+    if (!window->visible)
+      return;
+
+    float gl_x = x_coordinate_to_float(window->x + window->width / 2);
+    float gl_y = y_coordinate_to_float(window->y + window->height / 2);
+    float gl_width = width_dimension_to_float(window->width);
+    float gl_height = height_dimension_to_float(window->height);
+
+    int width_pixels = window->width;
+    int height_pixels = window->height;
+
+    if (width_pixels % 2)
+      gl_x += 0.5 / screen_width * 2;  // if width odd, add half a pixel to x
+    if (height_pixels % 2)
+      gl_y +=
+          0.5 / screen_height * 2;  // if height odd, subtract half a pixel to y
+
+    // calculate window depth
+
+    float depth = 1.0;
+
+    glUseProgram(shader);
+    glUniform1i(texture_uniform, 0);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glActiveTexture(GL_TEXTURE0);
+    bind_window_texture(window->window);
+
+    glUniform1f(opacity_uniform, 1);
+    glUniform1f(depth_uniform, depth);
+
+    glUniform2f(position_uniform, gl_x, gl_y);
+    glUniform2f(size_uniform, gl_width, gl_height);
+
+    glBindVertexArray(window->vao);
+    glDrawElements(GL_TRIANGLES, window->index_count, GL_UNSIGNED_BYTE, NULL);
+
+    unbind_window_texture(window->window);
+  }
+
+  void bind_window_texture(Window window_index) {
+    NokoWindow* window = &windows[window_index];
+
+    if (!window->exists)
+      return;
+    if (!window->visible)
+      return;
+
+    // TODO 'XGrabServer'/'XUngrabServer' necessary?
+    // it seems to make things 10x faster for whatever reason
+    // which is actually good for recording using OBS with XSHM
+
+    XGrabServer(display);
+    // glXWaitX(); // same as 'XSync', but a tad more efficient
+
+    // update the window's pixmap
+
+    if (!window->pixmap) {
+      XWindowAttributes attribs;
+      XGetWindowAttributes(display, window->window, &attribs);
+
+      int format;
+      GLXFBConfig config;
+
+      for (int i = 0; i < glx_config_count; i++) {
+        config = glx_configs[i];
+
+        int has_alpha;
+        glXGetFBConfigAttribChecked(display, config,
+                                    GLX_BIND_TO_TEXTURE_RGBA_EXT, &has_alpha);
+
+        XVisualInfo* visual = glXGetVisualFromFBConfig(display, config);
+        int visual_depth = visual->depth;
+        free(visual);
+
+        if (attribs.depth != visual_depth) {
+          continue;
+        }
+
+        // found the config we want, break
+
+        format = has_alpha ? GLX_TEXTURE_FORMAT_RGBA_EXT
+                           : GLX_TEXTURE_FORMAT_RGB_EXT;
+        break;
+      }
+
+      const int pixmap_attributes[] = {
+          GLX_TEXTURE_TARGET_EXT, GLX_TEXTURE_2D_EXT, GLX_TEXTURE_FORMAT_EXT,
+          format, 0  // GLX_TEXTURE_FORMAT_RGB_EXT
+      };
+
+      window->x_pixmap = XCompositeNameWindowPixmap(display, window->window);
+      window->pixmap =
+          glXCreatePixmap(display, config, window->x_pixmap, pixmap_attributes);
+    }
+
+    glXBindTexImageEXT(display, window->pixmap, GLX_FRONT_LEFT_EXT, NULL);
+  }
+
+  void unbind_window_texture(Window window_index) {
+    NokoWindow* window = &windows[window_index];
+
+    glXReleaseTexImageEXT(display, window->pixmap, GLX_FRONT_LEFT_EXT);
+    XUngrabServer(display);
+  }
+
+  float width_dimension_to_float(int pixels) {
+    return (float)pixels / screen_width * 2;
+  }
+  float height_dimension_to_float(int pixels) {
+    return (float)pixels / screen_height * 2;
+  }
+
+  float x_coordinate_to_float(int pixels) {
+    return width_dimension_to_float(pixels) - 1;
+  }
+  float y_coordinate_to_float(int pixels) {
+    return -height_dimension_to_float(pixels) + 1;
+  }
+
+  int float_to_width_dimension(float x) {
+    return (int)round(x / 2 * screen_width);
+  }
+  int float_to_height_dimension(float x) {
+    return (int)round(x / 2 * screen_height);
+  }
+
+  int float_to_x_coordinate(float x) { return float_to_width_dimension(x + 1); }
+  int float_to_y_coordinate(float x) {
+    return float_to_height_dimension(-x + 1);
   }
 };
 

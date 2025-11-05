@@ -3,10 +3,15 @@
 // can be found in the LICENSE file.
 
 #include "src/shared/client_util.h"
+#include <X11/X.h>
+#include <X11/Xatom.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
 
 #include <sstream>
 #include <string>
 
+#include "include/cef_browser.h"
 #include "include/cef_command_line.h"
 #include "include/views/cef_browser_view.h"
 #include "include/views/cef_window.h"
@@ -34,6 +39,10 @@ void OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString& title) {
 
 void OnAfterCreated(CefRefPtr<CefBrowser> browser) {
   CEF_REQUIRE_UI_THREAD();
+
+#if defined(OS_LINUX)
+
+#endif
 
   // Add to the list of existing browsers.
   ClientManager::GetInstance()->OnAfterCreated(browser);

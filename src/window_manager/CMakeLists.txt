@@ -1,8 +1,13 @@
 add_executable(noko
   main.cc
+  ../protobuf/windowmanager.pb.cc
 )
 
-target_compile_options(noko PRIVATE -std=c++20)
+set(CMAKE_CXX_STANDARD 17)
+
+target_compile_options(noko PRIVATE -std=c++20 -g)
 
 find_package(X11 REQUIRED)
-target_link_libraries(noko ${X11_LIBRARIES} Xext GL GLU GLEW Xcomposite Xfixes)
+find_package(gRPC CONFIG REQUIRED)
+find_package(Protobuf REQUIRED)
+target_link_libraries(noko ${X11_LIBRARIES} Xext GL GLU GLEW Xcomposite Xfixes gRPC::grpc++)
