@@ -29,6 +29,7 @@
 #include <unordered_map>
 #include <vector>
 #include "../protobuf/windowmanager.grpc.pb.h"
+#include "main.hpp"
 
 #define GLX_CONTEXT_MAJOR_VERSION_ARB 0x2091
 #define GLX_CONTEXT_MINOR_VERSION_ARB 0x2092
@@ -136,597 +137,555 @@ int x11_error_handler(Display* display, XErrorEvent* event) {
   return 0;
 }
 
-struct NokoWindow {
-  int exists;
-  Window window;
+class WindowManagerServiceImpl final : public WindowManager::Service {
+  NokoWindowManager* parent;
 
-  int visible;
-
-  float opacity;
-  int x, y;
-  int width, height;
-
-  Pixmap x_pixmap;
-  GLXPixmap pixmap;
-
-  int index_count;
-  GLuint vao, vbo, ibo;
+  grpc::Status RegisterBaseWindow(grpc::ServerContext* context,
+                                  const WindowRequest* request,
+                                  NoneReply* reply) override {
+    Window base_window = request->window();
+    return grpc::Status::OK;
+  }
 };
 
-class NokoWindowManager {
- public:
-  static std::optional<NokoWindowManager*> create() {
-    NokoWindowManager* ret = new NokoWindowManager;
-    ret->display = XOpenDisplay(NULL);
-    if (ret->display == NULL)
-      return {};
+void NokoWindowManager::bind_window_texture(Window window_index) {
+  NokoWindow* window = &windows[window_index];
 
-    XSynchronize(ret->display, 1);
+  if (!window->exists)
+    return;
+  if (!window->visible)
+    return;
 
-    ret->screen = DefaultScreen(ret->display);
-    ret->root_window = DefaultRootWindow(ret->display);
+  // TODO 'XGrabServer'/'XUngrabServer' necessary?
+  // it seems to make things 10x faster for whatever reason
+  // which is actually good for recording using OBS with XSHM
 
-    XWindowAttributes root_attributes;
-    XGetWindowAttributes(ret->display, ret->root_window, &root_attributes);
+  XGrabServer(display);
+  // glXWaitX(); // same as 'XSync', but a tad more efficient
 
-    ret->screen_width = root_attributes.width;
-    ret->screen_height = root_attributes.height;
+  // update the window's pixmap
 
-    XSelectInput(ret->display, ret->root_window,
-                 SubstructureNotifyMask | PointerMotionMask | ButtonMotionMask |
-                     ButtonPressMask | ButtonReleaseMask);
+  if (!window->pixmap) {
+    XWindowAttributes attribs;
+    XGetWindowAttributes(display, window->window, &attribs);
 
-    ret->client_list_atom = XInternAtom(ret->display, "_NET_CLIENT_LIST", 0);
+    int format;
+    GLXFBConfig config;
 
-    Atom supported_list_atom = XInternAtom(ret->display, "_NET_SUPPORTED", 0);
-    Atom supported_atoms[] = {supported_list_atom, ret->client_list_atom};
+    for (int i = 0; i < glx_config_count; i++) {
+      config = glx_configs[i];
 
-    XChangeProperty(ret->display, ret->root_window, supported_list_atom,
-                    XA_ATOM, 32, PropModeReplace,
-                    (const unsigned char*)supported_atoms,
-                    sizeof(supported_atoms) / sizeof(*supported_atoms));
+      int has_alpha;
+      glXGetFBConfigAttribChecked(display, config, GLX_BIND_TO_TEXTURE_RGBA_EXT,
+                                  &has_alpha);
 
-    // this bit is alegedy some gnome jank
-    Atom supporting_wm_check_atom =
-        XInternAtom(ret->display, "_NET_SUPPORTING_WM_CHECK", 0);
-    Window support_window = XCreateSimpleWindow(ret->display, ret->root_window,
-                                                0, 0, 1, 1, 0, 0, 0);
+      XVisualInfo* visual = glXGetVisualFromFBConfig(display, config);
+      int visual_depth = visual->depth;
+      free(visual);
 
-    Window support_window_list[1] = {support_window};
+      if (attribs.depth != visual_depth) {
+        continue;
+      }
 
-    XChangeProperty(ret->display, ret->root_window, supporting_wm_check_atom,
-                    XA_WINDOW, 32, PropModeReplace,
-                    (const unsigned char*)support_window_list, 1);
-    XChangeProperty(ret->display, support_window, supporting_wm_check_atom,
-                    XA_WINDOW, 32, PropModeReplace,
-                    (const unsigned char*)support_window_list, 1);
+      // found the config we want, break
 
-    Atom name_atom = XInternAtom(ret->display, "_NET_WM_NAME", 0);
-    XChangeProperty(ret->display, support_window, name_atom, XA_STRING, 8,
-                    PropModeReplace, (const unsigned char*)NAME, sizeof(NAME));
-    // sick
+      format =
+          has_alpha ? GLX_TEXTURE_FORMAT_RGBA_EXT : GLX_TEXTURE_FORMAT_RGB_EXT;
+      break;
+    }
 
-    XSetErrorHandler(x11_error_handler);
-
-    ret->blacklisted_windows.push_back(support_window);
-
-    Window screen_owner = XCreateSimpleWindow(ret->display, ret->root_window, 0,
-                                              0, 1, 1, 0, 0, 0);
-    Xutf8SetWMProperties(ret->display, screen_owner, "xcompmgr", "xcompmgr",
-                         NULL, 0, NULL, NULL, NULL);
-
-    char name[] = "_NET_WM_CM_S##";
-    snprintf(name, sizeof(name), "_NET_WM_CM_S%d", ret->screen);
-
-    Atom atom = XInternAtom(ret->display, name, 0);
-    XSetSelectionOwner(ret->display, atom, screen_owner, 0);
-
-    XCompositeRedirectSubwindows(ret->display, ret->root_window,
-                                 CompositeRedirectManual);
-
-    ret->overlay_window =
-        XCompositeGetOverlayWindow(ret->display, ret->root_window);
-
-    // passthrough
-    XserverRegion region = XFixesCreateRegion(ret->display, NULL, 0);
-    XFixesSetWindowShapeRegion(ret->display, ret->overlay_window, ShapeInput, 0,
-                               0, region);
-    XFixesDestroyRegion(ret->display, region);
-
-    // create the output window
-    // this window is where the actual drawing is going to happen
-
-    /* const */ int default_visual_attributes[] = {GLX_RGBA,
-                                                   GLX_DOUBLEBUFFER,
-                                                   GLX_SAMPLE_BUFFERS,
-                                                   1,
-                                                   GLX_SAMPLES,
-                                                   4,
-                                                   GLX_RED_SIZE,
-                                                   8,
-                                                   GLX_GREEN_SIZE,
-                                                   8,
-                                                   GLX_BLUE_SIZE,
-                                                   8,
-                                                   GLX_ALPHA_SIZE,
-                                                   8,
-                                                   GLX_DEPTH_SIZE,
-                                                   16,
-                                                   0};
-
-    XVisualInfo* default_visual =
-        glXChooseVisual(ret->display, ret->screen, default_visual_attributes);
-    if (!default_visual)
-      return {};
-
-    XSetWindowAttributes output_window_attributes = {
-        .border_pixel = 0,
-        .colormap = XCreateColormap(ret->display, ret->root_window,
-                                    default_visual->visual, AllocNone),
+    const int pixmap_attributes[] = {
+        GLX_TEXTURE_TARGET_EXT, GLX_TEXTURE_2D_EXT, GLX_TEXTURE_FORMAT_EXT,
+        format, 0  // GLX_TEXTURE_FORMAT_RGB_EXT
     };
 
-    ret->output_window = XCreateWindow(
-        ret->display, ret->root_window, 0, 0, (unsigned int)ret->screen_width,
-        (unsigned int)ret->screen_height, 0, default_visual->depth, InputOutput,
-        default_visual->visual, (unsigned long)(CWBorderPixel | CWColormap),
-        &output_window_attributes);
-
-    XReparentWindow(ret->display, ret->output_window, ret->overlay_window, 0,
-                    0);
-    XMapRaised(ret->display, ret->output_window);
-
-    const int config_attributes[] = {
-        GLX_BIND_TO_TEXTURE_RGBA_EXT, 1, GLX_BIND_TO_TEXTURE_TARGETS_EXT,
-        GLX_TEXTURE_2D_BIT_EXT, GLX_RENDER_TYPE, GLX_RGBA_BIT,
-        GLX_DRAWABLE_TYPE, GLX_PIXMAP_BIT, GLX_X_VISUAL_TYPE, GLX_TRUE_COLOR,
-        GLX_X_RENDERABLE, 1, GLX_FRAMEBUFFER_SRGB_CAPABLE_EXT,
-        (GLint)GLX_DONT_CARE, GLX_BUFFER_SIZE, 32,
-        //		GLX_SAMPLE_BUFFERS, 1,
-        //		GLX_SAMPLES, 4,
-        GLX_DOUBLEBUFFER, 1, GLX_RED_SIZE, 8, GLX_GREEN_SIZE, 8, GLX_BLUE_SIZE,
-        8, GLX_ALPHA_SIZE, 8, GLX_STENCIL_SIZE, 0, GLX_DEPTH_SIZE, 16, 0};
-
-    ret->glx_configs = glXChooseFBConfig(
-        ret->display, ret->screen, config_attributes, &ret->glx_config_count);
-    if (!ret->glx_configs)
-      return {};
-
-    // create our OpenGL context
-    // we must load the 'glXCreateContextAttribsARB' function ourselves
-
-    const int gl_version_attributes[] = {// we want OpenGL 3.3
-                                         GLX_CONTEXT_MAJOR_VERSION_ARB,
-                                         3,
-                                         GLX_CONTEXT_MINOR_VERSION_ARB,
-                                         3,
-                                         GLX_CONTEXT_FLAGS_ARB,
-                                         GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
-                                         0};
-
-    glXCreateContextAttribsARB_t glXCreateContextAttribsARB =
-        (glXCreateContextAttribsARB_t)glXGetProcAddressARB(
-            (const GLubyte*)"glXCreateContextAttribsARB");
-    ret->glx_context = glXCreateContextAttribsARB(
-        ret->display, ret->glx_configs[0], NULL, 1, gl_version_attributes);
-    if (!ret->glx_context)
-      return {};
-
-    // load the other two functions we need but don't have
-
-    ret->glXBindTexImageEXT = (glXBindTexImageEXT_t)glXGetProcAddress(
-        (const GLubyte*)"glXBindTexImageEXT");
-    ret->glXReleaseTexImageEXT = (glXReleaseTexImageEXT_t)glXGetProcAddress(
-        (const GLubyte*)"glXReleaseTexImageEXT");
-
-    // finally, make the context we just made the OpenGL context of this thread
-    glXMakeCurrent(ret->display, ret->output_window, ret->glx_context);
-
-    // initialize GLEW
-    // this will be needed for most modern OpenGL calls
-
-    glewExperimental = GL_TRUE;
-    if (glewInit() != GLEW_OK)
-      return {};
-
-    const char* vertex_shader_source =
-        "#version 330\n"
-        "layout(location = 0) in vec2 vertex_position;"
-        "out vec2 local_position;"
-
-        "uniform float depth;"
-        "uniform vec2 position;"
-        "uniform vec2 size;"
-
-        "void main(void) {"
-        "   local_position = vertex_position;"
-        "   gl_Position = vec4(vertex_position * (size/2) + position, depth, "
-        "1.0);"
-        "}";
-
-    const char* fragment_shader_source =
-        "#version 330\n"
-        "in vec2 local_position;"
-        "out vec4 fragment_colour;"
-
-        "uniform float opacity;"
-        "uniform sampler2D texture_sampler;"
-
-        "void main(void) {"
-        "   vec4 colour = texture(texture_sampler, local_position * vec2(0.5, "
-        "-0.5) + vec2(0.5));"
-        "   float alpha = opacity * colour.a;"
-        "   fragment_colour = vec4(colour.rgb, alpha);"
-        "}";
-
-    ret->shader =
-        gl_create_shader_program(vertex_shader_source, fragment_shader_source);
-    ret->texture_uniform = glGetUniformLocation(ret->shader, "texture_sampler");
-
-    ret->opacity_uniform = glGetUniformLocation(ret->shader, "opacity");
-    ret->depth_uniform = glGetUniformLocation(ret->shader, "depth");
-
-    ret->position_uniform = glGetUniformLocation(ret->shader, "position");
-    ret->size_uniform = glGetUniformLocation(ret->shader, "size");
-
-    // blacklist the overlay and output windows for events
-    ret->blacklisted_windows.push_back(ret->overlay_window);
-    ret->blacklisted_windows.push_back(ret->output_window);
-
-    gettimeofday(&ret->previous_time, 0);
-
-    return ret;
+    window->x_pixmap = XCompositeNameWindowPixmap(display, window->window);
+    window->pixmap =
+        glXCreatePixmap(display, config, window->x_pixmap, pixmap_attributes);
   }
 
-  void run() {
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glXBindTexImageEXT(display, window->pixmap, GLX_FRONT_LEFT_EXT, NULL);
+}
 
-    while (true) {
-      while (process_events())
-        ;
-      glClearColor(1, 1, 1, 1);
+void NokoWindowManager::run() {
+  glDisable(GL_DEPTH_TEST);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  while (true) {
+    while (process_events())
+      ;
+    glClearColor(1, 1, 1, 1);
 
-      for (auto window : windows) {
-        render_window(window.second.window);
-      }
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-      glXSwapBuffers(display, output_window);
-
-      // render our windows
-
-      // for (int i = 0; i < window_count; i++) {
-      //   render_window(wm, i, average_delta);
-      // }
-      //
-      // float delta = (float)cwm_swap(&wm->cwm) / 1000000;
-      //
-      // average_delta += delta;
-      // average_delta /= 2;
+    for (auto window : windows) {
+      render_window(window.second.window);
     }
+
+    glXSwapBuffers(display, output_window);
+
+    // render our windows
+
+    // for (int i = 0; i < window_count; i++) {
+    //   render_window(wm, i, average_delta);
+    // }
+    //
+    // float delta = (float)cwm_swap(&wm->cwm) / 1000000;
+    //
+    // average_delta += delta;
+    // average_delta /= 2;
   }
+}
 
-  NokoWindowManager() {}
-  ~NokoWindowManager() {}
+void NokoWindowManager::render_window(unsigned window_id) {
+  NokoWindow* window = &windows[window_id];
 
- private:
-  Display* display;
-  int screen;
-  Window root_window;
-  Window overlay_window;
-  Window output_window;
-  Atom client_list_atom;
+  if (!window->exists)
+    return;
+  if (!window->visible)
+    return;
 
-  std::vector<Window> blacklisted_windows;
-  std::unordered_map<Window, NokoWindow> windows;
+  float gl_x = x_coordinate_to_float(window->x + window->width / 2);
+  float gl_y = y_coordinate_to_float(window->y + window->height / 2);
+  float gl_width = width_dimension_to_float(window->width);
+  float gl_height = height_dimension_to_float(window->height);
 
-  GLXFBConfig* glx_configs;
-  int glx_config_count;
-  GLXContext glx_context;
+  int width_pixels = window->width;
+  int height_pixels = window->height;
 
-  GLuint shader;
-  GLuint texture_uniform;
+  if (width_pixels % 2)
+    gl_x += 0.5 / screen_width * 2;  // if width odd, add half a pixel to x
+  if (height_pixels % 2)
+    gl_y +=
+        0.5 / screen_height * 2;  // if height odd, subtract half a pixel to y
 
-  GLuint opacity_uniform;
-  GLuint depth_uniform;
+  // calculate window depth
 
-  GLuint position_uniform;
-  GLuint size_uniform;
+  float depth = 1.0;
 
-  glXBindTexImageEXT_t glXBindTexImageEXT;
-  glXReleaseTexImageEXT_t glXReleaseTexImageEXT;
+  glUseProgram(shader);
+  glUniform1i(texture_uniform, 0);
 
-  uint32_t screen_width;
-  uint32_t screen_height;
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  struct timeval previous_time;
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-  bool process_events() {
-    int events_left = XPending(display);
+  glActiveTexture(GL_TEXTURE0);
+  bind_window_texture(window->window);
 
-    if (events_left) {
-      XEvent event;
-      XNextEvent(display, &event);
+  glUniform1f(opacity_uniform, 1);
+  glUniform1f(depth_uniform, depth);
 
-      int type = event.type;
+  glUniform2f(position_uniform, gl_x, gl_y);
+  glUniform2f(size_uniform, gl_width, gl_height);
 
-      if (type == CreateNotify) {
-        Window x_window = event.xcreatewindow.window;
-        if (std::find(blacklisted_windows.begin(), blacklisted_windows.end(),
-                      x_window) != blacklisted_windows.end())
-          goto done;
+  glBindVertexArray(window->vao);
+  glDrawElements(GL_TRIANGLES, window->index_count, GL_UNSIGNED_BYTE, NULL);
 
-        windows[x_window] = {};
-        NokoWindow* window = &windows[x_window];
+  unbind_window_texture(window->window);
+}
 
-        window->exists = 1;
-        window->window = x_window;
+bool NokoWindowManager::process_events() {
+  int events_left = XPending(display);
 
-        window->opacity = 1.0;
-        gl_create_vao_vbo_ibo(&window->vao, &window->vbo, &window->ibo);
+  if (events_left) {
+    XEvent event;
+    XNextEvent(display, &event);
 
-        // set up some other stuff for the window
-        // this is saying we want focus change and button events from the
-        // window
+    int type = event.type;
 
-        XSelectInput(display, x_window, FocusChangeMask);
-        XGrabButton(display, AnyButton, AnyModifier, x_window, 1,
-                    ButtonPressMask | ButtonReleaseMask | ButtonMotionMask,
-                    GrabModeSync, GrabModeSync, 0, 0);
+    if (type == CreateNotify) {
+      Window x_window = event.xcreatewindow.window;
+      if (std::find(blacklisted_windows.begin(), blacklisted_windows.end(),
+                    x_window) != blacklisted_windows.end())
+        goto done;
 
-        printf("created a window!\n");
+      windows[x_window] = {};
+      NokoWindow* window = &windows[x_window];
 
-      } else if (type == PropertyNotify) {
-        printf("a\n");
+      window->exists = 1;
+      window->window = x_window;
 
-        Window x_window = event.xproperty.window;
+      window->opacity = 1.0;
+      gl_create_vao_vbo_ibo(&window->vao, &window->vbo, &window->ibo);
 
-        if (event.xproperty.atom != XA_WM_CLASS)
-          goto done;
+      // set up some other stuff for the window
+      // this is saying we want focus change and button events from the
+      // window
 
-        printf("b\n");
-        XClassHint hint;
-        XGetClassHint(display, x_window, &hint);
+      XSelectInput(display, x_window, FocusChangeMask);
+      XGrabButton(display, AnyButton, AnyModifier, x_window, 1,
+                  ButtonPressMask | ButtonReleaseMask | ButtonMotionMask,
+                  GrabModeSync, GrabModeSync, 0, 0);
 
-        if (hint.res_class != NULL) {
-          printf("%s\n", hint.res_class);
-        }
-      } else if (type == ConfigureNotify ||
-                 type == MapNotify /* show window */ ||
-                 type == UnmapNotify /* hide window */) {
-        Window x_window;
+      printf("created a window!\n");
 
-        if (type == ConfigureNotify)
-          x_window = event.xconfigure.window;
-        else if (type == MapNotify)
-          x_window = event.xmap.window;
-        else if (type == UnmapNotify)
-          x_window = event.xunmap.window;
+    } else if (type == PropertyNotify) {
+      printf("a\n");
 
-        if (std::find(blacklisted_windows.begin(), blacklisted_windows.end(),
-                      x_window) != blacklisted_windows.end())
-          goto done;
+      Window x_window = event.xproperty.window;
 
-        if (windows.find(x_window) == windows.end())
-          goto done;
+      if (event.xproperty.atom != XA_WM_CLASS)
+        goto done;
 
-        NokoWindow* window = &windows[x_window];
+      printf("b\n");
+      XClassHint hint;
+      XGetClassHint(display, x_window, &hint);
 
-        window->window = x_window;
-
-        int was_visible = window->visible;
-
-        // copy everything from the map
-        XWindowAttributes attributes;
-
-        XGetWindowAttributes(display, window->window, &attributes);
-
-        window->visible = attributes.map_state == IsViewable;
-
-        window->x = attributes.x;
-        window->y = attributes.y;
-
-        window->width = attributes.width;
-        window->height = attributes.height;
-
-        char* name = NULL;
-
-        if (XFetchName(display, x_window, &name) > 0) {
-          printf("%s\n", name);
-          XFree(name);
-        }
-
-        // if window wasn't visible before but is now, center it to the
-        // cursor position
-
-        if (window->visible && !was_visible && !window->x && !window->y) {
-          __attribute__((unused)) Window rw, cw;  // root_return, child_return
-          __attribute__((unused)) int wx, wy;     // win_x_return, win_y_return
-          __attribute__((unused)) unsigned int mask;  // mask_return
-
-          int x, y;
-          XQueryPointer(display, window->window, &rw, &cw, &x, &y, &wx, &wy,
-                        &mask);
-
-          window->x = x - window->width / 2;
-          window->y = y - window->height / 2;
-
-          XMoveWindow(display, window->window, window->x, window->y);
-        }
-
-        // we're updating the pixel coords
-        if (window->x_pixmap) {
-          XFreePixmap(display, window->x_pixmap);
-          window->x_pixmap = 0;
-        }
-
-        if (window->pixmap) {
-          glXDestroyPixmap(display, window->pixmap);
-          window->pixmap = 0;
-        }
-
-        GLfloat vertex_positions[4 * 2] = {
-            -1, -1, 1, -1, 1, 1, -1, 1,
-        };
-        GLubyte indices[6] = {// top tri
-                              0, 1, 2,
-                              // bottom tri
-                              0, 2, 3};
-
-        window->index_count = 6;
-        gl_set_vao_vbo_ibo_data(window->vao, window->vbo,
-                                sizeof(vertex_positions), vertex_positions,
-                                window->ibo, sizeof(indices), indices);
+      if (hint.res_class != NULL) {
+        printf("%s\n", hint.res_class);
       }
-    }
-  done:
-    return events_left;
-  }
+    } else if (type == ConfigureNotify || type == MapNotify /* show window */ ||
+               type == UnmapNotify /* hide window */) {
+      Window x_window;
 
-  void render_window(unsigned window_id) {
-    NokoWindow* window = &windows[window_id];
+      if (type == ConfigureNotify)
+        x_window = event.xconfigure.window;
+      else if (type == MapNotify)
+        x_window = event.xmap.window;
+      else if (type == UnmapNotify)
+        x_window = event.xunmap.window;
 
-    if (!window->exists)
-      return;
-    if (!window->visible)
-      return;
+      if (std::find(blacklisted_windows.begin(), blacklisted_windows.end(),
+                    x_window) != blacklisted_windows.end())
+        goto done;
 
-    float gl_x = x_coordinate_to_float(window->x + window->width / 2);
-    float gl_y = y_coordinate_to_float(window->y + window->height / 2);
-    float gl_width = width_dimension_to_float(window->width);
-    float gl_height = height_dimension_to_float(window->height);
+      if (windows.find(x_window) == windows.end())
+        goto done;
 
-    int width_pixels = window->width;
-    int height_pixels = window->height;
+      NokoWindow* window = &windows[x_window];
 
-    if (width_pixels % 2)
-      gl_x += 0.5 / screen_width * 2;  // if width odd, add half a pixel to x
-    if (height_pixels % 2)
-      gl_y +=
-          0.5 / screen_height * 2;  // if height odd, subtract half a pixel to y
+      window->window = x_window;
 
-    // calculate window depth
+      int was_visible = window->visible;
 
-    float depth = 1.0;
+      // copy everything from the map
+      XWindowAttributes attributes;
 
-    glUseProgram(shader);
-    glUniform1i(texture_uniform, 0);
+      XGetWindowAttributes(display, window->window, &attributes);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      window->visible = attributes.map_state == IsViewable;
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+      window->x = attributes.x;
+      window->y = attributes.y;
 
-    glActiveTexture(GL_TEXTURE0);
-    bind_window_texture(window->window);
+      window->width = attributes.width;
+      window->height = attributes.height;
 
-    glUniform1f(opacity_uniform, 1);
-    glUniform1f(depth_uniform, depth);
+      char* name = NULL;
 
-    glUniform2f(position_uniform, gl_x, gl_y);
-    glUniform2f(size_uniform, gl_width, gl_height);
-
-    glBindVertexArray(window->vao);
-    glDrawElements(GL_TRIANGLES, window->index_count, GL_UNSIGNED_BYTE, NULL);
-
-    unbind_window_texture(window->window);
-  }
-
-  void bind_window_texture(Window window_index) {
-    NokoWindow* window = &windows[window_index];
-
-    if (!window->exists)
-      return;
-    if (!window->visible)
-      return;
-
-    // TODO 'XGrabServer'/'XUngrabServer' necessary?
-    // it seems to make things 10x faster for whatever reason
-    // which is actually good for recording using OBS with XSHM
-
-    XGrabServer(display);
-    // glXWaitX(); // same as 'XSync', but a tad more efficient
-
-    // update the window's pixmap
-
-    if (!window->pixmap) {
-      XWindowAttributes attribs;
-      XGetWindowAttributes(display, window->window, &attribs);
-
-      int format;
-      GLXFBConfig config;
-
-      for (int i = 0; i < glx_config_count; i++) {
-        config = glx_configs[i];
-
-        int has_alpha;
-        glXGetFBConfigAttribChecked(display, config,
-                                    GLX_BIND_TO_TEXTURE_RGBA_EXT, &has_alpha);
-
-        XVisualInfo* visual = glXGetVisualFromFBConfig(display, config);
-        int visual_depth = visual->depth;
-        free(visual);
-
-        if (attribs.depth != visual_depth) {
-          continue;
-        }
-
-        // found the config we want, break
-
-        format = has_alpha ? GLX_TEXTURE_FORMAT_RGBA_EXT
-                           : GLX_TEXTURE_FORMAT_RGB_EXT;
-        break;
+      if (XFetchName(display, x_window, &name) > 0) {
+        printf("%s\n", name);
+        XFree(name);
       }
 
-      const int pixmap_attributes[] = {
-          GLX_TEXTURE_TARGET_EXT, GLX_TEXTURE_2D_EXT, GLX_TEXTURE_FORMAT_EXT,
-          format, 0  // GLX_TEXTURE_FORMAT_RGB_EXT
+      // if window wasn't visible before but is now, center it to the
+      // cursor position
+
+      if (window->visible && !was_visible && !window->x && !window->y) {
+        __attribute__((unused)) Window rw, cw;  // root_return, child_return
+        __attribute__((unused)) int wx, wy;     // win_x_return, win_y_return
+        __attribute__((unused)) unsigned int mask;  // mask_return
+
+        int x, y;
+        XQueryPointer(display, window->window, &rw, &cw, &x, &y, &wx, &wy,
+                      &mask);
+
+        window->x = x - window->width / 2;
+        window->y = y - window->height / 2;
+
+        XMoveWindow(display, window->window, window->x, window->y);
+      }
+
+      // we're updating the pixel coords
+      if (window->x_pixmap) {
+        XFreePixmap(display, window->x_pixmap);
+        window->x_pixmap = 0;
+      }
+
+      if (window->pixmap) {
+        glXDestroyPixmap(display, window->pixmap);
+        window->pixmap = 0;
+      }
+
+      GLfloat vertex_positions[4 * 2] = {
+          -1, -1, 1, -1, 1, 1, -1, 1,
       };
+      GLubyte indices[6] = {// top tri
+                            0, 1, 2,
+                            // bottom tri
+                            0, 2, 3};
 
-      window->x_pixmap = XCompositeNameWindowPixmap(display, window->window);
-      window->pixmap =
-          glXCreatePixmap(display, config, window->x_pixmap, pixmap_attributes);
+      window->index_count = 6;
+      gl_set_vao_vbo_ibo_data(window->vao, window->vbo,
+                              sizeof(vertex_positions), vertex_positions,
+                              window->ibo, sizeof(indices), indices);
     }
+  }
+done:
+  return events_left;
+}
 
-    glXBindTexImageEXT(display, window->pixmap, GLX_FRONT_LEFT_EXT, NULL);
-  }
+std::optional<NokoWindowManager*> NokoWindowManager::create() {
+  NokoWindowManager* ret = new NokoWindowManager;
+  ret->display = XOpenDisplay(NULL);
+  if (ret->display == NULL)
+    return {};
 
-  void unbind_window_texture(Window window_index) {
-    NokoWindow* window = &windows[window_index];
+  XSynchronize(ret->display, 1);
 
-    glXReleaseTexImageEXT(display, window->pixmap, GLX_FRONT_LEFT_EXT);
-    XUngrabServer(display);
-  }
+  ret->screen = DefaultScreen(ret->display);
+  ret->root_window = DefaultRootWindow(ret->display);
 
-  float width_dimension_to_float(int pixels) {
-    return (float)pixels / screen_width * 2;
-  }
-  float height_dimension_to_float(int pixels) {
-    return (float)pixels / screen_height * 2;
-  }
+  XWindowAttributes root_attributes;
+  XGetWindowAttributes(ret->display, ret->root_window, &root_attributes);
 
-  float x_coordinate_to_float(int pixels) {
-    return width_dimension_to_float(pixels) - 1;
-  }
-  float y_coordinate_to_float(int pixels) {
-    return -height_dimension_to_float(pixels) + 1;
-  }
+  ret->screen_width = root_attributes.width;
+  ret->screen_height = root_attributes.height;
 
-  int float_to_width_dimension(float x) {
-    return (int)round(x / 2 * screen_width);
-  }
-  int float_to_height_dimension(float x) {
-    return (int)round(x / 2 * screen_height);
-  }
+  XSelectInput(ret->display, ret->root_window,
+               SubstructureNotifyMask | PointerMotionMask | ButtonMotionMask |
+                   ButtonPressMask | ButtonReleaseMask);
 
-  int float_to_x_coordinate(float x) { return float_to_width_dimension(x + 1); }
-  int float_to_y_coordinate(float x) {
-    return float_to_height_dimension(-x + 1);
-  }
-};
+  ret->client_list_atom = XInternAtom(ret->display, "_NET_CLIENT_LIST", 0);
+
+  Atom supported_list_atom = XInternAtom(ret->display, "_NET_SUPPORTED", 0);
+  Atom supported_atoms[] = {supported_list_atom, ret->client_list_atom};
+
+  XChangeProperty(ret->display, ret->root_window, supported_list_atom, XA_ATOM,
+                  32, PropModeReplace, (const unsigned char*)supported_atoms,
+                  sizeof(supported_atoms) / sizeof(*supported_atoms));
+
+  // this bit is alegedy some gnome jank
+  Atom supporting_wm_check_atom =
+      XInternAtom(ret->display, "_NET_SUPPORTING_WM_CHECK", 0);
+  Window support_window =
+      XCreateSimpleWindow(ret->display, ret->root_window, 0, 0, 1, 1, 0, 0, 0);
+
+  Window support_window_list[1] = {support_window};
+
+  XChangeProperty(ret->display, ret->root_window, supporting_wm_check_atom,
+                  XA_WINDOW, 32, PropModeReplace,
+                  (const unsigned char*)support_window_list, 1);
+  XChangeProperty(ret->display, support_window, supporting_wm_check_atom,
+                  XA_WINDOW, 32, PropModeReplace,
+                  (const unsigned char*)support_window_list, 1);
+
+  Atom name_atom = XInternAtom(ret->display, "_NET_WM_NAME", 0);
+  XChangeProperty(ret->display, support_window, name_atom, XA_STRING, 8,
+                  PropModeReplace, (const unsigned char*)NAME, sizeof(NAME));
+  // sick
+
+  XSetErrorHandler(x11_error_handler);
+
+  ret->blacklisted_windows.push_back(support_window);
+
+  Window screen_owner =
+      XCreateSimpleWindow(ret->display, ret->root_window, 0, 0, 1, 1, 0, 0, 0);
+  Xutf8SetWMProperties(ret->display, screen_owner, "xcompmgr", "xcompmgr", NULL,
+                       0, NULL, NULL, NULL);
+
+  char name[] = "_NET_WM_CM_S##";
+  snprintf(name, sizeof(name), "_NET_WM_CM_S%d", ret->screen);
+
+  Atom atom = XInternAtom(ret->display, name, 0);
+  XSetSelectionOwner(ret->display, atom, screen_owner, 0);
+
+  XCompositeRedirectSubwindows(ret->display, ret->root_window,
+                               CompositeRedirectManual);
+
+  ret->overlay_window =
+      XCompositeGetOverlayWindow(ret->display, ret->root_window);
+
+  // passthrough
+  XserverRegion region = XFixesCreateRegion(ret->display, NULL, 0);
+  XFixesSetWindowShapeRegion(ret->display, ret->overlay_window, ShapeInput, 0,
+                             0, region);
+  XFixesDestroyRegion(ret->display, region);
+
+  // create the output window
+  // this window is where the actual drawing is going to happen
+
+  /* const */ int default_visual_attributes[] = {GLX_RGBA,
+                                                 GLX_DOUBLEBUFFER,
+                                                 GLX_SAMPLE_BUFFERS,
+                                                 1,
+                                                 GLX_SAMPLES,
+                                                 4,
+                                                 GLX_RED_SIZE,
+                                                 8,
+                                                 GLX_GREEN_SIZE,
+                                                 8,
+                                                 GLX_BLUE_SIZE,
+                                                 8,
+                                                 GLX_ALPHA_SIZE,
+                                                 8,
+                                                 GLX_DEPTH_SIZE,
+                                                 16,
+                                                 0};
+
+  XVisualInfo* default_visual =
+      glXChooseVisual(ret->display, ret->screen, default_visual_attributes);
+  if (!default_visual)
+    return {};
+
+  XSetWindowAttributes output_window_attributes = {
+      .border_pixel = 0,
+      .colormap = XCreateColormap(ret->display, ret->root_window,
+                                  default_visual->visual, AllocNone),
+  };
+
+  ret->output_window = XCreateWindow(
+      ret->display, ret->root_window, 0, 0, (unsigned int)ret->screen_width,
+      (unsigned int)ret->screen_height, 0, default_visual->depth, InputOutput,
+      default_visual->visual, (unsigned long)(CWBorderPixel | CWColormap),
+      &output_window_attributes);
+
+  XReparentWindow(ret->display, ret->output_window, ret->overlay_window, 0, 0);
+  XMapRaised(ret->display, ret->output_window);
+
+  const int config_attributes[] = {
+      GLX_BIND_TO_TEXTURE_RGBA_EXT, 1, GLX_BIND_TO_TEXTURE_TARGETS_EXT,
+      GLX_TEXTURE_2D_BIT_EXT, GLX_RENDER_TYPE, GLX_RGBA_BIT, GLX_DRAWABLE_TYPE,
+      GLX_PIXMAP_BIT, GLX_X_VISUAL_TYPE, GLX_TRUE_COLOR, GLX_X_RENDERABLE, 1,
+      GLX_FRAMEBUFFER_SRGB_CAPABLE_EXT, (GLint)GLX_DONT_CARE, GLX_BUFFER_SIZE,
+      32,
+      //		GLX_SAMPLE_BUFFERS, 1,
+      //		GLX_SAMPLES, 4,
+      GLX_DOUBLEBUFFER, 1, GLX_RED_SIZE, 8, GLX_GREEN_SIZE, 8, GLX_BLUE_SIZE, 8,
+      GLX_ALPHA_SIZE, 8, GLX_STENCIL_SIZE, 0, GLX_DEPTH_SIZE, 16, 0};
+
+  ret->glx_configs = glXChooseFBConfig(
+      ret->display, ret->screen, config_attributes, &ret->glx_config_count);
+  if (!ret->glx_configs)
+    return {};
+
+  // create our OpenGL context
+  // we must load the 'glXCreateContextAttribsARB' function ourselves
+
+  const int gl_version_attributes[] = {// we want OpenGL 3.3
+                                       GLX_CONTEXT_MAJOR_VERSION_ARB,
+                                       3,
+                                       GLX_CONTEXT_MINOR_VERSION_ARB,
+                                       3,
+                                       GLX_CONTEXT_FLAGS_ARB,
+                                       GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+                                       0};
+
+  glXCreateContextAttribsARB_t glXCreateContextAttribsARB =
+      (glXCreateContextAttribsARB_t)glXGetProcAddressARB(
+          (const GLubyte*)"glXCreateContextAttribsARB");
+  ret->glx_context = glXCreateContextAttribsARB(
+      ret->display, ret->glx_configs[0], NULL, 1, gl_version_attributes);
+  if (!ret->glx_context)
+    return {};
+
+  // load the other two functions we need but don't have
+
+  ret->glXBindTexImageEXT = (glXBindTexImageEXT_t)glXGetProcAddress(
+      (const GLubyte*)"glXBindTexImageEXT");
+  ret->glXReleaseTexImageEXT = (glXReleaseTexImageEXT_t)glXGetProcAddress(
+      (const GLubyte*)"glXReleaseTexImageEXT");
+
+  // finally, make the context we just made the OpenGL context of this thread
+  glXMakeCurrent(ret->display, ret->output_window, ret->glx_context);
+
+  // initialize GLEW
+  // this will be needed for most modern OpenGL calls
+
+  glewExperimental = GL_TRUE;
+  if (glewInit() != GLEW_OK)
+    return {};
+
+  const char* vertex_shader_source =
+      "#version 330\n"
+      "layout(location = 0) in vec2 vertex_position;"
+      "out vec2 local_position;"
+
+      "uniform float depth;"
+      "uniform vec2 position;"
+      "uniform vec2 size;"
+
+      "void main(void) {"
+      "   local_position = vertex_position;"
+      "   gl_Position = vec4(vertex_position * (size/2) + position, depth, "
+      "1.0);"
+      "}";
+
+  const char* fragment_shader_source =
+      "#version 330\n"
+      "in vec2 local_position;"
+      "out vec4 fragment_colour;"
+
+      "uniform float opacity;"
+      "uniform sampler2D texture_sampler;"
+
+      "void main(void) {"
+      "   vec4 colour = texture(texture_sampler, local_position * vec2(0.5, "
+      "-0.5) + vec2(0.5));"
+      "   float alpha = opacity * colour.a;"
+      "   fragment_colour = vec4(colour.rgb, alpha);"
+      "}";
+
+  ret->shader =
+      gl_create_shader_program(vertex_shader_source, fragment_shader_source);
+  ret->texture_uniform = glGetUniformLocation(ret->shader, "texture_sampler");
+
+  ret->opacity_uniform = glGetUniformLocation(ret->shader, "opacity");
+  ret->depth_uniform = glGetUniformLocation(ret->shader, "depth");
+
+  ret->position_uniform = glGetUniformLocation(ret->shader, "position");
+  ret->size_uniform = glGetUniformLocation(ret->shader, "size");
+
+  // blacklist the overlay and output windows for events
+  ret->blacklisted_windows.push_back(ret->overlay_window);
+  ret->blacklisted_windows.push_back(ret->output_window);
+
+  gettimeofday(&ret->previous_time, 0);
+
+  return ret;
+}
+void NokoWindowManager::unbind_window_texture(Window window_index) {
+  NokoWindow* window = &windows[window_index];
+
+  glXReleaseTexImageEXT(display, window->pixmap, GLX_FRONT_LEFT_EXT);
+  XUngrabServer(display);
+}
+
+float NokoWindowManager::height_dimension_to_float(int pixels) {
+  return (float)pixels / screen_height * 2;
+}
+
+float NokoWindowManager::width_dimension_to_float(int pixels) {
+  return (float)pixels / screen_width * 2;
+}
+
+float NokoWindowManager::x_coordinate_to_float(int pixels) {
+  return width_dimension_to_float(pixels) - 1;
+}
+
+float NokoWindowManager::y_coordinate_to_float(int pixels) {
+  return -height_dimension_to_float(pixels) + 1;
+}
+
+int NokoWindowManager::float_to_width_dimension(float x) {
+  return (int)round(x / 2 * screen_width);
+}
+
+int NokoWindowManager::float_to_height_dimension(float x) {
+  return (int)round(x / 2 * screen_height);
+}
+
+int NokoWindowManager::float_to_x_coordinate(float x) {
+  return float_to_width_dimension(x + 1);
+}
+
+int NokoWindowManager::float_to_y_coordinate(float x) {
+  return float_to_height_dimension(-x + 1);
+}
 
 int main(int argc, char* argv[]) {
   auto wm = NokoWindowManager::create();
