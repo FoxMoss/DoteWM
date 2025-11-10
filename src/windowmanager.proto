@@ -1,11 +1,81 @@
 syntax = "proto3";
 
+// requests are from the browser
+// replies are from the window manager
+
 message WindowRequest {
   uint64 window = 1;
 }
 
-message Packet {
+message WindowMapRequest {
+  uint64 window = 1;
+  uint32 x = 2;
+  uint32 y = 3;
+  uint32 width = 4;
+  uint32 height = 5;
+}
+
+message MouseMoveReply {
+  uint32 x = 1;
+  uint32 y = 2;
+}
+
+enum MouseButtonState {
+  MOUSE_LEFT_DOWN = 0;
+  MOUSE_LEFT_UP = 1;
+  MOUSE_RIGHT_DOWN = 2;
+  MOUSE_RIGHT_UP = 3;
+}
+
+message MousePressReply {
+  uint32 x = 1;
+  uint32 y = 2;
+  MouseButtonState state = 3;
+}
+
+message WindowFocusReply {
+  uint64 window = 1;
+}
+
+message WindowRegisterBorderRequest {
+  uint64 window = 1;
+  int32 x = 2;  // all of these values are the border arround your window
+  int32 y = 3;
+  int32 width = 4;
+  int32 height = 5;
+}
+
+message WindowFocusRequest {
+  uint64 window = 1;
+}
+
+message WindowReorderRequest {
+  repeated uint64 windows = 1;
+}
+
+message WindowMapReply {
+  uint64 window = 1;
+  uint32 x = 2;
+  uint32 y = 3;
+  uint32 width = 4;
+  uint32 height = 5;
+  bool visible = 6;
+}
+
+message DataSegment {
   oneof data {
     WindowRequest window_request = 1;
+    WindowMapReply window_map_reply = 2;
+    WindowMapRequest window_map_request = 3;
+    MouseMoveReply mouse_move_reply = 4;
+    MousePressReply mouse_press_reply = 5;
+    WindowFocusReply window_focus_reply = 6;
+    WindowReorderRequest window_reorder_request = 7;
+    WindowFocusRequest window_focus_request = 8;
+    WindowRegisterBorderRequest window_register_border_request = 9;
   }
+}
+
+message Packet {
+  repeated DataSegment segments = 1;
 }

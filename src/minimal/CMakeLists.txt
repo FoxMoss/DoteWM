@@ -55,7 +55,7 @@ endif()
 #
 
 # Target executable names.
-set(EXAMPLE_TARGET "minimal")
+set(MINIMAL_TARGET "minimal")
 if(OS_MAC)
   set(EXAMPLE_HELPER_TARGET "minimal_Helper")
   set(EXAMPLE_HELPER_OUTPUT_NAME "minimal Helper")
@@ -68,10 +68,11 @@ endif()
 
 if(OS_LINUX)
   # Executable target.
-  add_executable(${EXAMPLE_TARGET} ${EXAMPLE_SRCS})
-  SET_EXAMPLE_EXECUTABLE_TARGET_PROPERTIES(${EXAMPLE_TARGET})
-  add_dependencies(${EXAMPLE_TARGET} shared)
-  target_link_libraries(${EXAMPLE_TARGET} shared)
+  add_executable(${MINIMAL_TARGET} ${EXAMPLE_SRCS})
+  SET_EXAMPLE_EXECUTABLE_TARGET_PROPERTIES(${MINIMAL_TARGET})
+  add_dependencies(${MINIMAL_TARGET} shared)
+  target_link_libraries(${MINIMAL_TARGET} shared)
+  target_compile_options(${MINIMAL_TARGET} PRIVATE -std=c++20 -g)
 endif()
 
 
@@ -85,24 +86,24 @@ if(OS_MAC)
   SET_EXAMPLE_SOURCE_GROUPS("${EXAMPLE_HELPER_SRCS}")
 
   # Output path for the main app bundle.
-  set(EXAMPLE_APP "${EXAMPLE_TARGET_OUT_DIR}/${EXAMPLE_TARGET}.app")
+  set(EXAMPLE_APP "${MINIMAL_TARGET_OUT_DIR}/${MINIMAL_TARGET}.app")
 
   # Variables referenced from the main Info.plist file.
-  set(EXECUTABLE_NAME "${EXAMPLE_TARGET}")
-  set(PRODUCT_NAME "${EXAMPLE_TARGET}")
+  set(EXECUTABLE_NAME "${MINIMAL_TARGET}")
+  set(PRODUCT_NAME "${MINIMAL_TARGET}")
 
   # Main app bundle target.
-  add_executable(${EXAMPLE_TARGET} MACOSX_BUNDLE ${EXAMPLE_SRCS} ${EXAMPLE_RESOURCES_SRCS})
-  SET_EXAMPLE_EXECUTABLE_TARGET_PROPERTIES(${EXAMPLE_TARGET})
-  add_dependencies(${EXAMPLE_TARGET} shared)
-  target_link_libraries(${EXAMPLE_TARGET} shared)
-  set_target_properties(${EXAMPLE_TARGET} PROPERTIES
+  add_executable(${MINIMAL_TARGET} MACOSX_BUNDLE ${EXAMPLE_SRCS} ${EXAMPLE_RESOURCES_SRCS})
+  SET_EXAMPLE_EXECUTABLE_TARGET_PROPERTIES(${MINIMAL_TARGET})
+  add_dependencies(${MINIMAL_TARGET} shared)
+  target_link_libraries(${MINIMAL_TARGET} shared)
+  set_target_properties(${MINIMAL_TARGET} PROPERTIES
     RESOURCE "${EXAMPLE_RESOURCES_SRCS}"
     MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/${SHARED_INFO_PLIST}"
     )
 
   # Copy the CEF framework into the Frameworks directory and create the necessary symlinks.
-  COPY_MAC_FRAMEWORK("${EXAMPLE_TARGET}" "${CEF_BINARY_DIR}" "${EXAMPLE_APP}")
+  COPY_MAC_FRAMEWORK("${MINIMAL_TARGET}" "${CEF_BINARY_DIR}" "${EXAMPLE_APP}")
 
   # Create the multiple Helper app bundle targets.
   foreach(_suffix_list ${CEF_HELPER_APP_SUFFIXES})
@@ -138,14 +139,14 @@ if(OS_MAC)
       )
 
     # Add the Helper as a dependency of the main executable target.
-    add_dependencies(${EXAMPLE_TARGET} "${_helper_target}")
+    add_dependencies(${MINIMAL_TARGET} "${_helper_target}")
 
     # Copy the Helper app bundle into the Frameworks directory.
     add_custom_command(
-      TARGET ${EXAMPLE_TARGET}
+      TARGET ${MINIMAL_TARGET}
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_directory
-              "${EXAMPLE_TARGET_OUT_DIR}/${_helper_output_name}.app"
+              "${MINIMAL_TARGET_OUT_DIR}/${_helper_output_name}.app"
               "${EXAMPLE_APP}/Contents/Frameworks/${_helper_output_name}.app"
       VERBATIM
       )
@@ -158,7 +159,7 @@ if(OS_MAC)
   set(PREFIXES
     "../shared/mac/"
     )
-  COPY_MAC_RESOURCES("${EXAMPLE_RESOURCES_SRCS}" "${PREFIXES}" "${EXAMPLE_TARGET}" "${CMAKE_CURRENT_SOURCE_DIR}" "${EXAMPLE_APP}")
+  COPY_MAC_RESOURCES("${EXAMPLE_RESOURCES_SRCS}" "${PREFIXES}" "${MINIMAL_TARGET}" "${CMAKE_CURRENT_SOURCE_DIR}" "${EXAMPLE_APP}")
 endif()
 
 
@@ -178,23 +179,23 @@ if(OS_WINDOWS)
 
   if(USE_SANDBOX)
     # Shared library (DLL) target.
-    add_library(${EXAMPLE_TARGET} SHARED ${EXAMPLE_SRCS})
-    SET_EXAMPLE_LIBRARY_TARGET_PROPERTIES(${EXAMPLE_TARGET})
+    add_library(${MINIMAL_TARGET} SHARED ${EXAMPLE_SRCS})
+    SET_EXAMPLE_LIBRARY_TARGET_PROPERTIES(${MINIMAL_TARGET})
 
     # Copy and rename the bootstrap binary.
-    COPY_SINGLE_FILE(${EXAMPLE_TARGET} ${CEF_BINARY_DIR}/bootstrap.exe ${EXAMPLE_TARGET_OUT_DIR}/${EXAMPLE_TARGET}.exe)
+    COPY_SINGLE_FILE(${MINIMAL_TARGET} ${CEF_BINARY_DIR}/bootstrap.exe ${MINIMAL_TARGET_OUT_DIR}/${MINIMAL_TARGET}.exe)
     if (CMAKE_GENERATOR MATCHES "Visual Studio")
       # Make the bootstrap binary the default command for the Visual Studio debugger.
-      set_target_properties(${EXAMPLE_TARGET} PROPERTIES
-        VS_DEBUGGER_COMMAND "$<TARGET_FILE_DIR:${EXAMPLE_TARGET}>/${EXAMPLE_TARGET}.exe"
+      set_target_properties(${MINIMAL_TARGET} PROPERTIES
+        VS_DEBUGGER_COMMAND "$<TARGET_FILE_DIR:${MINIMAL_TARGET}>/${MINIMAL_TARGET}.exe"
       )
     endif()
   else()
     # Executable target (sandbox disabled).
-    add_executable(${EXAMPLE_TARGET} WIN32 ${EXAMPLE_SRCS})
-    SET_EXAMPLE_EXECUTABLE_TARGET_PROPERTIES(${EXAMPLE_TARGET})
+    add_executable(${MINIMAL_TARGET} WIN32 ${EXAMPLE_SRCS})
+    SET_EXAMPLE_EXECUTABLE_TARGET_PROPERTIES(${MINIMAL_TARGET})
   endif()
 
-  add_dependencies(${EXAMPLE_TARGET} shared)
-  target_link_libraries(${EXAMPLE_TARGET} shared)
+  add_dependencies(${MINIMAL_TARGET} shared)
+  target_link_libraries(${MINIMAL_TARGET} shared)
 endif()

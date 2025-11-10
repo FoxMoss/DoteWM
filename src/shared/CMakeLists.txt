@@ -94,12 +94,13 @@ if(OS_LINUX)
   endif()
 
   find_package(Protobuf REQUIRED)
+  find_package(absl REQUIRED)
 
   # Static library target.
   add_library(${SHARED_TARGET} STATIC ${SHARED_SRCS})
   SET_EXAMPLE_LIBRARY_TARGET_PROPERTIES(${SHARED_TARGET})
   add_dependencies(${SHARED_TARGET} libcef_dll_wrapper)
-  target_link_libraries(${SHARED_TARGET} libcef_lib libcef_dll_wrapper ${CEF_STANDARD_LIBS} protobuf nanomsg)
+  target_link_libraries(${SHARED_TARGET} libcef_lib libcef_dll_wrapper ${CEF_STANDARD_LIBS} protobuf::libprotobuf nanomsg absl::log_internal_check_op)
 
   target_include_directories(${SHARED_TARGET} PUBLIC ${nanomsg_SOURCE_DIR}/src)
 

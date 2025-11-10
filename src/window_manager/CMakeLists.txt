@@ -27,4 +27,5 @@ target_compile_options(noko PRIVATE -std=c++20 -g)
 
 find_package(X11 REQUIRED)
 find_package(Protobuf REQUIRED)
-target_link_libraries(noko ${X11_LIBRARIES} Xext GL GLU GLEW Xcomposite Xfixes nanomsg protobuf)
+find_package(absl REQUIRED)
+target_link_libraries(noko ${X11_LIBRARIES} Xext GL GLU GLEW Xcomposite Xfixes nanomsg protobuf::libprotobuf absl::log_internal_check_op absl::log_internal_message)

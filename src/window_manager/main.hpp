@@ -55,6 +55,7 @@ struct NokoWindow {
   float opacity;
   int x, y;
   int width, height;
+  double depth;
 
   Pixmap x_pixmap;
   GLXPixmap pixmap;
@@ -69,21 +70,51 @@ class NokoWindowManager {
 
   void run();
 
-  void register_base_window(Window base);
-
   void ipc_step() {
     char* buf = NULL;
-    int result = nn_recv(ipc_sock, &buf, NN_MSG, 0);
-    if (result > 0) {
-      Packet packet;
-      packet.ParseFromArray(buf, result);
+    int result;
+    do {
+      result = nn_recv(ipc_sock, &buf, NN_MSG, 0);
+      if (result > 0) {
+        Packet packet;
+        packet.ParseFromArray(buf, result);
 
-      if (packet.data_case() == Packet::kWindowRequest) {
-        register_base_window(packet.window_request().window());
+        for (auto segment : packet.segments()) {
+          if (segment.data_case() == DataSegment::kWindowRequest) {
+            register_base_window(segment.window_request().window());
+          } else if (segment.data_case() == DataSegment::kWindowMapRequest) {
+            configure_window(segment.window_map_request().window(),
+                             segment.window_map_request().x(),
+                             segment.window_map_request().y(),
+                             segment.window_map_request().width(),
+                             segment.window_map_request().height());
+          } else if (segment.data_case() ==
+                     DataSegment::kWindowReorderRequest) {
+            printf("reordering\n");
+
+            double window_count =
+                segment.window_reorder_request().windows().size();
+            double inc = (1 / window_count) * 0.8;
+            double depth = 0.8;
+            for (uint64_t window : segment.window_reorder_request().windows()) {
+              if (windows.find(window) == windows.end()) {
+                printf("Window %lu skipped\n", window);
+                continue;
+              }
+              windows[window].depth = depth;
+              printf("Setting window %lu depth to %f\n", window, depth);
+              depth -= inc;
+            }
+          } else if (segment.data_case() == DataSegment::kWindowFocusRequest) {
+            focus_window(segment.mutable_window_focus_request()->window());
+          } else if (segment.data_case() ==
+                     DataSegment::kWindowRegisterBorderRequest) {
+          }
+        }
+
+        nn_freemsg(buf);
       }
-
-      nn_freemsg(buf);
-    }
+    } while (result > 0);
   }
 
   NokoWindowManager() {
@@ -117,6 +148,8 @@ class NokoWindowManager {
 
   std::vector<Window> blacklisted_windows;
   std::unordered_map<Window, NokoWindow> windows;
+  std::unordered_map<Window, Window> border_window;
+  std::vector<Window> render_order;
 
   GLXFBConfig* glx_configs;
   int glx_config_count;
@@ -141,6 +174,18 @@ class NokoWindowManager {
 
   bool process_events();
 
+  void register_base_window(Window base);
+  void register_border(Window window,
+                       int32_t x,
+                       int32_t y,
+                       int32_t width,
+                       int32_t height);
+  void configure_window(Window window,
+                        uint32_t x,
+                        uint32_t y,
+                        uint32_t width,
+                        uint32_t height);
+
   void render_window(unsigned window_id);
 
   void bind_window_texture(Window window_index);
@@ -159,31 +204,6 @@ class NokoWindowManager {
   int float_to_x_coordinate(float x);
   int float_to_y_coordinate(float x);
 
-  void update_client_list() {
-    Window* client_list = (Window*)malloc(windows.size() * sizeof(Window));
-
-    size_t i = 0;
-    for (auto window : windows) {
-      client_list[i] = window.second.window;
-      i++;
-    }
-
-    XChangeProperty(display, root_window, client_list_atom, XA_WINDOW, 32,
-                    PropModeReplace, (unsigned char*)client_list,
-                    windows.size());
-    free(client_list);
-  }
-  void focus_window(Window window_id) {
-    Window window = windows[window_id].window;
-
-    if (base_window.has_value()) {
-      XLowerWindow(display, base_window.value());
-    }
-
-    if (base_window.has_value() && window == base_window.value())
-      return;
-
-    XSetInputFocus(display, window, RevertToParent, CurrentTime);
-    XMapRaised(display, window);
-  }
+  void update_client_list();
+  void focus_window(Window window_id);
 };

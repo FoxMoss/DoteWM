@@ -28,6 +28,7 @@
 #include "google/protobuf/message_lite.h"
 #include "google/protobuf/repeated_field.h"  // IWYU pragma: export
 #include "google/protobuf/extension_set.h"  // IWYU pragma: export
+#include "google/protobuf/generated_enum_reflection.h"
 #include "google/protobuf/unknown_field_set.h"
 // @@protoc_insertion_point(includes)
 
@@ -52,19 +53,98 @@ struct TableStruct_windowmanager_2eproto {
 extern "C" {
 extern const ::google::protobuf::internal::DescriptorTable descriptor_table_windowmanager_2eproto;
 }  // extern "C"
+enum MouseButtonState : int;
+extern const uint32_t MouseButtonState_internal_data_[];
+class DataSegment;
+struct DataSegmentDefaultTypeInternal;
+extern DataSegmentDefaultTypeInternal _DataSegment_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull DataSegment_class_data_;
+class MouseMoveReply;
+struct MouseMoveReplyDefaultTypeInternal;
+extern MouseMoveReplyDefaultTypeInternal _MouseMoveReply_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull MouseMoveReply_class_data_;
+class MousePressReply;
+struct MousePressReplyDefaultTypeInternal;
+extern MousePressReplyDefaultTypeInternal _MousePressReply_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull MousePressReply_class_data_;
 class Packet;
 struct PacketDefaultTypeInternal;
 extern PacketDefaultTypeInternal _Packet_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull Packet_class_data_;
+class WindowFocusReply;
+struct WindowFocusReplyDefaultTypeInternal;
+extern WindowFocusReplyDefaultTypeInternal _WindowFocusReply_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull WindowFocusReply_class_data_;
+class WindowFocusRequest;
+struct WindowFocusRequestDefaultTypeInternal;
+extern WindowFocusRequestDefaultTypeInternal _WindowFocusRequest_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull WindowFocusRequest_class_data_;
+class WindowMapReply;
+struct WindowMapReplyDefaultTypeInternal;
+extern WindowMapReplyDefaultTypeInternal _WindowMapReply_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull WindowMapReply_class_data_;
+class WindowMapRequest;
+struct WindowMapRequestDefaultTypeInternal;
+extern WindowMapRequestDefaultTypeInternal _WindowMapRequest_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull WindowMapRequest_class_data_;
+class WindowRegisterBorderRequest;
+struct WindowRegisterBorderRequestDefaultTypeInternal;
+extern WindowRegisterBorderRequestDefaultTypeInternal _WindowRegisterBorderRequest_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull WindowRegisterBorderRequest_class_data_;
+class WindowReorderRequest;
+struct WindowReorderRequestDefaultTypeInternal;
+extern WindowReorderRequestDefaultTypeInternal _WindowReorderRequest_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull WindowReorderRequest_class_data_;
 class WindowRequest;
 struct WindowRequestDefaultTypeInternal;
 extern WindowRequestDefaultTypeInternal _WindowRequest_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull WindowRequest_class_data_;
 namespace google {
 namespace protobuf {
+template <>
+internal::EnumTraitsT<::MouseButtonState_internal_data_>
+    internal::EnumTraitsImpl::value<::MouseButtonState>;
 }  // namespace protobuf
 }  // namespace google
 
+enum MouseButtonState : int {
+  MOUSE_LEFT_DOWN = 0,
+  MOUSE_LEFT_UP = 1,
+  MOUSE_RIGHT_DOWN = 2,
+  MOUSE_RIGHT_UP = 3,
+  MouseButtonState_INT_MIN_SENTINEL_DO_NOT_USE_ =
+      ::std::numeric_limits<::int32_t>::min(),
+  MouseButtonState_INT_MAX_SENTINEL_DO_NOT_USE_ =
+      ::std::numeric_limits<::int32_t>::max(),
+};
+
+extern const uint32_t MouseButtonState_internal_data_[];
+inline constexpr MouseButtonState MouseButtonState_MIN =
+    static_cast<MouseButtonState>(0);
+inline constexpr MouseButtonState MouseButtonState_MAX =
+    static_cast<MouseButtonState>(3);
+inline bool MouseButtonState_IsValid(int value) {
+  return 0 <= value && value <= 3;
+}
+inline constexpr int MouseButtonState_ARRAYSIZE = 3 + 1;
+const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL MouseButtonState_descriptor();
+template <typename T>
+const ::std::string& MouseButtonState_Name(T value) {
+  static_assert(::std::is_same<T, MouseButtonState>::value ||
+                    ::std::is_integral<T>::value,
+                "Incorrect type passed to MouseButtonState_Name().");
+  return MouseButtonState_Name(static_cast<MouseButtonState>(value));
+}
+template <>
+inline const ::std::string& MouseButtonState_Name(MouseButtonState value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<MouseButtonState_descriptor, 0, 3>(
+      static_cast<int>(value));
+}
+inline bool MouseButtonState_Parse(
+    ::absl::string_view name, MouseButtonState* PROTOBUF_NONNULL value) {
+  return ::google::protobuf::internal::ParseNamedEnum<MouseButtonState>(MouseButtonState_descriptor(), name,
+                                           value);
+}
 
 // ===================================================================
 
@@ -262,6 +342,2131 @@ class WindowRequest final : public ::google::protobuf::Message
 extern const ::google::protobuf::internal::ClassDataFull WindowRequest_class_data_;
 // -------------------------------------------------------------------
 
+class WindowReorderRequest final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:WindowReorderRequest) */ {
+ public:
+  inline WindowReorderRequest() : WindowReorderRequest(nullptr) {}
+  ~WindowReorderRequest() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(WindowReorderRequest* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(WindowReorderRequest));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR WindowReorderRequest(::google::protobuf::internal::ConstantInitialized);
+
+  inline WindowReorderRequest(const WindowReorderRequest& from) : WindowReorderRequest(nullptr, from) {}
+  inline WindowReorderRequest(WindowReorderRequest&& from) noexcept
+      : WindowReorderRequest(nullptr, ::std::move(from)) {}
+  inline WindowReorderRequest& operator=(const WindowReorderRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline WindowReorderRequest& operator=(WindowReorderRequest&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const WindowReorderRequest& default_instance() {
+    return *reinterpret_cast<const WindowReorderRequest*>(
+        &_WindowReorderRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 7;
+  friend void swap(WindowReorderRequest& a, WindowReorderRequest& b) { a.Swap(&b); }
+  inline void Swap(WindowReorderRequest* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(WindowReorderRequest* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  WindowReorderRequest* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<WindowReorderRequest>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const WindowReorderRequest& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const WindowReorderRequest& from) { WindowReorderRequest::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(WindowReorderRequest* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "WindowReorderRequest"; }
+
+ protected:
+  explicit WindowReorderRequest(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  WindowReorderRequest(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const WindowReorderRequest& from);
+  WindowReorderRequest(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, WindowReorderRequest&& from) noexcept
+      : WindowReorderRequest(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kWindowsFieldNumber = 1,
+  };
+  // repeated uint64 windows = 1;
+  int windows_size() const;
+  private:
+  int _internal_windows_size() const;
+
+  public:
+  void clear_windows() ;
+  ::uint64_t windows(int index) const;
+  void set_windows(int index, ::uint64_t value);
+  void add_windows(::uint64_t value);
+  const ::google::protobuf::RepeatedField<::uint64_t>& windows() const;
+  ::google::protobuf::RepeatedField<::uint64_t>* PROTOBUF_NONNULL mutable_windows();
+
+  private:
+  const ::google::protobuf::RepeatedField<::uint64_t>& _internal_windows() const;
+  ::google::protobuf::RepeatedField<::uint64_t>* PROTOBUF_NONNULL _internal_mutable_windows();
+
+  public:
+  // @@protoc_insertion_point(class_scope:WindowReorderRequest)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   0, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const WindowReorderRequest& from_msg);
+    ::google::protobuf::RepeatedField<::uint64_t> windows_;
+    ::google::protobuf::internal::CachedSize _windows_cached_byte_size_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_windowmanager_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull WindowReorderRequest_class_data_;
+// -------------------------------------------------------------------
+
+class WindowRegisterBorderRequest final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:WindowRegisterBorderRequest) */ {
+ public:
+  inline WindowRegisterBorderRequest() : WindowRegisterBorderRequest(nullptr) {}
+  ~WindowRegisterBorderRequest() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(WindowRegisterBorderRequest* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(WindowRegisterBorderRequest));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR WindowRegisterBorderRequest(::google::protobuf::internal::ConstantInitialized);
+
+  inline WindowRegisterBorderRequest(const WindowRegisterBorderRequest& from) : WindowRegisterBorderRequest(nullptr, from) {}
+  inline WindowRegisterBorderRequest(WindowRegisterBorderRequest&& from) noexcept
+      : WindowRegisterBorderRequest(nullptr, ::std::move(from)) {}
+  inline WindowRegisterBorderRequest& operator=(const WindowRegisterBorderRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline WindowRegisterBorderRequest& operator=(WindowRegisterBorderRequest&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const WindowRegisterBorderRequest& default_instance() {
+    return *reinterpret_cast<const WindowRegisterBorderRequest*>(
+        &_WindowRegisterBorderRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 5;
+  friend void swap(WindowRegisterBorderRequest& a, WindowRegisterBorderRequest& b) { a.Swap(&b); }
+  inline void Swap(WindowRegisterBorderRequest* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(WindowRegisterBorderRequest* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  WindowRegisterBorderRequest* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<WindowRegisterBorderRequest>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const WindowRegisterBorderRequest& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const WindowRegisterBorderRequest& from) { WindowRegisterBorderRequest::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(WindowRegisterBorderRequest* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "WindowRegisterBorderRequest"; }
+
+ protected:
+  explicit WindowRegisterBorderRequest(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  WindowRegisterBorderRequest(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const WindowRegisterBorderRequest& from);
+  WindowRegisterBorderRequest(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, WindowRegisterBorderRequest&& from) noexcept
+      : WindowRegisterBorderRequest(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kWindowFieldNumber = 1,
+    kXFieldNumber = 2,
+    kYFieldNumber = 3,
+    kWidthFieldNumber = 4,
+    kHeightFieldNumber = 5,
+  };
+  // uint64 window = 1;
+  void clear_window() ;
+  ::uint64_t window() const;
+  void set_window(::uint64_t value);
+
+  private:
+  ::uint64_t _internal_window() const;
+  void _internal_set_window(::uint64_t value);
+
+  public:
+  // int32 x = 2;
+  void clear_x() ;
+  ::int32_t x() const;
+  void set_x(::int32_t value);
+
+  private:
+  ::int32_t _internal_x() const;
+  void _internal_set_x(::int32_t value);
+
+  public:
+  // int32 y = 3;
+  void clear_y() ;
+  ::int32_t y() const;
+  void set_y(::int32_t value);
+
+  private:
+  ::int32_t _internal_y() const;
+  void _internal_set_y(::int32_t value);
+
+  public:
+  // int32 width = 4;
+  void clear_width() ;
+  ::int32_t width() const;
+  void set_width(::int32_t value);
+
+  private:
+  ::int32_t _internal_width() const;
+  void _internal_set_width(::int32_t value);
+
+  public:
+  // int32 height = 5;
+  void clear_height() ;
+  ::int32_t height() const;
+  void set_height(::int32_t value);
+
+  private:
+  ::int32_t _internal_height() const;
+  void _internal_set_height(::int32_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:WindowRegisterBorderRequest)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<3, 5,
+                                   0, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const WindowRegisterBorderRequest& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint64_t window_;
+    ::int32_t x_;
+    ::int32_t y_;
+    ::int32_t width_;
+    ::int32_t height_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_windowmanager_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull WindowRegisterBorderRequest_class_data_;
+// -------------------------------------------------------------------
+
+class WindowMapRequest final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:WindowMapRequest) */ {
+ public:
+  inline WindowMapRequest() : WindowMapRequest(nullptr) {}
+  ~WindowMapRequest() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(WindowMapRequest* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(WindowMapRequest));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR WindowMapRequest(::google::protobuf::internal::ConstantInitialized);
+
+  inline WindowMapRequest(const WindowMapRequest& from) : WindowMapRequest(nullptr, from) {}
+  inline WindowMapRequest(WindowMapRequest&& from) noexcept
+      : WindowMapRequest(nullptr, ::std::move(from)) {}
+  inline WindowMapRequest& operator=(const WindowMapRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline WindowMapRequest& operator=(WindowMapRequest&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const WindowMapRequest& default_instance() {
+    return *reinterpret_cast<const WindowMapRequest*>(
+        &_WindowMapRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 1;
+  friend void swap(WindowMapRequest& a, WindowMapRequest& b) { a.Swap(&b); }
+  inline void Swap(WindowMapRequest* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(WindowMapRequest* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  WindowMapRequest* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<WindowMapRequest>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const WindowMapRequest& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const WindowMapRequest& from) { WindowMapRequest::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(WindowMapRequest* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "WindowMapRequest"; }
+
+ protected:
+  explicit WindowMapRequest(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  WindowMapRequest(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const WindowMapRequest& from);
+  WindowMapRequest(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, WindowMapRequest&& from) noexcept
+      : WindowMapRequest(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kWindowFieldNumber = 1,
+    kXFieldNumber = 2,
+    kYFieldNumber = 3,
+    kWidthFieldNumber = 4,
+    kHeightFieldNumber = 5,
+  };
+  // uint64 window = 1;
+  void clear_window() ;
+  ::uint64_t window() const;
+  void set_window(::uint64_t value);
+
+  private:
+  ::uint64_t _internal_window() const;
+  void _internal_set_window(::uint64_t value);
+
+  public:
+  // uint32 x = 2;
+  void clear_x() ;
+  ::uint32_t x() const;
+  void set_x(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_x() const;
+  void _internal_set_x(::uint32_t value);
+
+  public:
+  // uint32 y = 3;
+  void clear_y() ;
+  ::uint32_t y() const;
+  void set_y(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_y() const;
+  void _internal_set_y(::uint32_t value);
+
+  public:
+  // uint32 width = 4;
+  void clear_width() ;
+  ::uint32_t width() const;
+  void set_width(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_width() const;
+  void _internal_set_width(::uint32_t value);
+
+  public:
+  // uint32 height = 5;
+  void clear_height() ;
+  ::uint32_t height() const;
+  void set_height(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_height() const;
+  void _internal_set_height(::uint32_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:WindowMapRequest)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<3, 5,
+                                   0, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const WindowMapRequest& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint64_t window_;
+    ::uint32_t x_;
+    ::uint32_t y_;
+    ::uint32_t width_;
+    ::uint32_t height_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_windowmanager_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull WindowMapRequest_class_data_;
+// -------------------------------------------------------------------
+
+class WindowMapReply final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:WindowMapReply) */ {
+ public:
+  inline WindowMapReply() : WindowMapReply(nullptr) {}
+  ~WindowMapReply() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(WindowMapReply* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(WindowMapReply));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR WindowMapReply(::google::protobuf::internal::ConstantInitialized);
+
+  inline WindowMapReply(const WindowMapReply& from) : WindowMapReply(nullptr, from) {}
+  inline WindowMapReply(WindowMapReply&& from) noexcept
+      : WindowMapReply(nullptr, ::std::move(from)) {}
+  inline WindowMapReply& operator=(const WindowMapReply& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline WindowMapReply& operator=(WindowMapReply&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const WindowMapReply& default_instance() {
+    return *reinterpret_cast<const WindowMapReply*>(
+        &_WindowMapReply_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 8;
+  friend void swap(WindowMapReply& a, WindowMapReply& b) { a.Swap(&b); }
+  inline void Swap(WindowMapReply* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(WindowMapReply* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  WindowMapReply* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<WindowMapReply>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const WindowMapReply& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const WindowMapReply& from) { WindowMapReply::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(WindowMapReply* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "WindowMapReply"; }
+
+ protected:
+  explicit WindowMapReply(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  WindowMapReply(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const WindowMapReply& from);
+  WindowMapReply(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, WindowMapReply&& from) noexcept
+      : WindowMapReply(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kWindowFieldNumber = 1,
+    kXFieldNumber = 2,
+    kYFieldNumber = 3,
+    kWidthFieldNumber = 4,
+    kHeightFieldNumber = 5,
+    kVisibleFieldNumber = 6,
+  };
+  // uint64 window = 1;
+  void clear_window() ;
+  ::uint64_t window() const;
+  void set_window(::uint64_t value);
+
+  private:
+  ::uint64_t _internal_window() const;
+  void _internal_set_window(::uint64_t value);
+
+  public:
+  // uint32 x = 2;
+  void clear_x() ;
+  ::uint32_t x() const;
+  void set_x(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_x() const;
+  void _internal_set_x(::uint32_t value);
+
+  public:
+  // uint32 y = 3;
+  void clear_y() ;
+  ::uint32_t y() const;
+  void set_y(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_y() const;
+  void _internal_set_y(::uint32_t value);
+
+  public:
+  // uint32 width = 4;
+  void clear_width() ;
+  ::uint32_t width() const;
+  void set_width(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_width() const;
+  void _internal_set_width(::uint32_t value);
+
+  public:
+  // uint32 height = 5;
+  void clear_height() ;
+  ::uint32_t height() const;
+  void set_height(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_height() const;
+  void _internal_set_height(::uint32_t value);
+
+  public:
+  // bool visible = 6;
+  void clear_visible() ;
+  bool visible() const;
+  void set_visible(bool value);
+
+  private:
+  bool _internal_visible() const;
+  void _internal_set_visible(bool value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:WindowMapReply)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<3, 6,
+                                   0, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const WindowMapReply& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint64_t window_;
+    ::uint32_t x_;
+    ::uint32_t y_;
+    ::uint32_t width_;
+    ::uint32_t height_;
+    bool visible_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_windowmanager_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull WindowMapReply_class_data_;
+// -------------------------------------------------------------------
+
+class WindowFocusRequest final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:WindowFocusRequest) */ {
+ public:
+  inline WindowFocusRequest() : WindowFocusRequest(nullptr) {}
+  ~WindowFocusRequest() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(WindowFocusRequest* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(WindowFocusRequest));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR WindowFocusRequest(::google::protobuf::internal::ConstantInitialized);
+
+  inline WindowFocusRequest(const WindowFocusRequest& from) : WindowFocusRequest(nullptr, from) {}
+  inline WindowFocusRequest(WindowFocusRequest&& from) noexcept
+      : WindowFocusRequest(nullptr, ::std::move(from)) {}
+  inline WindowFocusRequest& operator=(const WindowFocusRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline WindowFocusRequest& operator=(WindowFocusRequest&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const WindowFocusRequest& default_instance() {
+    return *reinterpret_cast<const WindowFocusRequest*>(
+        &_WindowFocusRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 6;
+  friend void swap(WindowFocusRequest& a, WindowFocusRequest& b) { a.Swap(&b); }
+  inline void Swap(WindowFocusRequest* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(WindowFocusRequest* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  WindowFocusRequest* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<WindowFocusRequest>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const WindowFocusRequest& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const WindowFocusRequest& from) { WindowFocusRequest::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(WindowFocusRequest* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "WindowFocusRequest"; }
+
+ protected:
+  explicit WindowFocusRequest(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  WindowFocusRequest(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const WindowFocusRequest& from);
+  WindowFocusRequest(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, WindowFocusRequest&& from) noexcept
+      : WindowFocusRequest(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kWindowFieldNumber = 1,
+  };
+  // uint64 window = 1;
+  void clear_window() ;
+  ::uint64_t window() const;
+  void set_window(::uint64_t value);
+
+  private:
+  ::uint64_t _internal_window() const;
+  void _internal_set_window(::uint64_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:WindowFocusRequest)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   0, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const WindowFocusRequest& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint64_t window_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_windowmanager_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull WindowFocusRequest_class_data_;
+// -------------------------------------------------------------------
+
+class WindowFocusReply final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:WindowFocusReply) */ {
+ public:
+  inline WindowFocusReply() : WindowFocusReply(nullptr) {}
+  ~WindowFocusReply() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(WindowFocusReply* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(WindowFocusReply));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR WindowFocusReply(::google::protobuf::internal::ConstantInitialized);
+
+  inline WindowFocusReply(const WindowFocusReply& from) : WindowFocusReply(nullptr, from) {}
+  inline WindowFocusReply(WindowFocusReply&& from) noexcept
+      : WindowFocusReply(nullptr, ::std::move(from)) {}
+  inline WindowFocusReply& operator=(const WindowFocusReply& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline WindowFocusReply& operator=(WindowFocusReply&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const WindowFocusReply& default_instance() {
+    return *reinterpret_cast<const WindowFocusReply*>(
+        &_WindowFocusReply_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 4;
+  friend void swap(WindowFocusReply& a, WindowFocusReply& b) { a.Swap(&b); }
+  inline void Swap(WindowFocusReply* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(WindowFocusReply* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  WindowFocusReply* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<WindowFocusReply>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const WindowFocusReply& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const WindowFocusReply& from) { WindowFocusReply::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(WindowFocusReply* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "WindowFocusReply"; }
+
+ protected:
+  explicit WindowFocusReply(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  WindowFocusReply(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const WindowFocusReply& from);
+  WindowFocusReply(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, WindowFocusReply&& from) noexcept
+      : WindowFocusReply(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kWindowFieldNumber = 1,
+  };
+  // uint64 window = 1;
+  void clear_window() ;
+  ::uint64_t window() const;
+  void set_window(::uint64_t value);
+
+  private:
+  ::uint64_t _internal_window() const;
+  void _internal_set_window(::uint64_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:WindowFocusReply)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   0, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const WindowFocusReply& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint64_t window_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_windowmanager_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull WindowFocusReply_class_data_;
+// -------------------------------------------------------------------
+
+class MousePressReply final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:MousePressReply) */ {
+ public:
+  inline MousePressReply() : MousePressReply(nullptr) {}
+  ~MousePressReply() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(MousePressReply* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(MousePressReply));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR MousePressReply(::google::protobuf::internal::ConstantInitialized);
+
+  inline MousePressReply(const MousePressReply& from) : MousePressReply(nullptr, from) {}
+  inline MousePressReply(MousePressReply&& from) noexcept
+      : MousePressReply(nullptr, ::std::move(from)) {}
+  inline MousePressReply& operator=(const MousePressReply& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline MousePressReply& operator=(MousePressReply&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const MousePressReply& default_instance() {
+    return *reinterpret_cast<const MousePressReply*>(
+        &_MousePressReply_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 3;
+  friend void swap(MousePressReply& a, MousePressReply& b) { a.Swap(&b); }
+  inline void Swap(MousePressReply* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(MousePressReply* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  MousePressReply* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<MousePressReply>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const MousePressReply& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const MousePressReply& from) { MousePressReply::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(MousePressReply* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "MousePressReply"; }
+
+ protected:
+  explicit MousePressReply(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  MousePressReply(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const MousePressReply& from);
+  MousePressReply(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, MousePressReply&& from) noexcept
+      : MousePressReply(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kXFieldNumber = 1,
+    kYFieldNumber = 2,
+    kStateFieldNumber = 3,
+  };
+  // uint32 x = 1;
+  void clear_x() ;
+  ::uint32_t x() const;
+  void set_x(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_x() const;
+  void _internal_set_x(::uint32_t value);
+
+  public:
+  // uint32 y = 2;
+  void clear_y() ;
+  ::uint32_t y() const;
+  void set_y(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_y() const;
+  void _internal_set_y(::uint32_t value);
+
+  public:
+  // .MouseButtonState state = 3;
+  void clear_state() ;
+  ::MouseButtonState state() const;
+  void set_state(::MouseButtonState value);
+
+  private:
+  ::MouseButtonState _internal_state() const;
+  void _internal_set_state(::MouseButtonState value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:MousePressReply)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<2, 3,
+                                   0, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const MousePressReply& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t x_;
+    ::uint32_t y_;
+    int state_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_windowmanager_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull MousePressReply_class_data_;
+// -------------------------------------------------------------------
+
+class MouseMoveReply final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:MouseMoveReply) */ {
+ public:
+  inline MouseMoveReply() : MouseMoveReply(nullptr) {}
+  ~MouseMoveReply() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(MouseMoveReply* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(MouseMoveReply));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR MouseMoveReply(::google::protobuf::internal::ConstantInitialized);
+
+  inline MouseMoveReply(const MouseMoveReply& from) : MouseMoveReply(nullptr, from) {}
+  inline MouseMoveReply(MouseMoveReply&& from) noexcept
+      : MouseMoveReply(nullptr, ::std::move(from)) {}
+  inline MouseMoveReply& operator=(const MouseMoveReply& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline MouseMoveReply& operator=(MouseMoveReply&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const MouseMoveReply& default_instance() {
+    return *reinterpret_cast<const MouseMoveReply*>(
+        &_MouseMoveReply_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 2;
+  friend void swap(MouseMoveReply& a, MouseMoveReply& b) { a.Swap(&b); }
+  inline void Swap(MouseMoveReply* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(MouseMoveReply* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  MouseMoveReply* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<MouseMoveReply>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const MouseMoveReply& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const MouseMoveReply& from) { MouseMoveReply::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(MouseMoveReply* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "MouseMoveReply"; }
+
+ protected:
+  explicit MouseMoveReply(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  MouseMoveReply(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const MouseMoveReply& from);
+  MouseMoveReply(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, MouseMoveReply&& from) noexcept
+      : MouseMoveReply(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kXFieldNumber = 1,
+    kYFieldNumber = 2,
+  };
+  // uint32 x = 1;
+  void clear_x() ;
+  ::uint32_t x() const;
+  void set_x(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_x() const;
+  void _internal_set_x(::uint32_t value);
+
+  public:
+  // uint32 y = 2;
+  void clear_y() ;
+  ::uint32_t y() const;
+  void set_y(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_y() const;
+  void _internal_set_y(::uint32_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:MouseMoveReply)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<1, 2,
+                                   0, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const MouseMoveReply& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t x_;
+    ::uint32_t y_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_windowmanager_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull MouseMoveReply_class_data_;
+// -------------------------------------------------------------------
+
+class DataSegment final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:DataSegment) */ {
+ public:
+  inline DataSegment() : DataSegment(nullptr) {}
+  ~DataSegment() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(DataSegment* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(DataSegment));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR DataSegment(::google::protobuf::internal::ConstantInitialized);
+
+  inline DataSegment(const DataSegment& from) : DataSegment(nullptr, from) {}
+  inline DataSegment(DataSegment&& from) noexcept
+      : DataSegment(nullptr, ::std::move(from)) {}
+  inline DataSegment& operator=(const DataSegment& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline DataSegment& operator=(DataSegment&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const DataSegment& default_instance() {
+    return *reinterpret_cast<const DataSegment*>(
+        &_DataSegment_default_instance_);
+  }
+  enum DataCase {
+    kWindowRequest = 1,
+    kWindowMapReply = 2,
+    kWindowMapRequest = 3,
+    kMouseMoveReply = 4,
+    kMousePressReply = 5,
+    kWindowFocusReply = 6,
+    kWindowReorderRequest = 7,
+    kWindowFocusRequest = 8,
+    kWindowRegisterBorderRequest = 9,
+    DATA_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 9;
+  friend void swap(DataSegment& a, DataSegment& b) { a.Swap(&b); }
+  inline void Swap(DataSegment* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(DataSegment* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  DataSegment* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<DataSegment>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const DataSegment& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const DataSegment& from) { DataSegment::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(DataSegment* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "DataSegment"; }
+
+ protected:
+  explicit DataSegment(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  DataSegment(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const DataSegment& from);
+  DataSegment(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, DataSegment&& from) noexcept
+      : DataSegment(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kWindowRequestFieldNumber = 1,
+    kWindowMapReplyFieldNumber = 2,
+    kWindowMapRequestFieldNumber = 3,
+    kMouseMoveReplyFieldNumber = 4,
+    kMousePressReplyFieldNumber = 5,
+    kWindowFocusReplyFieldNumber = 6,
+    kWindowReorderRequestFieldNumber = 7,
+    kWindowFocusRequestFieldNumber = 8,
+    kWindowRegisterBorderRequestFieldNumber = 9,
+  };
+  // .WindowRequest window_request = 1;
+  bool has_window_request() const;
+  private:
+  bool _internal_has_window_request() const;
+
+  public:
+  void clear_window_request() ;
+  const ::WindowRequest& window_request() const;
+  [[nodiscard]] ::WindowRequest* PROTOBUF_NULLABLE release_window_request();
+  ::WindowRequest* PROTOBUF_NONNULL mutable_window_request();
+  void set_allocated_window_request(::WindowRequest* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_window_request(::WindowRequest* PROTOBUF_NULLABLE value);
+  ::WindowRequest* PROTOBUF_NULLABLE unsafe_arena_release_window_request();
+
+  private:
+  const ::WindowRequest& _internal_window_request() const;
+  ::WindowRequest* PROTOBUF_NONNULL _internal_mutable_window_request();
+
+  public:
+  // .WindowMapReply window_map_reply = 2;
+  bool has_window_map_reply() const;
+  private:
+  bool _internal_has_window_map_reply() const;
+
+  public:
+  void clear_window_map_reply() ;
+  const ::WindowMapReply& window_map_reply() const;
+  [[nodiscard]] ::WindowMapReply* PROTOBUF_NULLABLE release_window_map_reply();
+  ::WindowMapReply* PROTOBUF_NONNULL mutable_window_map_reply();
+  void set_allocated_window_map_reply(::WindowMapReply* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_window_map_reply(::WindowMapReply* PROTOBUF_NULLABLE value);
+  ::WindowMapReply* PROTOBUF_NULLABLE unsafe_arena_release_window_map_reply();
+
+  private:
+  const ::WindowMapReply& _internal_window_map_reply() const;
+  ::WindowMapReply* PROTOBUF_NONNULL _internal_mutable_window_map_reply();
+
+  public:
+  // .WindowMapRequest window_map_request = 3;
+  bool has_window_map_request() const;
+  private:
+  bool _internal_has_window_map_request() const;
+
+  public:
+  void clear_window_map_request() ;
+  const ::WindowMapRequest& window_map_request() const;
+  [[nodiscard]] ::WindowMapRequest* PROTOBUF_NULLABLE release_window_map_request();
+  ::WindowMapRequest* PROTOBUF_NONNULL mutable_window_map_request();
+  void set_allocated_window_map_request(::WindowMapRequest* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_window_map_request(::WindowMapRequest* PROTOBUF_NULLABLE value);
+  ::WindowMapRequest* PROTOBUF_NULLABLE unsafe_arena_release_window_map_request();
+
+  private:
+  const ::WindowMapRequest& _internal_window_map_request() const;
+  ::WindowMapRequest* PROTOBUF_NONNULL _internal_mutable_window_map_request();
+
+  public:
+  // .MouseMoveReply mouse_move_reply = 4;
+  bool has_mouse_move_reply() const;
+  private:
+  bool _internal_has_mouse_move_reply() const;
+
+  public:
+  void clear_mouse_move_reply() ;
+  const ::MouseMoveReply& mouse_move_reply() const;
+  [[nodiscard]] ::MouseMoveReply* PROTOBUF_NULLABLE release_mouse_move_reply();
+  ::MouseMoveReply* PROTOBUF_NONNULL mutable_mouse_move_reply();
+  void set_allocated_mouse_move_reply(::MouseMoveReply* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_mouse_move_reply(::MouseMoveReply* PROTOBUF_NULLABLE value);
+  ::MouseMoveReply* PROTOBUF_NULLABLE unsafe_arena_release_mouse_move_reply();
+
+  private:
+  const ::MouseMoveReply& _internal_mouse_move_reply() const;
+  ::MouseMoveReply* PROTOBUF_NONNULL _internal_mutable_mouse_move_reply();
+
+  public:
+  // .MousePressReply mouse_press_reply = 5;
+  bool has_mouse_press_reply() const;
+  private:
+  bool _internal_has_mouse_press_reply() const;
+
+  public:
+  void clear_mouse_press_reply() ;
+  const ::MousePressReply& mouse_press_reply() const;
+  [[nodiscard]] ::MousePressReply* PROTOBUF_NULLABLE release_mouse_press_reply();
+  ::MousePressReply* PROTOBUF_NONNULL mutable_mouse_press_reply();
+  void set_allocated_mouse_press_reply(::MousePressReply* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_mouse_press_reply(::MousePressReply* PROTOBUF_NULLABLE value);
+  ::MousePressReply* PROTOBUF_NULLABLE unsafe_arena_release_mouse_press_reply();
+
+  private:
+  const ::MousePressReply& _internal_mouse_press_reply() const;
+  ::MousePressReply* PROTOBUF_NONNULL _internal_mutable_mouse_press_reply();
+
+  public:
+  // .WindowFocusReply window_focus_reply = 6;
+  bool has_window_focus_reply() const;
+  private:
+  bool _internal_has_window_focus_reply() const;
+
+  public:
+  void clear_window_focus_reply() ;
+  const ::WindowFocusReply& window_focus_reply() const;
+  [[nodiscard]] ::WindowFocusReply* PROTOBUF_NULLABLE release_window_focus_reply();
+  ::WindowFocusReply* PROTOBUF_NONNULL mutable_window_focus_reply();
+  void set_allocated_window_focus_reply(::WindowFocusReply* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_window_focus_reply(::WindowFocusReply* PROTOBUF_NULLABLE value);
+  ::WindowFocusReply* PROTOBUF_NULLABLE unsafe_arena_release_window_focus_reply();
+
+  private:
+  const ::WindowFocusReply& _internal_window_focus_reply() const;
+  ::WindowFocusReply* PROTOBUF_NONNULL _internal_mutable_window_focus_reply();
+
+  public:
+  // .WindowReorderRequest window_reorder_request = 7;
+  bool has_window_reorder_request() const;
+  private:
+  bool _internal_has_window_reorder_request() const;
+
+  public:
+  void clear_window_reorder_request() ;
+  const ::WindowReorderRequest& window_reorder_request() const;
+  [[nodiscard]] ::WindowReorderRequest* PROTOBUF_NULLABLE release_window_reorder_request();
+  ::WindowReorderRequest* PROTOBUF_NONNULL mutable_window_reorder_request();
+  void set_allocated_window_reorder_request(::WindowReorderRequest* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_window_reorder_request(::WindowReorderRequest* PROTOBUF_NULLABLE value);
+  ::WindowReorderRequest* PROTOBUF_NULLABLE unsafe_arena_release_window_reorder_request();
+
+  private:
+  const ::WindowReorderRequest& _internal_window_reorder_request() const;
+  ::WindowReorderRequest* PROTOBUF_NONNULL _internal_mutable_window_reorder_request();
+
+  public:
+  // .WindowFocusRequest window_focus_request = 8;
+  bool has_window_focus_request() const;
+  private:
+  bool _internal_has_window_focus_request() const;
+
+  public:
+  void clear_window_focus_request() ;
+  const ::WindowFocusRequest& window_focus_request() const;
+  [[nodiscard]] ::WindowFocusRequest* PROTOBUF_NULLABLE release_window_focus_request();
+  ::WindowFocusRequest* PROTOBUF_NONNULL mutable_window_focus_request();
+  void set_allocated_window_focus_request(::WindowFocusRequest* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_window_focus_request(::WindowFocusRequest* PROTOBUF_NULLABLE value);
+  ::WindowFocusRequest* PROTOBUF_NULLABLE unsafe_arena_release_window_focus_request();
+
+  private:
+  const ::WindowFocusRequest& _internal_window_focus_request() const;
+  ::WindowFocusRequest* PROTOBUF_NONNULL _internal_mutable_window_focus_request();
+
+  public:
+  // .WindowRegisterBorderRequest window_register_border_request = 9;
+  bool has_window_register_border_request() const;
+  private:
+  bool _internal_has_window_register_border_request() const;
+
+  public:
+  void clear_window_register_border_request() ;
+  const ::WindowRegisterBorderRequest& window_register_border_request() const;
+  [[nodiscard]] ::WindowRegisterBorderRequest* PROTOBUF_NULLABLE release_window_register_border_request();
+  ::WindowRegisterBorderRequest* PROTOBUF_NONNULL mutable_window_register_border_request();
+  void set_allocated_window_register_border_request(::WindowRegisterBorderRequest* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_window_register_border_request(::WindowRegisterBorderRequest* PROTOBUF_NULLABLE value);
+  ::WindowRegisterBorderRequest* PROTOBUF_NULLABLE unsafe_arena_release_window_register_border_request();
+
+  private:
+  const ::WindowRegisterBorderRequest& _internal_window_register_border_request() const;
+  ::WindowRegisterBorderRequest* PROTOBUF_NONNULL _internal_mutable_window_register_border_request();
+
+  public:
+  void clear_data();
+  DataCase data_case() const;
+  // @@protoc_insertion_point(class_scope:DataSegment)
+ private:
+  class _Internal;
+  void set_has_window_request();
+  void set_has_window_map_reply();
+  void set_has_window_map_request();
+  void set_has_mouse_move_reply();
+  void set_has_mouse_press_reply();
+  void set_has_window_focus_reply();
+  void set_has_window_reorder_request();
+  void set_has_window_focus_request();
+  void set_has_window_register_border_request();
+  inline bool has_data() const;
+  inline void clear_has_data();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 9,
+                                   9, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const DataSegment& from_msg);
+    union DataUnion {
+      constexpr DataUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE window_request_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE window_map_reply_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE window_map_request_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE mouse_move_reply_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE mouse_press_reply_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE window_focus_reply_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE window_reorder_request_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE window_focus_request_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE window_register_border_request_;
+    } data_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_windowmanager_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull DataSegment_class_data_;
+// -------------------------------------------------------------------
+
 class Packet final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:Packet) */ {
  public:
@@ -317,11 +2522,7 @@ class Packet final : public ::google::protobuf::Message
     return *reinterpret_cast<const Packet*>(
         &_Packet_default_instance_);
   }
-  enum DataCase {
-    kWindowRequest = 1,
-    DATA_NOT_SET = 0,
-  };
-  static constexpr int kIndexInFileMessages = 1;
+  static constexpr int kIndexInFileMessages = 10;
   friend void swap(Packet& a, Packet& b) { a.Swap(&b); }
   inline void Swap(Packet* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -409,35 +2610,28 @@ class Packet final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kWindowRequestFieldNumber = 1,
+    kSegmentsFieldNumber = 1,
   };
-  // .WindowRequest window_request = 1;
-  bool has_window_request() const;
+  // repeated .DataSegment segments = 1;
+  int segments_size() const;
   private:
-  bool _internal_has_window_request() const;
+  int _internal_segments_size() const;
 
   public:
-  void clear_window_request() ;
-  const ::WindowRequest& window_request() const;
-  [[nodiscard]] ::WindowRequest* PROTOBUF_NULLABLE release_window_request();
-  ::WindowRequest* PROTOBUF_NONNULL mutable_window_request();
-  void set_allocated_window_request(::WindowRequest* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_window_request(::WindowRequest* PROTOBUF_NULLABLE value);
-  ::WindowRequest* PROTOBUF_NULLABLE unsafe_arena_release_window_request();
+  void clear_segments() ;
+  ::DataSegment* PROTOBUF_NONNULL mutable_segments(int index);
+  ::google::protobuf::RepeatedPtrField<::DataSegment>* PROTOBUF_NONNULL mutable_segments();
 
   private:
-  const ::WindowRequest& _internal_window_request() const;
-  ::WindowRequest* PROTOBUF_NONNULL _internal_mutable_window_request();
-
+  const ::google::protobuf::RepeatedPtrField<::DataSegment>& _internal_segments() const;
+  ::google::protobuf::RepeatedPtrField<::DataSegment>* PROTOBUF_NONNULL _internal_mutable_segments();
   public:
-  void clear_data();
-  DataCase data_case() const;
+  const ::DataSegment& segments(int index) const;
+  ::DataSegment* PROTOBUF_NONNULL add_segments();
+  const ::google::protobuf::RepeatedPtrField<::DataSegment>& segments() const;
   // @@protoc_insertion_point(class_scope:Packet)
  private:
   class _Internal;
-  void set_has_window_request();
-  inline bool has_data() const;
-  inline void clear_has_data();
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<0, 1,
                                    1, 0,
@@ -459,13 +2653,8 @@ class Packet final : public ::google::protobuf::Message
         ::google::protobuf::internal::InternalVisibility visibility,
         ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
         const Packet& from_msg);
-    union DataUnion {
-      constexpr DataUnion() : _constinit_{} {}
-      ::google::protobuf::internal::ConstantInitialized _constinit_;
-      ::WindowRequest* PROTOBUF_NULLABLE window_request_;
-    } data_;
+    ::google::protobuf::RepeatedPtrField< ::DataSegment > segments_;
     ::google::protobuf::internal::CachedSize _cached_size_;
-    ::uint32_t _oneof_case_[1];
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -516,19 +2705,649 @@ inline void WindowRequest::_internal_set_window(::uint64_t value) {
 
 // -------------------------------------------------------------------
 
-// Packet
+// WindowMapRequest
+
+// uint64 window = 1;
+inline void WindowMapRequest::clear_window() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.window_ = ::uint64_t{0u};
+  _impl_._has_bits_[0] &= ~0x00000001U;
+}
+inline ::uint64_t WindowMapRequest::window() const {
+  // @@protoc_insertion_point(field_get:WindowMapRequest.window)
+  return _internal_window();
+}
+inline void WindowMapRequest::set_window(::uint64_t value) {
+  _internal_set_window(value);
+  _impl_._has_bits_[0] |= 0x00000001U;
+  // @@protoc_insertion_point(field_set:WindowMapRequest.window)
+}
+inline ::uint64_t WindowMapRequest::_internal_window() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.window_;
+}
+inline void WindowMapRequest::_internal_set_window(::uint64_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.window_ = value;
+}
+
+// uint32 x = 2;
+inline void WindowMapRequest::clear_x() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.x_ = 0u;
+  _impl_._has_bits_[0] &= ~0x00000002U;
+}
+inline ::uint32_t WindowMapRequest::x() const {
+  // @@protoc_insertion_point(field_get:WindowMapRequest.x)
+  return _internal_x();
+}
+inline void WindowMapRequest::set_x(::uint32_t value) {
+  _internal_set_x(value);
+  _impl_._has_bits_[0] |= 0x00000002U;
+  // @@protoc_insertion_point(field_set:WindowMapRequest.x)
+}
+inline ::uint32_t WindowMapRequest::_internal_x() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.x_;
+}
+inline void WindowMapRequest::_internal_set_x(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.x_ = value;
+}
+
+// uint32 y = 3;
+inline void WindowMapRequest::clear_y() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.y_ = 0u;
+  _impl_._has_bits_[0] &= ~0x00000004U;
+}
+inline ::uint32_t WindowMapRequest::y() const {
+  // @@protoc_insertion_point(field_get:WindowMapRequest.y)
+  return _internal_y();
+}
+inline void WindowMapRequest::set_y(::uint32_t value) {
+  _internal_set_y(value);
+  _impl_._has_bits_[0] |= 0x00000004U;
+  // @@protoc_insertion_point(field_set:WindowMapRequest.y)
+}
+inline ::uint32_t WindowMapRequest::_internal_y() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.y_;
+}
+inline void WindowMapRequest::_internal_set_y(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.y_ = value;
+}
+
+// uint32 width = 4;
+inline void WindowMapRequest::clear_width() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.width_ = 0u;
+  _impl_._has_bits_[0] &= ~0x00000008U;
+}
+inline ::uint32_t WindowMapRequest::width() const {
+  // @@protoc_insertion_point(field_get:WindowMapRequest.width)
+  return _internal_width();
+}
+inline void WindowMapRequest::set_width(::uint32_t value) {
+  _internal_set_width(value);
+  _impl_._has_bits_[0] |= 0x00000008U;
+  // @@protoc_insertion_point(field_set:WindowMapRequest.width)
+}
+inline ::uint32_t WindowMapRequest::_internal_width() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.width_;
+}
+inline void WindowMapRequest::_internal_set_width(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.width_ = value;
+}
+
+// uint32 height = 5;
+inline void WindowMapRequest::clear_height() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.height_ = 0u;
+  _impl_._has_bits_[0] &= ~0x00000010U;
+}
+inline ::uint32_t WindowMapRequest::height() const {
+  // @@protoc_insertion_point(field_get:WindowMapRequest.height)
+  return _internal_height();
+}
+inline void WindowMapRequest::set_height(::uint32_t value) {
+  _internal_set_height(value);
+  _impl_._has_bits_[0] |= 0x00000010U;
+  // @@protoc_insertion_point(field_set:WindowMapRequest.height)
+}
+inline ::uint32_t WindowMapRequest::_internal_height() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.height_;
+}
+inline void WindowMapRequest::_internal_set_height(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.height_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// MouseMoveReply
+
+// uint32 x = 1;
+inline void MouseMoveReply::clear_x() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.x_ = 0u;
+  _impl_._has_bits_[0] &= ~0x00000001U;
+}
+inline ::uint32_t MouseMoveReply::x() const {
+  // @@protoc_insertion_point(field_get:MouseMoveReply.x)
+  return _internal_x();
+}
+inline void MouseMoveReply::set_x(::uint32_t value) {
+  _internal_set_x(value);
+  _impl_._has_bits_[0] |= 0x00000001U;
+  // @@protoc_insertion_point(field_set:MouseMoveReply.x)
+}
+inline ::uint32_t MouseMoveReply::_internal_x() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.x_;
+}
+inline void MouseMoveReply::_internal_set_x(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.x_ = value;
+}
+
+// uint32 y = 2;
+inline void MouseMoveReply::clear_y() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.y_ = 0u;
+  _impl_._has_bits_[0] &= ~0x00000002U;
+}
+inline ::uint32_t MouseMoveReply::y() const {
+  // @@protoc_insertion_point(field_get:MouseMoveReply.y)
+  return _internal_y();
+}
+inline void MouseMoveReply::set_y(::uint32_t value) {
+  _internal_set_y(value);
+  _impl_._has_bits_[0] |= 0x00000002U;
+  // @@protoc_insertion_point(field_set:MouseMoveReply.y)
+}
+inline ::uint32_t MouseMoveReply::_internal_y() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.y_;
+}
+inline void MouseMoveReply::_internal_set_y(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.y_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// MousePressReply
+
+// uint32 x = 1;
+inline void MousePressReply::clear_x() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.x_ = 0u;
+  _impl_._has_bits_[0] &= ~0x00000001U;
+}
+inline ::uint32_t MousePressReply::x() const {
+  // @@protoc_insertion_point(field_get:MousePressReply.x)
+  return _internal_x();
+}
+inline void MousePressReply::set_x(::uint32_t value) {
+  _internal_set_x(value);
+  _impl_._has_bits_[0] |= 0x00000001U;
+  // @@protoc_insertion_point(field_set:MousePressReply.x)
+}
+inline ::uint32_t MousePressReply::_internal_x() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.x_;
+}
+inline void MousePressReply::_internal_set_x(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.x_ = value;
+}
+
+// uint32 y = 2;
+inline void MousePressReply::clear_y() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.y_ = 0u;
+  _impl_._has_bits_[0] &= ~0x00000002U;
+}
+inline ::uint32_t MousePressReply::y() const {
+  // @@protoc_insertion_point(field_get:MousePressReply.y)
+  return _internal_y();
+}
+inline void MousePressReply::set_y(::uint32_t value) {
+  _internal_set_y(value);
+  _impl_._has_bits_[0] |= 0x00000002U;
+  // @@protoc_insertion_point(field_set:MousePressReply.y)
+}
+inline ::uint32_t MousePressReply::_internal_y() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.y_;
+}
+inline void MousePressReply::_internal_set_y(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.y_ = value;
+}
+
+// .MouseButtonState state = 3;
+inline void MousePressReply::clear_state() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.state_ = 0;
+  _impl_._has_bits_[0] &= ~0x00000004U;
+}
+inline ::MouseButtonState MousePressReply::state() const {
+  // @@protoc_insertion_point(field_get:MousePressReply.state)
+  return _internal_state();
+}
+inline void MousePressReply::set_state(::MouseButtonState value) {
+  _internal_set_state(value);
+  _impl_._has_bits_[0] |= 0x00000004U;
+  // @@protoc_insertion_point(field_set:MousePressReply.state)
+}
+inline ::MouseButtonState MousePressReply::_internal_state() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::MouseButtonState>(_impl_.state_);
+}
+inline void MousePressReply::_internal_set_state(::MouseButtonState value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.state_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// WindowFocusReply
+
+// uint64 window = 1;
+inline void WindowFocusReply::clear_window() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.window_ = ::uint64_t{0u};
+  _impl_._has_bits_[0] &= ~0x00000001U;
+}
+inline ::uint64_t WindowFocusReply::window() const {
+  // @@protoc_insertion_point(field_get:WindowFocusReply.window)
+  return _internal_window();
+}
+inline void WindowFocusReply::set_window(::uint64_t value) {
+  _internal_set_window(value);
+  _impl_._has_bits_[0] |= 0x00000001U;
+  // @@protoc_insertion_point(field_set:WindowFocusReply.window)
+}
+inline ::uint64_t WindowFocusReply::_internal_window() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.window_;
+}
+inline void WindowFocusReply::_internal_set_window(::uint64_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.window_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// WindowRegisterBorderRequest
+
+// uint64 window = 1;
+inline void WindowRegisterBorderRequest::clear_window() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.window_ = ::uint64_t{0u};
+  _impl_._has_bits_[0] &= ~0x00000001U;
+}
+inline ::uint64_t WindowRegisterBorderRequest::window() const {
+  // @@protoc_insertion_point(field_get:WindowRegisterBorderRequest.window)
+  return _internal_window();
+}
+inline void WindowRegisterBorderRequest::set_window(::uint64_t value) {
+  _internal_set_window(value);
+  _impl_._has_bits_[0] |= 0x00000001U;
+  // @@protoc_insertion_point(field_set:WindowRegisterBorderRequest.window)
+}
+inline ::uint64_t WindowRegisterBorderRequest::_internal_window() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.window_;
+}
+inline void WindowRegisterBorderRequest::_internal_set_window(::uint64_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.window_ = value;
+}
+
+// int32 x = 2;
+inline void WindowRegisterBorderRequest::clear_x() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.x_ = 0;
+  _impl_._has_bits_[0] &= ~0x00000002U;
+}
+inline ::int32_t WindowRegisterBorderRequest::x() const {
+  // @@protoc_insertion_point(field_get:WindowRegisterBorderRequest.x)
+  return _internal_x();
+}
+inline void WindowRegisterBorderRequest::set_x(::int32_t value) {
+  _internal_set_x(value);
+  _impl_._has_bits_[0] |= 0x00000002U;
+  // @@protoc_insertion_point(field_set:WindowRegisterBorderRequest.x)
+}
+inline ::int32_t WindowRegisterBorderRequest::_internal_x() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.x_;
+}
+inline void WindowRegisterBorderRequest::_internal_set_x(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.x_ = value;
+}
+
+// int32 y = 3;
+inline void WindowRegisterBorderRequest::clear_y() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.y_ = 0;
+  _impl_._has_bits_[0] &= ~0x00000004U;
+}
+inline ::int32_t WindowRegisterBorderRequest::y() const {
+  // @@protoc_insertion_point(field_get:WindowRegisterBorderRequest.y)
+  return _internal_y();
+}
+inline void WindowRegisterBorderRequest::set_y(::int32_t value) {
+  _internal_set_y(value);
+  _impl_._has_bits_[0] |= 0x00000004U;
+  // @@protoc_insertion_point(field_set:WindowRegisterBorderRequest.y)
+}
+inline ::int32_t WindowRegisterBorderRequest::_internal_y() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.y_;
+}
+inline void WindowRegisterBorderRequest::_internal_set_y(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.y_ = value;
+}
+
+// int32 width = 4;
+inline void WindowRegisterBorderRequest::clear_width() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.width_ = 0;
+  _impl_._has_bits_[0] &= ~0x00000008U;
+}
+inline ::int32_t WindowRegisterBorderRequest::width() const {
+  // @@protoc_insertion_point(field_get:WindowRegisterBorderRequest.width)
+  return _internal_width();
+}
+inline void WindowRegisterBorderRequest::set_width(::int32_t value) {
+  _internal_set_width(value);
+  _impl_._has_bits_[0] |= 0x00000008U;
+  // @@protoc_insertion_point(field_set:WindowRegisterBorderRequest.width)
+}
+inline ::int32_t WindowRegisterBorderRequest::_internal_width() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.width_;
+}
+inline void WindowRegisterBorderRequest::_internal_set_width(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.width_ = value;
+}
+
+// int32 height = 5;
+inline void WindowRegisterBorderRequest::clear_height() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.height_ = 0;
+  _impl_._has_bits_[0] &= ~0x00000010U;
+}
+inline ::int32_t WindowRegisterBorderRequest::height() const {
+  // @@protoc_insertion_point(field_get:WindowRegisterBorderRequest.height)
+  return _internal_height();
+}
+inline void WindowRegisterBorderRequest::set_height(::int32_t value) {
+  _internal_set_height(value);
+  _impl_._has_bits_[0] |= 0x00000010U;
+  // @@protoc_insertion_point(field_set:WindowRegisterBorderRequest.height)
+}
+inline ::int32_t WindowRegisterBorderRequest::_internal_height() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.height_;
+}
+inline void WindowRegisterBorderRequest::_internal_set_height(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.height_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// WindowFocusRequest
+
+// uint64 window = 1;
+inline void WindowFocusRequest::clear_window() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.window_ = ::uint64_t{0u};
+  _impl_._has_bits_[0] &= ~0x00000001U;
+}
+inline ::uint64_t WindowFocusRequest::window() const {
+  // @@protoc_insertion_point(field_get:WindowFocusRequest.window)
+  return _internal_window();
+}
+inline void WindowFocusRequest::set_window(::uint64_t value) {
+  _internal_set_window(value);
+  _impl_._has_bits_[0] |= 0x00000001U;
+  // @@protoc_insertion_point(field_set:WindowFocusRequest.window)
+}
+inline ::uint64_t WindowFocusRequest::_internal_window() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.window_;
+}
+inline void WindowFocusRequest::_internal_set_window(::uint64_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.window_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// WindowReorderRequest
+
+// repeated uint64 windows = 1;
+inline int WindowReorderRequest::_internal_windows_size() const {
+  return _internal_windows().size();
+}
+inline int WindowReorderRequest::windows_size() const {
+  return _internal_windows_size();
+}
+inline void WindowReorderRequest::clear_windows() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.windows_.Clear();
+}
+inline ::uint64_t WindowReorderRequest::windows(int index) const {
+  // @@protoc_insertion_point(field_get:WindowReorderRequest.windows)
+  return _internal_windows().Get(index);
+}
+inline void WindowReorderRequest::set_windows(int index, ::uint64_t value) {
+  _internal_mutable_windows()->Set(index, value);
+  // @@protoc_insertion_point(field_set:WindowReorderRequest.windows)
+}
+inline void WindowReorderRequest::add_windows(::uint64_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _internal_mutable_windows()->Add(value);
+  // @@protoc_insertion_point(field_add:WindowReorderRequest.windows)
+}
+inline const ::google::protobuf::RepeatedField<::uint64_t>& WindowReorderRequest::windows() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:WindowReorderRequest.windows)
+  return _internal_windows();
+}
+inline ::google::protobuf::RepeatedField<::uint64_t>* PROTOBUF_NONNULL WindowReorderRequest::mutable_windows()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable_list:WindowReorderRequest.windows)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_windows();
+}
+inline const ::google::protobuf::RepeatedField<::uint64_t>&
+WindowReorderRequest::_internal_windows() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.windows_;
+}
+inline ::google::protobuf::RepeatedField<::uint64_t>* PROTOBUF_NONNULL
+WindowReorderRequest::_internal_mutable_windows() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.windows_;
+}
+
+// -------------------------------------------------------------------
+
+// WindowMapReply
+
+// uint64 window = 1;
+inline void WindowMapReply::clear_window() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.window_ = ::uint64_t{0u};
+  _impl_._has_bits_[0] &= ~0x00000001U;
+}
+inline ::uint64_t WindowMapReply::window() const {
+  // @@protoc_insertion_point(field_get:WindowMapReply.window)
+  return _internal_window();
+}
+inline void WindowMapReply::set_window(::uint64_t value) {
+  _internal_set_window(value);
+  _impl_._has_bits_[0] |= 0x00000001U;
+  // @@protoc_insertion_point(field_set:WindowMapReply.window)
+}
+inline ::uint64_t WindowMapReply::_internal_window() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.window_;
+}
+inline void WindowMapReply::_internal_set_window(::uint64_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.window_ = value;
+}
+
+// uint32 x = 2;
+inline void WindowMapReply::clear_x() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.x_ = 0u;
+  _impl_._has_bits_[0] &= ~0x00000002U;
+}
+inline ::uint32_t WindowMapReply::x() const {
+  // @@protoc_insertion_point(field_get:WindowMapReply.x)
+  return _internal_x();
+}
+inline void WindowMapReply::set_x(::uint32_t value) {
+  _internal_set_x(value);
+  _impl_._has_bits_[0] |= 0x00000002U;
+  // @@protoc_insertion_point(field_set:WindowMapReply.x)
+}
+inline ::uint32_t WindowMapReply::_internal_x() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.x_;
+}
+inline void WindowMapReply::_internal_set_x(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.x_ = value;
+}
+
+// uint32 y = 3;
+inline void WindowMapReply::clear_y() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.y_ = 0u;
+  _impl_._has_bits_[0] &= ~0x00000004U;
+}
+inline ::uint32_t WindowMapReply::y() const {
+  // @@protoc_insertion_point(field_get:WindowMapReply.y)
+  return _internal_y();
+}
+inline void WindowMapReply::set_y(::uint32_t value) {
+  _internal_set_y(value);
+  _impl_._has_bits_[0] |= 0x00000004U;
+  // @@protoc_insertion_point(field_set:WindowMapReply.y)
+}
+inline ::uint32_t WindowMapReply::_internal_y() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.y_;
+}
+inline void WindowMapReply::_internal_set_y(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.y_ = value;
+}
+
+// uint32 width = 4;
+inline void WindowMapReply::clear_width() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.width_ = 0u;
+  _impl_._has_bits_[0] &= ~0x00000008U;
+}
+inline ::uint32_t WindowMapReply::width() const {
+  // @@protoc_insertion_point(field_get:WindowMapReply.width)
+  return _internal_width();
+}
+inline void WindowMapReply::set_width(::uint32_t value) {
+  _internal_set_width(value);
+  _impl_._has_bits_[0] |= 0x00000008U;
+  // @@protoc_insertion_point(field_set:WindowMapReply.width)
+}
+inline ::uint32_t WindowMapReply::_internal_width() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.width_;
+}
+inline void WindowMapReply::_internal_set_width(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.width_ = value;
+}
+
+// uint32 height = 5;
+inline void WindowMapReply::clear_height() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.height_ = 0u;
+  _impl_._has_bits_[0] &= ~0x00000010U;
+}
+inline ::uint32_t WindowMapReply::height() const {
+  // @@protoc_insertion_point(field_get:WindowMapReply.height)
+  return _internal_height();
+}
+inline void WindowMapReply::set_height(::uint32_t value) {
+  _internal_set_height(value);
+  _impl_._has_bits_[0] |= 0x00000010U;
+  // @@protoc_insertion_point(field_set:WindowMapReply.height)
+}
+inline ::uint32_t WindowMapReply::_internal_height() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.height_;
+}
+inline void WindowMapReply::_internal_set_height(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.height_ = value;
+}
+
+// bool visible = 6;
+inline void WindowMapReply::clear_visible() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.visible_ = false;
+  _impl_._has_bits_[0] &= ~0x00000020U;
+}
+inline bool WindowMapReply::visible() const {
+  // @@protoc_insertion_point(field_get:WindowMapReply.visible)
+  return _internal_visible();
+}
+inline void WindowMapReply::set_visible(bool value) {
+  _internal_set_visible(value);
+  _impl_._has_bits_[0] |= 0x00000020U;
+  // @@protoc_insertion_point(field_set:WindowMapReply.visible)
+}
+inline bool WindowMapReply::_internal_visible() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.visible_;
+}
+inline void WindowMapReply::_internal_set_visible(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.visible_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// DataSegment
 
 // .WindowRequest window_request = 1;
-inline bool Packet::has_window_request() const {
+inline bool DataSegment::has_window_request() const {
   return data_case() == kWindowRequest;
 }
-inline bool Packet::_internal_has_window_request() const {
+inline bool DataSegment::_internal_has_window_request() const {
   return data_case() == kWindowRequest;
 }
-inline void Packet::set_has_window_request() {
+inline void DataSegment::set_has_window_request() {
   _impl_._oneof_case_[0] = kWindowRequest;
 }
-inline void Packet::clear_window_request() {
+inline void DataSegment::clear_window_request() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (data_case() == kWindowRequest) {
     if (GetArena() == nullptr) {
@@ -539,11 +3358,11 @@ inline void Packet::clear_window_request() {
     clear_has_data();
   }
 }
-inline ::WindowRequest* PROTOBUF_NULLABLE Packet::release_window_request() {
-  // @@protoc_insertion_point(field_release:Packet.window_request)
+inline ::WindowRequest* PROTOBUF_NULLABLE DataSegment::release_window_request() {
+  // @@protoc_insertion_point(field_release:DataSegment.window_request)
   if (data_case() == kWindowRequest) {
     clear_has_data();
-    auto* temp = _impl_.data_.window_request_;
+    auto* temp = reinterpret_cast<::WindowRequest*>(_impl_.data_.window_request_);
     if (GetArena() != nullptr) {
       temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
     }
@@ -553,25 +3372,25 @@ inline ::WindowRequest* PROTOBUF_NULLABLE Packet::release_window_request() {
     return nullptr;
   }
 }
-inline const ::WindowRequest& Packet::_internal_window_request() const {
-  return data_case() == kWindowRequest ? *_impl_.data_.window_request_ : reinterpret_cast<::WindowRequest&>(::_WindowRequest_default_instance_);
+inline const ::WindowRequest& DataSegment::_internal_window_request() const {
+  return data_case() == kWindowRequest ? *reinterpret_cast<::WindowRequest*>(_impl_.data_.window_request_) : reinterpret_cast<::WindowRequest&>(::_WindowRequest_default_instance_);
 }
-inline const ::WindowRequest& Packet::window_request() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:Packet.window_request)
+inline const ::WindowRequest& DataSegment::window_request() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:DataSegment.window_request)
   return _internal_window_request();
 }
-inline ::WindowRequest* PROTOBUF_NULLABLE Packet::unsafe_arena_release_window_request() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:Packet.window_request)
+inline ::WindowRequest* PROTOBUF_NULLABLE DataSegment::unsafe_arena_release_window_request() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:DataSegment.window_request)
   if (data_case() == kWindowRequest) {
     clear_has_data();
-    auto* temp = _impl_.data_.window_request_;
+    auto* temp = reinterpret_cast<::WindowRequest*>(_impl_.data_.window_request_);
     _impl_.data_.window_request_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline void Packet::unsafe_arena_set_allocated_window_request(
+inline void DataSegment::unsafe_arena_set_allocated_window_request(
     ::WindowRequest* PROTOBUF_NULLABLE value) {
   // We rely on the oneof clear method to free the earlier contents
   // of this oneof. We can directly use the pointer we're given to
@@ -579,41 +3398,756 @@ inline void Packet::unsafe_arena_set_allocated_window_request(
   clear_data();
   if (value) {
     set_has_window_request();
-    _impl_.data_.window_request_ = value;
+    _impl_.data_.window_request_ = reinterpret_cast<::google::protobuf::Message*>(value);
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Packet.window_request)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:DataSegment.window_request)
 }
-inline ::WindowRequest* PROTOBUF_NONNULL Packet::_internal_mutable_window_request() {
+inline ::WindowRequest* PROTOBUF_NONNULL DataSegment::_internal_mutable_window_request() {
   if (data_case() != kWindowRequest) {
     clear_data();
     set_has_window_request();
-    _impl_.data_.window_request_ = 
-        ::google::protobuf::Message::DefaultConstruct<::WindowRequest>(GetArena());
+    _impl_.data_.window_request_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::WindowRequest>(GetArena()));
   }
-  return _impl_.data_.window_request_;
+  return reinterpret_cast<::WindowRequest*>(_impl_.data_.window_request_);
 }
-inline ::WindowRequest* PROTOBUF_NONNULL Packet::mutable_window_request()
+inline ::WindowRequest* PROTOBUF_NONNULL DataSegment::mutable_window_request()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::WindowRequest* _msg = _internal_mutable_window_request();
-  // @@protoc_insertion_point(field_mutable:Packet.window_request)
+  // @@protoc_insertion_point(field_mutable:DataSegment.window_request)
   return _msg;
 }
 
-inline bool Packet::has_data() const {
+// .WindowMapReply window_map_reply = 2;
+inline bool DataSegment::has_window_map_reply() const {
+  return data_case() == kWindowMapReply;
+}
+inline bool DataSegment::_internal_has_window_map_reply() const {
+  return data_case() == kWindowMapReply;
+}
+inline void DataSegment::set_has_window_map_reply() {
+  _impl_._oneof_case_[0] = kWindowMapReply;
+}
+inline void DataSegment::clear_window_map_reply() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (data_case() == kWindowMapReply) {
+    if (GetArena() == nullptr) {
+      delete _impl_.data_.window_map_reply_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.data_.window_map_reply_);
+    }
+    clear_has_data();
+  }
+}
+inline ::WindowMapReply* PROTOBUF_NULLABLE DataSegment::release_window_map_reply() {
+  // @@protoc_insertion_point(field_release:DataSegment.window_map_reply)
+  if (data_case() == kWindowMapReply) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::WindowMapReply*>(_impl_.data_.window_map_reply_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.data_.window_map_reply_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::WindowMapReply& DataSegment::_internal_window_map_reply() const {
+  return data_case() == kWindowMapReply ? *reinterpret_cast<::WindowMapReply*>(_impl_.data_.window_map_reply_) : reinterpret_cast<::WindowMapReply&>(::_WindowMapReply_default_instance_);
+}
+inline const ::WindowMapReply& DataSegment::window_map_reply() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:DataSegment.window_map_reply)
+  return _internal_window_map_reply();
+}
+inline ::WindowMapReply* PROTOBUF_NULLABLE DataSegment::unsafe_arena_release_window_map_reply() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:DataSegment.window_map_reply)
+  if (data_case() == kWindowMapReply) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::WindowMapReply*>(_impl_.data_.window_map_reply_);
+    _impl_.data_.window_map_reply_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void DataSegment::unsafe_arena_set_allocated_window_map_reply(
+    ::WindowMapReply* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_data();
+  if (value) {
+    set_has_window_map_reply();
+    _impl_.data_.window_map_reply_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:DataSegment.window_map_reply)
+}
+inline ::WindowMapReply* PROTOBUF_NONNULL DataSegment::_internal_mutable_window_map_reply() {
+  if (data_case() != kWindowMapReply) {
+    clear_data();
+    set_has_window_map_reply();
+    _impl_.data_.window_map_reply_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::WindowMapReply>(GetArena()));
+  }
+  return reinterpret_cast<::WindowMapReply*>(_impl_.data_.window_map_reply_);
+}
+inline ::WindowMapReply* PROTOBUF_NONNULL DataSegment::mutable_window_map_reply()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::WindowMapReply* _msg = _internal_mutable_window_map_reply();
+  // @@protoc_insertion_point(field_mutable:DataSegment.window_map_reply)
+  return _msg;
+}
+
+// .WindowMapRequest window_map_request = 3;
+inline bool DataSegment::has_window_map_request() const {
+  return data_case() == kWindowMapRequest;
+}
+inline bool DataSegment::_internal_has_window_map_request() const {
+  return data_case() == kWindowMapRequest;
+}
+inline void DataSegment::set_has_window_map_request() {
+  _impl_._oneof_case_[0] = kWindowMapRequest;
+}
+inline void DataSegment::clear_window_map_request() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (data_case() == kWindowMapRequest) {
+    if (GetArena() == nullptr) {
+      delete _impl_.data_.window_map_request_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.data_.window_map_request_);
+    }
+    clear_has_data();
+  }
+}
+inline ::WindowMapRequest* PROTOBUF_NULLABLE DataSegment::release_window_map_request() {
+  // @@protoc_insertion_point(field_release:DataSegment.window_map_request)
+  if (data_case() == kWindowMapRequest) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::WindowMapRequest*>(_impl_.data_.window_map_request_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.data_.window_map_request_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::WindowMapRequest& DataSegment::_internal_window_map_request() const {
+  return data_case() == kWindowMapRequest ? *reinterpret_cast<::WindowMapRequest*>(_impl_.data_.window_map_request_) : reinterpret_cast<::WindowMapRequest&>(::_WindowMapRequest_default_instance_);
+}
+inline const ::WindowMapRequest& DataSegment::window_map_request() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:DataSegment.window_map_request)
+  return _internal_window_map_request();
+}
+inline ::WindowMapRequest* PROTOBUF_NULLABLE DataSegment::unsafe_arena_release_window_map_request() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:DataSegment.window_map_request)
+  if (data_case() == kWindowMapRequest) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::WindowMapRequest*>(_impl_.data_.window_map_request_);
+    _impl_.data_.window_map_request_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void DataSegment::unsafe_arena_set_allocated_window_map_request(
+    ::WindowMapRequest* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_data();
+  if (value) {
+    set_has_window_map_request();
+    _impl_.data_.window_map_request_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:DataSegment.window_map_request)
+}
+inline ::WindowMapRequest* PROTOBUF_NONNULL DataSegment::_internal_mutable_window_map_request() {
+  if (data_case() != kWindowMapRequest) {
+    clear_data();
+    set_has_window_map_request();
+    _impl_.data_.window_map_request_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::WindowMapRequest>(GetArena()));
+  }
+  return reinterpret_cast<::WindowMapRequest*>(_impl_.data_.window_map_request_);
+}
+inline ::WindowMapRequest* PROTOBUF_NONNULL DataSegment::mutable_window_map_request()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::WindowMapRequest* _msg = _internal_mutable_window_map_request();
+  // @@protoc_insertion_point(field_mutable:DataSegment.window_map_request)
+  return _msg;
+}
+
+// .MouseMoveReply mouse_move_reply = 4;
+inline bool DataSegment::has_mouse_move_reply() const {
+  return data_case() == kMouseMoveReply;
+}
+inline bool DataSegment::_internal_has_mouse_move_reply() const {
+  return data_case() == kMouseMoveReply;
+}
+inline void DataSegment::set_has_mouse_move_reply() {
+  _impl_._oneof_case_[0] = kMouseMoveReply;
+}
+inline void DataSegment::clear_mouse_move_reply() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (data_case() == kMouseMoveReply) {
+    if (GetArena() == nullptr) {
+      delete _impl_.data_.mouse_move_reply_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.data_.mouse_move_reply_);
+    }
+    clear_has_data();
+  }
+}
+inline ::MouseMoveReply* PROTOBUF_NULLABLE DataSegment::release_mouse_move_reply() {
+  // @@protoc_insertion_point(field_release:DataSegment.mouse_move_reply)
+  if (data_case() == kMouseMoveReply) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::MouseMoveReply*>(_impl_.data_.mouse_move_reply_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.data_.mouse_move_reply_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::MouseMoveReply& DataSegment::_internal_mouse_move_reply() const {
+  return data_case() == kMouseMoveReply ? *reinterpret_cast<::MouseMoveReply*>(_impl_.data_.mouse_move_reply_) : reinterpret_cast<::MouseMoveReply&>(::_MouseMoveReply_default_instance_);
+}
+inline const ::MouseMoveReply& DataSegment::mouse_move_reply() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:DataSegment.mouse_move_reply)
+  return _internal_mouse_move_reply();
+}
+inline ::MouseMoveReply* PROTOBUF_NULLABLE DataSegment::unsafe_arena_release_mouse_move_reply() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:DataSegment.mouse_move_reply)
+  if (data_case() == kMouseMoveReply) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::MouseMoveReply*>(_impl_.data_.mouse_move_reply_);
+    _impl_.data_.mouse_move_reply_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void DataSegment::unsafe_arena_set_allocated_mouse_move_reply(
+    ::MouseMoveReply* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_data();
+  if (value) {
+    set_has_mouse_move_reply();
+    _impl_.data_.mouse_move_reply_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:DataSegment.mouse_move_reply)
+}
+inline ::MouseMoveReply* PROTOBUF_NONNULL DataSegment::_internal_mutable_mouse_move_reply() {
+  if (data_case() != kMouseMoveReply) {
+    clear_data();
+    set_has_mouse_move_reply();
+    _impl_.data_.mouse_move_reply_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::MouseMoveReply>(GetArena()));
+  }
+  return reinterpret_cast<::MouseMoveReply*>(_impl_.data_.mouse_move_reply_);
+}
+inline ::MouseMoveReply* PROTOBUF_NONNULL DataSegment::mutable_mouse_move_reply()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::MouseMoveReply* _msg = _internal_mutable_mouse_move_reply();
+  // @@protoc_insertion_point(field_mutable:DataSegment.mouse_move_reply)
+  return _msg;
+}
+
+// .MousePressReply mouse_press_reply = 5;
+inline bool DataSegment::has_mouse_press_reply() const {
+  return data_case() == kMousePressReply;
+}
+inline bool DataSegment::_internal_has_mouse_press_reply() const {
+  return data_case() == kMousePressReply;
+}
+inline void DataSegment::set_has_mouse_press_reply() {
+  _impl_._oneof_case_[0] = kMousePressReply;
+}
+inline void DataSegment::clear_mouse_press_reply() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (data_case() == kMousePressReply) {
+    if (GetArena() == nullptr) {
+      delete _impl_.data_.mouse_press_reply_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.data_.mouse_press_reply_);
+    }
+    clear_has_data();
+  }
+}
+inline ::MousePressReply* PROTOBUF_NULLABLE DataSegment::release_mouse_press_reply() {
+  // @@protoc_insertion_point(field_release:DataSegment.mouse_press_reply)
+  if (data_case() == kMousePressReply) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::MousePressReply*>(_impl_.data_.mouse_press_reply_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.data_.mouse_press_reply_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::MousePressReply& DataSegment::_internal_mouse_press_reply() const {
+  return data_case() == kMousePressReply ? *reinterpret_cast<::MousePressReply*>(_impl_.data_.mouse_press_reply_) : reinterpret_cast<::MousePressReply&>(::_MousePressReply_default_instance_);
+}
+inline const ::MousePressReply& DataSegment::mouse_press_reply() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:DataSegment.mouse_press_reply)
+  return _internal_mouse_press_reply();
+}
+inline ::MousePressReply* PROTOBUF_NULLABLE DataSegment::unsafe_arena_release_mouse_press_reply() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:DataSegment.mouse_press_reply)
+  if (data_case() == kMousePressReply) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::MousePressReply*>(_impl_.data_.mouse_press_reply_);
+    _impl_.data_.mouse_press_reply_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void DataSegment::unsafe_arena_set_allocated_mouse_press_reply(
+    ::MousePressReply* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_data();
+  if (value) {
+    set_has_mouse_press_reply();
+    _impl_.data_.mouse_press_reply_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:DataSegment.mouse_press_reply)
+}
+inline ::MousePressReply* PROTOBUF_NONNULL DataSegment::_internal_mutable_mouse_press_reply() {
+  if (data_case() != kMousePressReply) {
+    clear_data();
+    set_has_mouse_press_reply();
+    _impl_.data_.mouse_press_reply_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::MousePressReply>(GetArena()));
+  }
+  return reinterpret_cast<::MousePressReply*>(_impl_.data_.mouse_press_reply_);
+}
+inline ::MousePressReply* PROTOBUF_NONNULL DataSegment::mutable_mouse_press_reply()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::MousePressReply* _msg = _internal_mutable_mouse_press_reply();
+  // @@protoc_insertion_point(field_mutable:DataSegment.mouse_press_reply)
+  return _msg;
+}
+
+// .WindowFocusReply window_focus_reply = 6;
+inline bool DataSegment::has_window_focus_reply() const {
+  return data_case() == kWindowFocusReply;
+}
+inline bool DataSegment::_internal_has_window_focus_reply() const {
+  return data_case() == kWindowFocusReply;
+}
+inline void DataSegment::set_has_window_focus_reply() {
+  _impl_._oneof_case_[0] = kWindowFocusReply;
+}
+inline void DataSegment::clear_window_focus_reply() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (data_case() == kWindowFocusReply) {
+    if (GetArena() == nullptr) {
+      delete _impl_.data_.window_focus_reply_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.data_.window_focus_reply_);
+    }
+    clear_has_data();
+  }
+}
+inline ::WindowFocusReply* PROTOBUF_NULLABLE DataSegment::release_window_focus_reply() {
+  // @@protoc_insertion_point(field_release:DataSegment.window_focus_reply)
+  if (data_case() == kWindowFocusReply) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::WindowFocusReply*>(_impl_.data_.window_focus_reply_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.data_.window_focus_reply_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::WindowFocusReply& DataSegment::_internal_window_focus_reply() const {
+  return data_case() == kWindowFocusReply ? *reinterpret_cast<::WindowFocusReply*>(_impl_.data_.window_focus_reply_) : reinterpret_cast<::WindowFocusReply&>(::_WindowFocusReply_default_instance_);
+}
+inline const ::WindowFocusReply& DataSegment::window_focus_reply() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:DataSegment.window_focus_reply)
+  return _internal_window_focus_reply();
+}
+inline ::WindowFocusReply* PROTOBUF_NULLABLE DataSegment::unsafe_arena_release_window_focus_reply() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:DataSegment.window_focus_reply)
+  if (data_case() == kWindowFocusReply) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::WindowFocusReply*>(_impl_.data_.window_focus_reply_);
+    _impl_.data_.window_focus_reply_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void DataSegment::unsafe_arena_set_allocated_window_focus_reply(
+    ::WindowFocusReply* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_data();
+  if (value) {
+    set_has_window_focus_reply();
+    _impl_.data_.window_focus_reply_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:DataSegment.window_focus_reply)
+}
+inline ::WindowFocusReply* PROTOBUF_NONNULL DataSegment::_internal_mutable_window_focus_reply() {
+  if (data_case() != kWindowFocusReply) {
+    clear_data();
+    set_has_window_focus_reply();
+    _impl_.data_.window_focus_reply_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::WindowFocusReply>(GetArena()));
+  }
+  return reinterpret_cast<::WindowFocusReply*>(_impl_.data_.window_focus_reply_);
+}
+inline ::WindowFocusReply* PROTOBUF_NONNULL DataSegment::mutable_window_focus_reply()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::WindowFocusReply* _msg = _internal_mutable_window_focus_reply();
+  // @@protoc_insertion_point(field_mutable:DataSegment.window_focus_reply)
+  return _msg;
+}
+
+// .WindowReorderRequest window_reorder_request = 7;
+inline bool DataSegment::has_window_reorder_request() const {
+  return data_case() == kWindowReorderRequest;
+}
+inline bool DataSegment::_internal_has_window_reorder_request() const {
+  return data_case() == kWindowReorderRequest;
+}
+inline void DataSegment::set_has_window_reorder_request() {
+  _impl_._oneof_case_[0] = kWindowReorderRequest;
+}
+inline void DataSegment::clear_window_reorder_request() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (data_case() == kWindowReorderRequest) {
+    if (GetArena() == nullptr) {
+      delete _impl_.data_.window_reorder_request_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.data_.window_reorder_request_);
+    }
+    clear_has_data();
+  }
+}
+inline ::WindowReorderRequest* PROTOBUF_NULLABLE DataSegment::release_window_reorder_request() {
+  // @@protoc_insertion_point(field_release:DataSegment.window_reorder_request)
+  if (data_case() == kWindowReorderRequest) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::WindowReorderRequest*>(_impl_.data_.window_reorder_request_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.data_.window_reorder_request_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::WindowReorderRequest& DataSegment::_internal_window_reorder_request() const {
+  return data_case() == kWindowReorderRequest ? *reinterpret_cast<::WindowReorderRequest*>(_impl_.data_.window_reorder_request_) : reinterpret_cast<::WindowReorderRequest&>(::_WindowReorderRequest_default_instance_);
+}
+inline const ::WindowReorderRequest& DataSegment::window_reorder_request() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:DataSegment.window_reorder_request)
+  return _internal_window_reorder_request();
+}
+inline ::WindowReorderRequest* PROTOBUF_NULLABLE DataSegment::unsafe_arena_release_window_reorder_request() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:DataSegment.window_reorder_request)
+  if (data_case() == kWindowReorderRequest) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::WindowReorderRequest*>(_impl_.data_.window_reorder_request_);
+    _impl_.data_.window_reorder_request_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void DataSegment::unsafe_arena_set_allocated_window_reorder_request(
+    ::WindowReorderRequest* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_data();
+  if (value) {
+    set_has_window_reorder_request();
+    _impl_.data_.window_reorder_request_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:DataSegment.window_reorder_request)
+}
+inline ::WindowReorderRequest* PROTOBUF_NONNULL DataSegment::_internal_mutable_window_reorder_request() {
+  if (data_case() != kWindowReorderRequest) {
+    clear_data();
+    set_has_window_reorder_request();
+    _impl_.data_.window_reorder_request_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::WindowReorderRequest>(GetArena()));
+  }
+  return reinterpret_cast<::WindowReorderRequest*>(_impl_.data_.window_reorder_request_);
+}
+inline ::WindowReorderRequest* PROTOBUF_NONNULL DataSegment::mutable_window_reorder_request()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::WindowReorderRequest* _msg = _internal_mutable_window_reorder_request();
+  // @@protoc_insertion_point(field_mutable:DataSegment.window_reorder_request)
+  return _msg;
+}
+
+// .WindowFocusRequest window_focus_request = 8;
+inline bool DataSegment::has_window_focus_request() const {
+  return data_case() == kWindowFocusRequest;
+}
+inline bool DataSegment::_internal_has_window_focus_request() const {
+  return data_case() == kWindowFocusRequest;
+}
+inline void DataSegment::set_has_window_focus_request() {
+  _impl_._oneof_case_[0] = kWindowFocusRequest;
+}
+inline void DataSegment::clear_window_focus_request() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (data_case() == kWindowFocusRequest) {
+    if (GetArena() == nullptr) {
+      delete _impl_.data_.window_focus_request_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.data_.window_focus_request_);
+    }
+    clear_has_data();
+  }
+}
+inline ::WindowFocusRequest* PROTOBUF_NULLABLE DataSegment::release_window_focus_request() {
+  // @@protoc_insertion_point(field_release:DataSegment.window_focus_request)
+  if (data_case() == kWindowFocusRequest) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::WindowFocusRequest*>(_impl_.data_.window_focus_request_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.data_.window_focus_request_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::WindowFocusRequest& DataSegment::_internal_window_focus_request() const {
+  return data_case() == kWindowFocusRequest ? *reinterpret_cast<::WindowFocusRequest*>(_impl_.data_.window_focus_request_) : reinterpret_cast<::WindowFocusRequest&>(::_WindowFocusRequest_default_instance_);
+}
+inline const ::WindowFocusRequest& DataSegment::window_focus_request() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:DataSegment.window_focus_request)
+  return _internal_window_focus_request();
+}
+inline ::WindowFocusRequest* PROTOBUF_NULLABLE DataSegment::unsafe_arena_release_window_focus_request() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:DataSegment.window_focus_request)
+  if (data_case() == kWindowFocusRequest) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::WindowFocusRequest*>(_impl_.data_.window_focus_request_);
+    _impl_.data_.window_focus_request_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void DataSegment::unsafe_arena_set_allocated_window_focus_request(
+    ::WindowFocusRequest* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_data();
+  if (value) {
+    set_has_window_focus_request();
+    _impl_.data_.window_focus_request_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:DataSegment.window_focus_request)
+}
+inline ::WindowFocusRequest* PROTOBUF_NONNULL DataSegment::_internal_mutable_window_focus_request() {
+  if (data_case() != kWindowFocusRequest) {
+    clear_data();
+    set_has_window_focus_request();
+    _impl_.data_.window_focus_request_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::WindowFocusRequest>(GetArena()));
+  }
+  return reinterpret_cast<::WindowFocusRequest*>(_impl_.data_.window_focus_request_);
+}
+inline ::WindowFocusRequest* PROTOBUF_NONNULL DataSegment::mutable_window_focus_request()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::WindowFocusRequest* _msg = _internal_mutable_window_focus_request();
+  // @@protoc_insertion_point(field_mutable:DataSegment.window_focus_request)
+  return _msg;
+}
+
+// .WindowRegisterBorderRequest window_register_border_request = 9;
+inline bool DataSegment::has_window_register_border_request() const {
+  return data_case() == kWindowRegisterBorderRequest;
+}
+inline bool DataSegment::_internal_has_window_register_border_request() const {
+  return data_case() == kWindowRegisterBorderRequest;
+}
+inline void DataSegment::set_has_window_register_border_request() {
+  _impl_._oneof_case_[0] = kWindowRegisterBorderRequest;
+}
+inline void DataSegment::clear_window_register_border_request() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (data_case() == kWindowRegisterBorderRequest) {
+    if (GetArena() == nullptr) {
+      delete _impl_.data_.window_register_border_request_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.data_.window_register_border_request_);
+    }
+    clear_has_data();
+  }
+}
+inline ::WindowRegisterBorderRequest* PROTOBUF_NULLABLE DataSegment::release_window_register_border_request() {
+  // @@protoc_insertion_point(field_release:DataSegment.window_register_border_request)
+  if (data_case() == kWindowRegisterBorderRequest) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::WindowRegisterBorderRequest*>(_impl_.data_.window_register_border_request_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.data_.window_register_border_request_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::WindowRegisterBorderRequest& DataSegment::_internal_window_register_border_request() const {
+  return data_case() == kWindowRegisterBorderRequest ? *reinterpret_cast<::WindowRegisterBorderRequest*>(_impl_.data_.window_register_border_request_) : reinterpret_cast<::WindowRegisterBorderRequest&>(::_WindowRegisterBorderRequest_default_instance_);
+}
+inline const ::WindowRegisterBorderRequest& DataSegment::window_register_border_request() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:DataSegment.window_register_border_request)
+  return _internal_window_register_border_request();
+}
+inline ::WindowRegisterBorderRequest* PROTOBUF_NULLABLE DataSegment::unsafe_arena_release_window_register_border_request() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:DataSegment.window_register_border_request)
+  if (data_case() == kWindowRegisterBorderRequest) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::WindowRegisterBorderRequest*>(_impl_.data_.window_register_border_request_);
+    _impl_.data_.window_register_border_request_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void DataSegment::unsafe_arena_set_allocated_window_register_border_request(
+    ::WindowRegisterBorderRequest* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_data();
+  if (value) {
+    set_has_window_register_border_request();
+    _impl_.data_.window_register_border_request_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:DataSegment.window_register_border_request)
+}
+inline ::WindowRegisterBorderRequest* PROTOBUF_NONNULL DataSegment::_internal_mutable_window_register_border_request() {
+  if (data_case() != kWindowRegisterBorderRequest) {
+    clear_data();
+    set_has_window_register_border_request();
+    _impl_.data_.window_register_border_request_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::WindowRegisterBorderRequest>(GetArena()));
+  }
+  return reinterpret_cast<::WindowRegisterBorderRequest*>(_impl_.data_.window_register_border_request_);
+}
+inline ::WindowRegisterBorderRequest* PROTOBUF_NONNULL DataSegment::mutable_window_register_border_request()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::WindowRegisterBorderRequest* _msg = _internal_mutable_window_register_border_request();
+  // @@protoc_insertion_point(field_mutable:DataSegment.window_register_border_request)
+  return _msg;
+}
+
+inline bool DataSegment::has_data() const {
   return data_case() != DATA_NOT_SET;
 }
-inline void Packet::clear_has_data() {
+inline void DataSegment::clear_has_data() {
   _impl_._oneof_case_[0] = DATA_NOT_SET;
 }
-inline Packet::DataCase Packet::data_case() const {
-  return Packet::DataCase(_impl_._oneof_case_[0]);
+inline DataSegment::DataCase DataSegment::data_case() const {
+  return DataSegment::DataCase(_impl_._oneof_case_[0]);
 }
+// -------------------------------------------------------------------
+
+// Packet
+
+// repeated .DataSegment segments = 1;
+inline int Packet::_internal_segments_size() const {
+  return _internal_segments().size();
+}
+inline int Packet::segments_size() const {
+  return _internal_segments_size();
+}
+inline void Packet::clear_segments() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.segments_.Clear();
+}
+inline ::DataSegment* PROTOBUF_NONNULL Packet::mutable_segments(int index)
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable:Packet.segments)
+  return _internal_mutable_segments()->Mutable(index);
+}
+inline ::google::protobuf::RepeatedPtrField<::DataSegment>* PROTOBUF_NONNULL Packet::mutable_segments()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable_list:Packet.segments)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_segments();
+}
+inline const ::DataSegment& Packet::segments(int index) const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Packet.segments)
+  return _internal_segments().Get(index);
+}
+inline ::DataSegment* PROTOBUF_NONNULL Packet::add_segments()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::DataSegment* _add = _internal_mutable_segments()->Add();
+  // @@protoc_insertion_point(field_add:Packet.segments)
+  return _add;
+}
+inline const ::google::protobuf::RepeatedPtrField<::DataSegment>& Packet::segments() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:Packet.segments)
+  return _internal_segments();
+}
+inline const ::google::protobuf::RepeatedPtrField<::DataSegment>&
+Packet::_internal_segments() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.segments_;
+}
+inline ::google::protobuf::RepeatedPtrField<::DataSegment>* PROTOBUF_NONNULL
+Packet::_internal_mutable_segments() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.segments_;
+}
+
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif  // __GNUC__
 
 // @@protoc_insertion_point(namespace_scope)
 
+
+namespace google {
+namespace protobuf {
+
+template <>
+struct is_proto_enum<::MouseButtonState> : std::true_type {};
+template <>
+inline const EnumDescriptor* PROTOBUF_NONNULL GetEnumDescriptor<::MouseButtonState>() {
+  return ::MouseButtonState_descriptor();
+}
+
+}  // namespace protobuf
+}  // namespace google
 
 // @@protoc_insertion_point(global_scope)
 

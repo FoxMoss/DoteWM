@@ -9,6 +9,7 @@
 #include <X11/extensions/Xcomposite.h>
 #include <X11/extensions/Xfixes.h>
 #include <X11/extensions/shape.h>
+#include <cstdlib>
 #include <mutex>
 
 #undef Status
@@ -29,6 +30,7 @@
 #include <unordered_map>
 #include <vector>
 #include "main.hpp"
+#include "src/protobuf/windowmanager.pb.h"
 
 #define GLX_CONTEXT_MAJOR_VERSION_ARB 0x2091
 #define GLX_CONTEXT_MINOR_VERSION_ARB 0x2092
@@ -136,24 +138,27 @@ int x11_error_handler(Display* display, XErrorEvent* event) {
   return 0;
 }
 
-// grpc::Status WindowManagerServiceImpl::RegisterBaseWindow(
-//     grpc::ServerContext* context,
-//     const WindowRequest* request,
-//     NoneReply* reply) {
-//   Window base_window = request->window();
-//
-//   printf("attempting to register\n");
-//
-//   // https://stackoverflow.com/questions/17527621/is-stdmutex-fair this
-//   // should probably be chill to do like 90% of the time. we might loose a
-//   // couple of events but that's fine
-//   std::unique_lock<std::mutex> ipc_lock_gaurd(parent->ipc_lock);
-//   parent->ipc_cv.wait(ipc_lock_gaurd);
-//   parent->register_base_window(base_window);
-//   ipc_lock_gaurd.unlock();
-//
-//   return grpc::Status::OK;
-// }
+void NokoWindowManager::configure_window(Window window,
+                                         uint32_t x,
+                                         uint32_t y,
+                                         uint32_t width,
+                                         uint32_t height) {
+  XWindowChanges changes;
+  changes.x = x;
+  changes.y = y;
+  changes.width = width;
+  changes.height = height;
+  XConfigureWindow(display, window, CWX | CWY | CWWidth | CWHeight, &changes);
+}
+
+void NokoWindowManager::register_border(Window window,
+                                        int32_t x,
+                                        int32_t y,
+                                        int32_t width,
+                                        int32_t height) {
+  if (!base_window.has_value())
+    return;
+}
 
 void NokoWindowManager::register_base_window(Window base) {
   base_window = base;
@@ -243,14 +248,14 @@ void NokoWindowManager::run() {
     while (process_events())
       ;
     glClearColor(1, 1, 1, 1);
-    glClearDepth(1.0);
+    glClearDepth(1.2);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    ipc_step();
     for (auto window : windows) {
       render_window(window.second.window);
     }
 
-    ipc_step();
     glXSwapBuffers(display, output_window);
 
     // render our windows
@@ -290,7 +295,7 @@ void NokoWindowManager::render_window(unsigned window_id) {
 
   // calculate window depth
 
-  float depth = 0.1;
+  float depth = window->depth;
   if (base_window.has_value() && window->window == base_window.value()) {
     depth = 0.9;
   }
@@ -347,7 +352,7 @@ bool NokoWindowManager::process_events() {
       // this is saying we want focus change and button events from the
       // window
 
-      XSelectInput(display, x_window, FocusChangeMask);
+      XSelectInput(display, x_window, FocusChangeMask | PointerMotionMask);
       XGrabButton(display, AnyButton, AnyModifier, x_window, 1,
                   ButtonPressMask | ButtonReleaseMask | ButtonMotionMask,
                   GrabModeSync, GrabModeSync, 0, 0);
@@ -377,8 +382,6 @@ bool NokoWindowManager::process_events() {
 
       window->window = x_window;
 
-      int was_visible = window->visible;
-
       // copy everything from the map
       XWindowAttributes attributes;
 
@@ -389,32 +392,29 @@ bool NokoWindowManager::process_events() {
       window->x = attributes.x;
       window->y = attributes.y;
 
+      window->depth = 0.1;
+
       window->width = attributes.width;
       window->height = attributes.height;
 
-      char* name = NULL;
+      // serialize data to client if window not the base window
+      if (!base_window.has_value() || base_window.value() != window->window) {
+        Packet packet;
+        auto segment = packet.add_segments();
+        auto reply = segment->mutable_window_map_reply();
+        reply->set_window(window->window);
+        reply->set_visible(window->visible);
+        reply->set_x(window->x);
+        reply->set_y(window->y);
+        reply->set_width(window->width);
+        reply->set_height(window->height);
 
-      if (XFetchName(display, x_window, &name) > 0) {
-        printf("%s\n", name);
-        XFree(name);
-      }
+        size_t len = packet.ByteSizeLong();
+        char* buf = (char*)malloc(len);
+        packet.SerializeToArray(buf, len);
 
-      // if window wasn't visible before but is now, center it to the
-      // cursor position
-
-      if (window->visible && !was_visible && !window->x && !window->y) {
-        __attribute__((unused)) Window rw, cw;  // root_return, child_return
-        __attribute__((unused)) int wx, wy;     // win_x_return, win_y_return
-        __attribute__((unused)) unsigned int mask;  // mask_return
-
-        int x, y;
-        XQueryPointer(display, window->window, &rw, &cw, &x, &y, &wx, &wy,
-                      &mask);
-
-        window->x = x - window->width / 2;
-        window->y = y - window->height / 2;
-
-        XMoveWindow(display, window->window, window->x, window->y);
+        nn_send(ipc_sock, buf, len, 0);
+        free(buf);
       }
 
       // we're updating the pixel coords
@@ -452,15 +452,11 @@ bool NokoWindowManager::process_events() {
 
       update_client_list();
     } else if (type == ButtonPress || type == ButtonRelease) {
-      Window x_window = -1;
+      Window x_window = event.xbutton.window;
 
-      if (std::find(blacklisted_windows.begin(), blacklisted_windows.end(),
-                    x_window) == blacklisted_windows.end())
-
-        if (type == ButtonPress) {
-          x_window = event.xbutton.window;
-          focus_window(x_window);
-        }
+      if (type == ButtonPress) {
+        focus_window(x_window);
+      }
 
       // pass the event on to the client
       XAllowEvents(display, ReplayPointer, CurrentTime);
@@ -468,12 +464,76 @@ bool NokoWindowManager::process_events() {
       // if we shouldn't pass the event on to the client, we still need to
       // sync the pointer or else we hang
       // XAllowEvents(wm->display, SyncPointer, CurrentTime);
+
+      if (base_window.has_value()) {
+        Packet packet;
+        auto segment = packet.add_segments();
+        auto reply = segment->mutable_mouse_press_reply();
+        reply->set_x(event.xbutton.x);
+        reply->set_y(event.xbutton.y);
+        reply->set_state(
+            (type == ButtonPress
+                 ? (event.xbutton.button == Button1 ? MOUSE_LEFT_DOWN
+                                                    : MOUSE_RIGHT_DOWN)
+                 : (event.xbutton.button == Button1 ? MOUSE_LEFT_UP
+                                                    : MOUSE_RIGHT_UP)));
+
+        size_t len = packet.ByteSizeLong();
+        char* buf = (char*)malloc(len);
+        packet.SerializeToArray(buf, len);
+
+        nn_send(ipc_sock, buf, len, 0);
+        free(buf);
+      }
+
     } else if (type == KeyPress || type == KeyRelease) {
       // TODO
     }
   }
 done:
   return events_left;
+}
+
+void NokoWindowManager::update_client_list() {
+  Window* client_list = (Window*)malloc(windows.size() * sizeof(Window));
+
+  size_t i = 0;
+  for (auto window : windows) {
+    client_list[i] = window.second.window;
+    i++;
+  }
+
+  XChangeProperty(display, root_window, client_list_atom, XA_WINDOW, 32,
+                  PropModeReplace, (unsigned char*)client_list, windows.size());
+  free(client_list);
+}
+
+void NokoWindowManager::focus_window(Window window_id) {
+  Window window = windows[window_id].window;
+
+  if (base_window.has_value()) {
+    XLowerWindow(display, base_window.value());
+  }
+
+  if (base_window.has_value() && window == base_window.value())
+    return;
+
+  XSetInputFocus(display, window, RevertToParent, CurrentTime);
+  XMapRaised(display, window);
+
+  printf("sending focus!\n");
+
+  Packet packet;
+  auto segment = packet.add_segments();
+  auto reply = segment->mutable_window_focus_reply();
+  reply->set_window(window_id);
+
+  size_t len = packet.ByteSizeLong();
+  char* buf = (char*)malloc(len);
+  packet.SerializeToArray(buf, len);
+
+  nn_send(ipc_sock, buf, len, 0);
+  free(buf);
 }
 
 std::optional<NokoWindowManager*> NokoWindowManager::create() {
