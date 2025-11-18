@@ -4,7 +4,7 @@
 namespace minimal {
 
 // Create and register the custom scheme handler factory.
-void RegisterSchemeHandlerFactory();
+void RegisterSchemeHandlerFactory(int sock);
 
 }  // namespace minimal
 

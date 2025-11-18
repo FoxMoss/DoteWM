@@ -12,6 +12,7 @@
 #include <X11/extensions/shape.h>
 #include <cstdlib>
 #include <mutex>
+#include <string>
 #include <thread>
 
 #define X11_Success 0
@@ -268,30 +269,6 @@ void NokoWindowManager::run() {
     }
 
     glXSwapBuffers(display, output_window);
-
-    // Packet packet;
-    // auto segment = packet.add_segments();
-    //
-    // auto reply = segment->mutable_render_reply();
-    // reply->set_last_frame_observered(0);
-    //
-    // size_t len = packet.ByteSizeLong();
-    // char* buf = (char*)malloc(len);
-    // packet.SerializeToArray(buf, len);
-    //
-    // nn_send(ipc_sock, buf, len, 0);
-    // free(buf);
-    //
-    // render our windows
-
-    // for (int i = 0; i < window_count; i++) {
-    //   render_window(wm, i, average_delta);
-    // }
-    //
-    // float delta = (float)cwm_swap(&wm->cwm) / 1000000;
-    //
-    // average_delta += delta;
-    // average_delta /= 2;
   }
 }
 
@@ -464,6 +441,19 @@ bool NokoWindowManager::process_events() {
         window->width = attributes.width;
         window->height = attributes.height;
 
+        Atom actual_type;
+        int actual_format;
+        unsigned long nitems, bytes_after;
+        unsigned char* prop = nullptr;
+
+        if (XGetWindowProperty(display, window->window, XA_WM_NAME, 0, 1024,
+                               false, XA_STRING, &actual_type, &actual_format,
+                               &nitems, &bytes_after, &prop) == X11_Success &&
+            prop) {
+          window->name = std::string((char*)prop);
+          printf("set name %s\n", prop);
+          XFree(prop);
+        }
         // serialize data to client if window not the base window
         if (!base_window.has_value() || base_window.value() != window->window) {
           Packet packet;
@@ -475,6 +465,9 @@ bool NokoWindowManager::process_events() {
           reply->set_y(window->y);
           reply->set_width(window->width);
           reply->set_height(window->height);
+          if (window->name.has_value()) {
+            reply->set_name(window->name.value());
+          }
 
           size_t len = packet.ByteSizeLong();
           char* buf = (char*)malloc(len);

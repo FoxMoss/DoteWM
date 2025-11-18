@@ -12,6 +12,7 @@
 #include <X11/extensions/shape.h>
 #include <nn.h>
 #include <pair.h>
+#include <sys/inotify.h>
 #include <unistd.h>
 #include <condition_variable>
 #include <cstddef>
@@ -56,6 +57,8 @@ struct NokoWindow {
   int exists;
   Window window;
 
+  std::optional<std::string> name;
+
   int visible;
 
   float opacity;
@@ -79,6 +82,37 @@ class NokoWindowManager {
   void run();
 
   int ipc_step() {
+    constexpr size_t inotify_buf_len =
+        (1024 * (sizeof(struct inotify_event) + 16));
+
+    char inotify_buf[inotify_buf_len];
+    int len, i = 0;
+
+    len = read(inotify_fd, inotify_buf, inotify_buf_len);
+
+    if (i < len) {
+      // just grab the first event because frankly we dont gaf
+      struct inotify_event* event;
+
+      event = (struct inotify_event*)&inotify_buf[i];
+
+      if (watched_files.find(event->wd) != watched_files.end()) {
+        printf("file updated %s\n", watched_files[event->wd].c_str());
+      }
+
+      Packet packet;
+      auto segment = packet.add_segments();
+      // initialize
+      segment->mutable_reload_reply();
+
+      size_t len = packet.ByteSizeLong();
+      char* buf = (char*)malloc(len);
+      packet.SerializeToArray(buf, len);
+
+      nn_send(ipc_sock, buf, len, 0);
+      free(buf);
+    }
+
     char* buf = NULL;
     int result;
     int count = 0;
@@ -142,6 +176,40 @@ class NokoWindowManager {
               execve(c_str, args, env);
               exit(1);
             }
+          } else if (segment.data_case() == DataSegment::kFileRegisterRequest) {
+            watched_files[inotify_add_watch(
+                inotify_fd,
+                segment.mutable_file_register_request()->file_path().c_str(),
+                IN_MODIFY)] =
+                segment.mutable_file_register_request()->file_path();
+          } else if (segment.data_case() == DataSegment::kBrowserStartRequest) {
+            printf("resending all windows\n");
+            Packet packet;
+            for (auto window : windows) {
+              if (std::find(blacklisted_windows.begin(),
+                            blacklisted_windows.end(),
+                            window.first) != blacklisted_windows.end())
+                continue;
+              if (base_window.value() == window.first)
+                continue;
+
+              printf("%lu\n", window.first);
+
+              auto segment = packet.add_segments();
+              auto reply = segment->mutable_window_map_reply();
+              reply->set_window(window.second.window);
+              reply->set_visible(window.second.visible);
+              reply->set_x(window.second.x);
+              reply->set_y(window.second.y);
+              reply->set_width(window.second.width);
+              reply->set_height(window.second.height);
+            }
+            size_t len = packet.ByteSizeLong();
+            char* buf = (char*)malloc(len);
+            packet.SerializeToArray(buf, len);
+
+            nn_send(ipc_sock, buf, len, 0);
+            free(buf);
           }
         }
 
@@ -165,11 +233,16 @@ class NokoWindowManager {
         0) {
       printf("ipc non_block failed\n");
     }
+
+    inotify_fd = inotify_init1(IN_NONBLOCK);
   }
-  ~NokoWindowManager() {}
+  ~NokoWindowManager() { close(inotify_fd); }
 
  private:
   int ipc_sock;
+
+  std::unordered_map<int, std::string> watched_files = {};
+  int inotify_fd;
 
   Display* display;
   int screen;

@@ -14,8 +14,10 @@ namespace minimal {
 class Client : public CefClient,
                public CefDisplayHandler,
                public CefLifeSpanHandler {
+  int sock;
+
  public:
-  Client();
+  Client(int* sock);
 
   // CefClient methods:
   CefRefPtr<CefDisplayHandler> GetDisplayHandler() override { return this; }

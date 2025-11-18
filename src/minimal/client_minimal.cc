@@ -90,6 +90,9 @@ class MessageHandler : public CefMessageRouterBrowserSide::Handler {
         auto reply = segment->mutable_window_close_request();
         reply->set_window(
             std::stoll(segment_json["window"].get<std::string>()));
+      } else if (segment_json["t"] == "browser_start") {
+        auto segment = packet.add_segments();
+        segment->mutable_browser_start_request();
       }
     }
     if (packet.segments_size() != 0) {
@@ -124,6 +127,7 @@ class MessageHandler : public CefMessageRouterBrowserSide::Handler {
           case DataSegment::kWindowMapReply: {
             nlohmann::json obj = {
                 {"t", "window_map"},
+                {"name", segment.mutable_window_map_reply()->name()},
                 {"window", std::to_string(segment.window_map_reply().window())},
                 {"visible", segment.window_map_reply().visible()},
                 {"x", segment.window_map_reply().x()},
@@ -165,6 +169,12 @@ class MessageHandler : public CefMessageRouterBrowserSide::Handler {
             };
             to_browser.push_back(obj);
           } break;
+          case DataSegment::kReloadReply: {
+            nlohmann::json obj = {
+                {"t", "reload"},
+            };
+            to_browser.push_back(obj);
+          } break;
 
           default:
             break;
@@ -183,7 +193,21 @@ class MessageHandler : public CefMessageRouterBrowserSide::Handler {
   DISALLOW_COPY_AND_ASSIGN(MessageHandler);
 };
 
-Client::Client() {}
+Client::Client(int* foriegn_sock) {
+  if ((sock = nn_socket(AF_SP, NN_PAIR)) < 0) {
+    printf("nn_socket\n");
+  }
+  if (nn_connect(sock, "ipc:///tmp/noko.ipc") < 0) {
+    printf("nn_connect\n");
+  }
+
+  // non-blocking
+  int to = 0;
+  if (nn_setsockopt(sock, NN_SOL_SOCKET, NN_RCVTIMEO, &to, sizeof(to)) < 0) {
+    printf("ipc failed\n");
+  }
+  *foriegn_sock = sock;
+}
 
 void Client::OnTitleChange(CefRefPtr<CefBrowser> browser,
                            const CefString& title) {
@@ -206,20 +230,6 @@ void Client::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
 
 #if defined(OS_LINUX)
   ::Window window = browser->GetHost()->GetWindowHandle();
-
-  int sock;
-  if ((sock = nn_socket(AF_SP, NN_PAIR)) < 0) {
-    printf("nn_socket\n");
-  }
-  if (nn_connect(sock, "ipc:///tmp/noko.ipc") < 0) {
-    printf("nn_connect\n");
-  }
-
-  // non-blocking
-  int to = 0;
-  if (nn_setsockopt(sock, NN_SOL_SOCKET, NN_RCVTIMEO, &to, sizeof(to)) < 0) {
-    printf("ipc failed\n");
-  }
 
   Packet packet;
   auto segment = packet.add_segments();

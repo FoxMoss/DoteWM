@@ -17,6 +17,8 @@ std::string GetStartupURL() {
 
 // Minimal implementation of CefApp for the browser process.
 class BrowserApp : public CefApp, public CefBrowserProcessHandler {
+  int sock;
+
  public:
   BrowserApp() {}
 
@@ -45,10 +47,11 @@ class BrowserApp : public CefApp, public CefBrowserProcessHandler {
 
   // CefBrowserProcessHandler methods:
   void OnContextInitialized() override {
-    RegisterSchemeHandlerFactory();
+    RegisterSchemeHandlerFactory(sock);
 
     // Create the browser window.
-    shared::CreateBrowser(new Client(), GetStartupURL(), CefBrowserSettings());
+    shared::CreateBrowser(new Client(&sock), GetStartupURL(),
+                          CefBrowserSettings());
   }
 
  private:

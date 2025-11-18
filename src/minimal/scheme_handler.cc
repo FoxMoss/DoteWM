@@ -17,8 +17,10 @@
 #include "include/cef_scheme.h"
 #include "include/wrapper/cef_helpers.h"
 
+#include "nn.h"
 #include "src/minimal/mime.h"
 #include "src/minimal/scheme_strings.h"
+#include "src/protobuf/windowmanager.pb.h"
 #include "src/shared/client_util.h"
 #include "src/shared/resource_util.h"
 
@@ -28,8 +30,10 @@ namespace {
 
 // Implementation of the scheme handler for client:// requests.
 class ClientSchemeHandler : public CefResourceHandler {
+  int sock;
+
  public:
-  ClientSchemeHandler() : offset_(0) {}
+  ClientSchemeHandler(int sock) : sock(sock), offset_(0) {}
 
   bool NotFound(std::string url, CefRefPtr<CefCallback> callback) {
     data_ = url + " not found.";
@@ -75,6 +79,18 @@ class ClientSchemeHandler : public CefResourceHandler {
     else {
       mime_type_ = type->second;
     }
+
+    Packet packet;
+    auto segment = packet.add_segments();
+    segment->mutable_file_register_request()->set_file_path(
+        target_file.string());
+
+    size_t len = packet.ByteSizeLong();
+    char* buf = (char*)malloc(len);
+    packet.SerializeToArray(buf, len);
+
+    nn_send(sock, buf, len, 0);
+    free(buf);
 
     callback->Continue();
     return true;
@@ -130,8 +146,10 @@ class ClientSchemeHandler : public CefResourceHandler {
 
 // Implementation of the factory for creating scheme handlers.
 class ClientSchemeHandlerFactory : public CefSchemeHandlerFactory {
+  int sock;
+
  public:
-  ClientSchemeHandlerFactory() {}
+  ClientSchemeHandlerFactory(int sock) : sock(sock) {}
 
   // Return a new scheme handler instance to handle the request.
   CefRefPtr<CefResourceHandler> Create(CefRefPtr<CefBrowser> browser,
@@ -139,7 +157,7 @@ class ClientSchemeHandlerFactory : public CefSchemeHandlerFactory {
                                        const CefString& scheme_name,
                                        CefRefPtr<CefRequest> request) override {
     CEF_REQUIRE_IO_THREAD();
-    return new ClientSchemeHandler();
+    return new ClientSchemeHandler(sock);
   }
 
  private:
@@ -149,9 +167,9 @@ class ClientSchemeHandlerFactory : public CefSchemeHandlerFactory {
 
 }  // namespace
 
-void RegisterSchemeHandlerFactory() {
+void RegisterSchemeHandlerFactory(int sock) {
   CefRegisterSchemeHandlerFactory(SCHEME, DOMAIN,
-                                  new ClientSchemeHandlerFactory());
+                                  new ClientSchemeHandlerFactory(sock));
 }
 
 }  // namespace minimal
