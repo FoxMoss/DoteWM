@@ -615,7 +615,7 @@ bool NokoWindowManager::process_events() {
         }
 
         if (type == ButtonPress && !is_border) {
-          focus_window(x_window);
+          focus_window(x_window, true);
         }
 
       } else if (type == MotionNotify) {
@@ -680,28 +680,30 @@ void NokoWindowManager::update_client_list() {
   free(client_list);
 }
 
-void NokoWindowManager::focus_window(Window window) {
-  if (base_window.has_value() && window == base_window.value())
+void NokoWindowManager::focus_window(Window window_id, bool send_event) {
+  if (base_window.has_value() && window_id == base_window.value())
     return;
 
-  XSetInputFocus(display, window, RevertToParent, CurrentTime);
-  XMapRaised(display, window);
+  XSetInputFocus(display, window_id, RevertToParent, CurrentTime);
+  XMapRaised(display, window_id);
 
   printf("sending focus!\n");
 
-  Packet packet;
-  auto segment = packet.add_segments();
-  auto reply = segment->mutable_window_focus_reply();
-  reply->set_window(window);
+  if (send_event) {
+    Packet packet;
+    auto segment = packet.add_segments();
+    auto reply = segment->mutable_window_focus_reply();
+    reply->set_window(window_id);
 
-  size_t len = packet.ByteSizeLong();
-  char* buf = (char*)malloc(len);
-  packet.SerializeToArray(buf, len);
+    size_t len = packet.ByteSizeLong();
+    char* buf = (char*)malloc(len);
+    packet.SerializeToArray(buf, len);
 
-  nn_send(ipc_sock, buf, len, 0);
-  free(buf);
+    nn_send(ipc_sock, buf, len, 0);
+    free(buf);
+  }
 
-  focused_window = window;
+  focused_window = window_id;
 }
 
 std::optional<NokoWindowManager*> NokoWindowManager::create() {

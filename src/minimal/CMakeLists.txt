@@ -72,7 +72,7 @@ if(OS_LINUX)
   SET_EXAMPLE_EXECUTABLE_TARGET_PROPERTIES(${MINIMAL_TARGET})
   add_dependencies(${MINIMAL_TARGET} shared)
   target_link_libraries(${MINIMAL_TARGET} shared)
-  target_compile_options(${MINIMAL_TARGET} PRIVATE -std=c++20 -g)
+  target_compile_options(${MINIMAL_TARGET} PRIVATE -std=c++20 -g -fexceptions)
 endif()
 
 

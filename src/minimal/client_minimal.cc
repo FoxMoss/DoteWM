@@ -38,163 +38,168 @@ class MessageHandler : public CefMessageRouterBrowserSide::Handler {
                const CefString& request,
                bool persistent,
                CefRefPtr<Callback> callback) override {
-    nlohmann::json from_browser = nlohmann::json::parse(request.ToString());
+    try {
+      nlohmann::json from_browser = nlohmann::json::parse(request.ToString());
 
-    Packet packet;
-    for (auto segment_json : from_browser) {
-      if (segment_json["t"] == "window_map") {  // for some reason it crashes
-                                                // when we use ["type"] lol
-        auto segment = packet.add_segments();
-        auto window_map = segment->mutable_window_map_request();
-        window_map->set_window(
-            std::stoll(segment_json["window"].get<std::string>()));
-        window_map->set_x(segment_json["x"]);
-        window_map->set_y(segment_json["y"]);
-        window_map->set_width(segment_json["width"]);
-        window_map->set_height(segment_json["height"]);
-
-      } else if (segment_json["t"] == "window_reorder") {
-        auto segment = packet.add_segments();
-        auto window_reorder = segment->mutable_window_reorder_request();
-
-        for (auto window : segment_json["windows"]) {
-          window_reorder->add_windows(std::stoll(window.get<std::string>()));
-        }
-
-      } else if (segment_json["t"] == "window_focus") {
-        auto segment = packet.add_segments();
-        auto window_focus = segment->mutable_window_focus_request();
-
-        window_focus->set_window(
-            std::stoll(segment_json["window"].get<std::string>()));
-
-      } else if (segment_json["t"] == "window_register_border") {
-        auto segment = packet.add_segments();
-        auto window_register_border =
-            segment->mutable_window_register_border_request();
-
-        window_register_border->set_window(
-            std::stoll(segment_json["window"].get<std::string>()));
-        window_register_border->set_x(segment_json["x"]);
-        window_register_border->set_y(segment_json["y"]);
-        window_register_border->set_width(segment_json["width"]);
-        window_register_border->set_height(segment_json["height"]);
-      } else if (segment_json["t"] == "render_request") {
-        auto segment = packet.add_segments();
-        segment->mutable_render_request();
-      } else if (segment_json["t"] == "run_program") {
-        auto segment = packet.add_segments();
-        auto reply = segment->mutable_run_program_request();
-        for (auto command_chunk : segment_json["command"]) {
-          reply->add_command(command_chunk.get<std::string>());
-        }
-      } else if (segment_json["t"] == "window_close") {
-        auto segment = packet.add_segments();
-        auto reply = segment->mutable_window_close_request();
-        reply->set_window(
-            std::stoll(segment_json["window"].get<std::string>()));
-      } else if (segment_json["t"] == "browser_start") {
-        auto segment = packet.add_segments();
-        segment->mutable_browser_start_request();
-      }
-    }
-    if (packet.segments_size() != 0) {
-      size_t len = packet.ByteSizeLong();
-      char* buf = (char*)malloc(len);
-      packet.SerializeToArray(buf, len);
-
-      nn_send(ipc_sock, buf, len, 0);
-      free(buf);
-    }
-
-    char* buf;
-    int result = nn_recv(ipc_sock, &buf, NN_MSG, 0);
-
-    nlohmann::json to_browser = nlohmann::json::array();
-
-    if (result > 0) {
       Packet packet;
-      packet.ParseFromArray(buf, result);
+      for (auto segment_json : from_browser) {
+        if (segment_json["t"] == "window_map") {  // for some reason it crashes
+                                                  // when we use ["type"] lol
+          auto segment = packet.add_segments();
+          auto window_map = segment->mutable_window_map_request();
+          window_map->set_window(
+              std::stoll(segment_json["window"].get<std::string>()));
+          window_map->set_x(segment_json["x"]);
+          window_map->set_y(segment_json["y"]);
+          window_map->set_width(segment_json["width"]);
+          window_map->set_height(segment_json["height"]);
 
-      for (auto segment : packet.segments()) {
-        switch (segment.data_case()) {
-          case DataSegment::kWindowFocusReply: {
-            nlohmann::json obj = {
-                {"t", "window_focus"},
-                {"window",
-                 std::to_string(segment.window_focus_reply().window())}};
+        } else if (segment_json["t"] == "window_reorder") {
+          auto segment = packet.add_segments();
+          auto window_reorder = segment->mutable_window_reorder_request();
 
-            to_browser.push_back(obj);
+          for (auto window : segment_json["windows"]) {
+            window_reorder->add_windows(std::stoll(window.get<std::string>()));
+          }
 
-          } break;
-          case DataSegment::kWindowMapReply: {
-            nlohmann::json obj = {
-                {"t", "window_map"},
-                {"name", segment.mutable_window_map_reply()->name()},
-                {"window", std::to_string(segment.window_map_reply().window())},
-                {"visible", segment.window_map_reply().visible()},
-                {"x", segment.window_map_reply().x()},
-                {"y", segment.window_map_reply().y()},
-                {"width", segment.window_map_reply().width()},
-                {"height", segment.window_map_reply().height()}};
+        } else if (segment_json["t"] == "window_focus") {
+          auto segment = packet.add_segments();
+          auto window_focus = segment->mutable_window_focus_request();
 
-            to_browser.push_back(obj);
+          window_focus->set_window(
+              std::stoll(segment_json["window"].get<std::string>()));
 
-          } break;
-          case DataSegment::kMouseMoveReply: {
-            nlohmann::json obj = {{"t", "mouse_move"},
-                                  {"x", segment.mouse_move_reply().x()},
-                                  {"y", segment.mouse_move_reply().y()}};
+        } else if (segment_json["t"] == "window_register_border") {
+          auto segment = packet.add_segments();
+          auto window_register_border =
+              segment->mutable_window_register_border_request();
 
-            to_browser.push_back(obj);
-          } break;
-          case DataSegment::kMousePressReply: {
-            nlohmann::json obj = {
-                {"t", "mouse_press"},
-                {"state", segment.mouse_press_reply().state()},
-                {"x", segment.mouse_press_reply().x()},
-                {"y", segment.mouse_press_reply().y()}};
-
-            to_browser.push_back(obj);
-          } break;
-          case DataSegment::kRenderReply: {
-            nlohmann::json obj = {
-                {"t", "render_reply"},
-                {"last_frame_observered",
-                 segment.render_reply().last_frame_observered()}};
-            to_browser.push_back(obj);
-          } break;
-          case DataSegment::kWindowCloseReply: {
-            nlohmann::json obj = {
-                {"t", "window_close"},
-                {"window",
-                 std::to_string(segment.window_close_reply().window())},
-            };
-            to_browser.push_back(obj);
-          } break;
-          case DataSegment::kReloadReply: {
-            nlohmann::json obj = {
-                {"t", "reload"},
-            };
-            to_browser.push_back(obj);
-          } break;
-
-          case DataSegment::kLogMessageReply: {
-            nlohmann::json obj = {
-                {"t", "log"},
-                {"message", segment.log_message_reply().message()}};
-            to_browser.push_back(obj);
-          } break;
-          default:
-            break;
+          window_register_border->set_window(
+              std::stoll(segment_json["window"].get<std::string>()));
+          window_register_border->set_x(segment_json["x"]);
+          window_register_border->set_y(segment_json["y"]);
+          window_register_border->set_width(segment_json["width"]);
+          window_register_border->set_height(segment_json["height"]);
+        } else if (segment_json["t"] == "render_request") {
+          auto segment = packet.add_segments();
+          segment->mutable_render_request();
+        } else if (segment_json["t"] == "run_program") {
+          auto segment = packet.add_segments();
+          auto reply = segment->mutable_run_program_request();
+          for (auto command_chunk : segment_json["command"]) {
+            reply->add_command(command_chunk.get<std::string>());
+          }
+        } else if (segment_json["t"] == "window_close") {
+          auto segment = packet.add_segments();
+          auto reply = segment->mutable_window_close_request();
+          reply->set_window(
+              std::stoll(segment_json["window"].get<std::string>()));
+        } else if (segment_json["t"] == "browser_start") {
+          auto segment = packet.add_segments();
+          segment->mutable_browser_start_request();
         }
       }
+      if (packet.segments_size() != 0) {
+        size_t len = packet.ByteSizeLong();
+        char* buf = (char*)malloc(len);
+        packet.SerializeToArray(buf, len);
 
-      nn_freemsg(buf);
+        nn_send(ipc_sock, buf, len, 0);
+        free(buf);
+      }
+
+      char* buf;
+      int result = nn_recv(ipc_sock, &buf, NN_MSG, 0);
+
+      nlohmann::json to_browser = nlohmann::json::array();
+
+      if (result > 0) {
+        Packet packet;
+        packet.ParseFromArray(buf, result);
+
+        for (auto segment : packet.segments()) {
+          switch (segment.data_case()) {
+            case DataSegment::kWindowFocusReply: {
+              nlohmann::json obj = {
+                  {"t", "window_focus"},
+                  {"window",
+                   std::to_string(segment.window_focus_reply().window())}};
+
+              to_browser.push_back(obj);
+
+            } break;
+            case DataSegment::kWindowMapReply: {
+              nlohmann::json obj = {
+                  {"t", "window_map"},
+                  {"name", segment.mutable_window_map_reply()->name()},
+                  {"window",
+                   std::to_string(segment.window_map_reply().window())},
+                  {"visible", segment.window_map_reply().visible()},
+                  {"x", segment.window_map_reply().x()},
+                  {"y", segment.window_map_reply().y()},
+                  {"width", segment.window_map_reply().width()},
+                  {"height", segment.window_map_reply().height()}};
+
+              to_browser.push_back(obj);
+
+            } break;
+            case DataSegment::kMouseMoveReply: {
+              nlohmann::json obj = {{"t", "mouse_move"},
+                                    {"x", segment.mouse_move_reply().x()},
+                                    {"y", segment.mouse_move_reply().y()}};
+
+              to_browser.push_back(obj);
+            } break;
+            case DataSegment::kMousePressReply: {
+              nlohmann::json obj = {
+                  {"t", "mouse_press"},
+                  {"state", segment.mouse_press_reply().state()},
+                  {"x", segment.mouse_press_reply().x()},
+                  {"y", segment.mouse_press_reply().y()}};
+
+              to_browser.push_back(obj);
+            } break;
+            case DataSegment::kRenderReply: {
+              nlohmann::json obj = {
+                  {"t", "render_reply"},
+                  {"last_frame_observered",
+                   segment.render_reply().last_frame_observered()}};
+              to_browser.push_back(obj);
+            } break;
+            case DataSegment::kWindowCloseReply: {
+              nlohmann::json obj = {
+                  {"t", "window_close"},
+                  {"window",
+                   std::to_string(segment.window_close_reply().window())},
+              };
+              to_browser.push_back(obj);
+            } break;
+            case DataSegment::kReloadReply: {
+              nlohmann::json obj = {
+                  {"t", "reload"},
+              };
+              to_browser.push_back(obj);
+            } break;
+
+            case DataSegment::kLogMessageReply: {
+              nlohmann::json obj = {
+                  {"t", "log"},
+                  {"message", segment.log_message_reply().message()}};
+              to_browser.push_back(obj);
+            } break;
+            default:
+              break;
+          }
+        }
+
+        nn_freemsg(buf);
+      }
+      const std::string& url = frame->GetURL();
+
+      callback->Success(to_browser.dump());
+    } catch (const std::exception& e) {
+      callback->Failure(-1, std::string(e.what()));
     }
-    const std::string& url = frame->GetURL();
-
-    callback->Success(to_browser.dump());
     return true;
   }
 

@@ -123,6 +123,8 @@ class NokoWindowManager {
         Packet packet;
         packet.ParseFromArray(buf, result);
 
+        printf("got %i packets\n", packet.segments_size());
+
         for (auto segment : packet.segments()) {
           count++;
           if (segment.data_case() == DataSegment::kWindowRequest) {
@@ -151,7 +153,8 @@ class NokoWindowManager {
               depth -= inc;
             }
           } else if (segment.data_case() == DataSegment::kWindowFocusRequest) {
-            focus_window(segment.mutable_window_focus_request()->window());
+            focus_window(segment.mutable_window_focus_request()->window(),
+                         false);
           } else if (segment.data_case() ==
                      DataSegment::kWindowRegisterBorderRequest) {
             register_border(
@@ -324,5 +327,5 @@ class NokoWindowManager {
   void update_client_list();
 
   std::optional<Window> focused_window;
-  void focus_window(Window window_id);
+  void focus_window(Window window_id, bool send_event);
 };
