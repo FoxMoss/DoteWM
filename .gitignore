@@ -57,3 +57,4 @@ bazel/cef/platform.bzl
 # Bazel output files/directories
 bazel-*
 MODULE.bazel.lock
+out.log

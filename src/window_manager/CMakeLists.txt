@@ -24,8 +24,7 @@ endif()
 
 target_include_directories(noko PRIVATE ${nanomsg_SOURCE_DIR}/src)
 
-
-target_compile_options(noko PRIVATE -std=c++20 -g)
+target_compile_options(noko PRIVATE -std=c++20 )
 
 find_package(X11 REQUIRED)
 find_package(Protobuf REQUIRED)
