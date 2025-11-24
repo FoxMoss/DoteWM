@@ -76,6 +76,11 @@ message RunProgramRequest {
 
 // REPLIES (Window Manager -> Browser)
 
+message WindowIconReply {
+  uint64 window = 1;
+  string image = 2;
+}
+
 message WindowMapReply {
   uint64 window = 1;
   uint32 x = 2;
@@ -137,6 +142,7 @@ message DataSegment {
     ReloadReply reload_reply = 16;
     BrowserStartRequest browser_start_request = 17;
     LogMessageReply log_message_reply = 18;
+    WindowIconReply window_icon_reply = 19;
   }
 }
 

@@ -118,6 +118,10 @@ class WindowFocusRequest;
 struct WindowFocusRequestDefaultTypeInternal;
 extern WindowFocusRequestDefaultTypeInternal _WindowFocusRequest_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull WindowFocusRequest_class_data_;
+class WindowIconReply;
+struct WindowIconReplyDefaultTypeInternal;
+extern WindowIconReplyDefaultTypeInternal _WindowIconReply_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull WindowIconReply_class_data_;
 class WindowMapReply;
 struct WindowMapReplyDefaultTypeInternal;
 extern WindowMapReplyDefaultTypeInternal _WindowMapReply_default_instance_;
@@ -1161,7 +1165,7 @@ class WindowMapReply final : public ::google::protobuf::Message
     return *reinterpret_cast<const WindowMapReply*>(
         &_WindowMapReply_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 11;
+  static constexpr int kIndexInFileMessages = 12;
   friend void swap(WindowMapReply& a, WindowMapReply& b) { a.Swap(&b); }
   inline void Swap(WindowMapReply* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -1395,6 +1399,213 @@ class WindowMapReply final : public ::google::protobuf::Message
 };
 
 extern const ::google::protobuf::internal::ClassDataFull WindowMapReply_class_data_;
+// -------------------------------------------------------------------
+
+class WindowIconReply final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:WindowIconReply) */ {
+ public:
+  inline WindowIconReply() : WindowIconReply(nullptr) {}
+  ~WindowIconReply() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(WindowIconReply* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(WindowIconReply));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR WindowIconReply(::google::protobuf::internal::ConstantInitialized);
+
+  inline WindowIconReply(const WindowIconReply& from) : WindowIconReply(nullptr, from) {}
+  inline WindowIconReply(WindowIconReply&& from) noexcept
+      : WindowIconReply(nullptr, ::std::move(from)) {}
+  inline WindowIconReply& operator=(const WindowIconReply& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline WindowIconReply& operator=(WindowIconReply&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const WindowIconReply& default_instance() {
+    return *reinterpret_cast<const WindowIconReply*>(
+        &_WindowIconReply_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 11;
+  friend void swap(WindowIconReply& a, WindowIconReply& b) { a.Swap(&b); }
+  inline void Swap(WindowIconReply* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(WindowIconReply* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  WindowIconReply* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<WindowIconReply>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const WindowIconReply& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const WindowIconReply& from) { WindowIconReply::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(WindowIconReply* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "WindowIconReply"; }
+
+  explicit WindowIconReply(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  WindowIconReply(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const WindowIconReply& from);
+  WindowIconReply(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, WindowIconReply&& from) noexcept
+      : WindowIconReply(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kImageFieldNumber = 2,
+    kWindowFieldNumber = 1,
+  };
+  // string image = 2;
+  void clear_image() ;
+  const ::std::string& image() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_image(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_image();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_image();
+  void set_allocated_image(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_image() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_image(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_image();
+
+  public:
+  // uint64 window = 1;
+  void clear_window() ;
+  ::uint64_t window() const;
+  void set_window(::uint64_t value);
+
+  private:
+  ::uint64_t _internal_window() const;
+  void _internal_set_window(::uint64_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:WindowIconReply)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<1, 2,
+                                   0, 29,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const WindowIconReply& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::internal::ArenaStringPtr image_;
+    ::uint64_t window_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_windowmanager_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull WindowIconReply_class_data_;
 // -------------------------------------------------------------------
 
 class WindowFocusRequest final : public ::google::protobuf::Message
@@ -1642,7 +1853,7 @@ class WindowFocusReply final : public ::google::protobuf::Message
     return *reinterpret_cast<const WindowFocusReply*>(
         &_WindowFocusReply_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 12;
+  static constexpr int kIndexInFileMessages = 13;
   friend void swap(WindowFocusReply& a, WindowFocusReply& b) { a.Swap(&b); }
   inline void Swap(WindowFocusReply* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -1832,7 +2043,7 @@ class WindowCloseRequest final : public ::google::protobuf::Message
     return *reinterpret_cast<const WindowCloseRequest*>(
         &_WindowCloseRequest_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 16;
+  static constexpr int kIndexInFileMessages = 17;
   friend void swap(WindowCloseRequest& a, WindowCloseRequest& b) { a.Swap(&b); }
   inline void Swap(WindowCloseRequest* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -2022,7 +2233,7 @@ class WindowCloseReply final : public ::google::protobuf::Message
     return *reinterpret_cast<const WindowCloseReply*>(
         &_WindowCloseReply_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 17;
+  static constexpr int kIndexInFileMessages = 18;
   friend void swap(WindowCloseReply& a, WindowCloseReply& b) { a.Swap(&b); }
   inline void Swap(WindowCloseReply* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -2604,7 +2815,7 @@ class RenderReply final : public ::google::protobuf::Message
     return *reinterpret_cast<const RenderReply*>(
         &_RenderReply_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 15;
+  static constexpr int kIndexInFileMessages = 16;
   friend void swap(RenderReply& a, RenderReply& b) { a.Swap(&b); }
   inline void Swap(RenderReply* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -2928,7 +3139,7 @@ class MousePressReply final : public ::google::protobuf::Message
     return *reinterpret_cast<const MousePressReply*>(
         &_MousePressReply_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 14;
+  static constexpr int kIndexInFileMessages = 15;
   friend void swap(MousePressReply& a, MousePressReply& b) { a.Swap(&b); }
   inline void Swap(MousePressReply* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -3142,7 +3353,7 @@ class MouseMoveReply final : public ::google::protobuf::Message
     return *reinterpret_cast<const MouseMoveReply*>(
         &_MouseMoveReply_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 13;
+  static constexpr int kIndexInFileMessages = 14;
   friend void swap(MouseMoveReply& a, MouseMoveReply& b) { a.Swap(&b); }
   inline void Swap(MouseMoveReply* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -3887,9 +4098,10 @@ class DataSegment final : public ::google::protobuf::Message
     kReloadReply = 16,
     kBrowserStartRequest = 17,
     kLogMessageReply = 18,
+    kWindowIconReply = 19,
     DATA_NOT_SET = 0,
   };
-  static constexpr int kIndexInFileMessages = 18;
+  static constexpr int kIndexInFileMessages = 19;
   friend void swap(DataSegment& a, DataSegment& b) { a.Swap(&b); }
   inline void Swap(DataSegment* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -3994,6 +4206,7 @@ class DataSegment final : public ::google::protobuf::Message
     kReloadReplyFieldNumber = 16,
     kBrowserStartRequestFieldNumber = 17,
     kLogMessageReplyFieldNumber = 18,
+    kWindowIconReplyFieldNumber = 19,
   };
   // .WindowRequest window_request = 1;
   bool has_window_request() const;
@@ -4337,6 +4550,25 @@ class DataSegment final : public ::google::protobuf::Message
   ::LogMessageReply* PROTOBUF_NONNULL _internal_mutable_log_message_reply();
 
   public:
+  // .WindowIconReply window_icon_reply = 19;
+  bool has_window_icon_reply() const;
+  private:
+  bool _internal_has_window_icon_reply() const;
+
+  public:
+  void clear_window_icon_reply() ;
+  const ::WindowIconReply& window_icon_reply() const;
+  [[nodiscard]] ::WindowIconReply* PROTOBUF_NULLABLE release_window_icon_reply();
+  ::WindowIconReply* PROTOBUF_NONNULL mutable_window_icon_reply();
+  void set_allocated_window_icon_reply(::WindowIconReply* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_window_icon_reply(::WindowIconReply* PROTOBUF_NULLABLE value);
+  ::WindowIconReply* PROTOBUF_NULLABLE unsafe_arena_release_window_icon_reply();
+
+  private:
+  const ::WindowIconReply& _internal_window_icon_reply() const;
+  ::WindowIconReply* PROTOBUF_NONNULL _internal_mutable_window_icon_reply();
+
+  public:
   void clear_data();
   DataCase data_case() const;
   // @@protoc_insertion_point(class_scope:DataSegment)
@@ -4360,11 +4592,12 @@ class DataSegment final : public ::google::protobuf::Message
   void set_has_reload_reply();
   void set_has_browser_start_request();
   void set_has_log_message_reply();
+  void set_has_window_icon_reply();
   inline bool has_data() const;
   inline void clear_has_data();
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<0, 18,
-                                   18, 0,
+  static const ::google::protobuf::internal::TcParseTable<0, 19,
+                                   19, 0,
                                    2>
       _table_;
 
@@ -4404,6 +4637,7 @@ class DataSegment final : public ::google::protobuf::Message
       ::google::protobuf::Message* PROTOBUF_NULLABLE reload_reply_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE browser_start_request_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE log_message_reply_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE window_icon_reply_;
     } data_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::uint32_t _oneof_case_[1];
@@ -4471,7 +4705,7 @@ class Packet final : public ::google::protobuf::Message
     return *reinterpret_cast<const Packet*>(
         &_Packet_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 19;
+  static constexpr int kIndexInFileMessages = 20;
   friend void swap(Packet& a, Packet& b) { a.Swap(&b); }
   inline void Swap(Packet* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -5243,6 +5477,100 @@ inline ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL
 RunProgramRequest::_internal_mutable_command() {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return &_impl_.command_;
+}
+
+// -------------------------------------------------------------------
+
+// WindowIconReply
+
+// uint64 window = 1;
+inline void WindowIconReply::clear_window() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.window_ = ::uint64_t{0u};
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline ::uint64_t WindowIconReply::window() const {
+  // @@protoc_insertion_point(field_get:WindowIconReply.window)
+  return _internal_window();
+}
+inline void WindowIconReply::set_window(::uint64_t value) {
+  _internal_set_window(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  // @@protoc_insertion_point(field_set:WindowIconReply.window)
+}
+inline ::uint64_t WindowIconReply::_internal_window() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.window_;
+}
+inline void WindowIconReply::_internal_set_window(::uint64_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.window_ = value;
+}
+
+// string image = 2;
+inline void WindowIconReply::clear_image() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.image_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline const ::std::string& WindowIconReply::image() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:WindowIconReply.image)
+  return _internal_image();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void WindowIconReply::set_image(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  _impl_.image_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:WindowIconReply.image)
+}
+inline ::std::string* PROTOBUF_NONNULL WindowIconReply::mutable_image()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::std::string* _s = _internal_mutable_image();
+  // @@protoc_insertion_point(field_mutable:WindowIconReply.image)
+  return _s;
+}
+inline const ::std::string& WindowIconReply::_internal_image() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.image_.Get();
+}
+inline void WindowIconReply::_internal_set_image(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.image_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL WindowIconReply::_internal_mutable_image() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.image_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE WindowIconReply::release_image() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:WindowIconReply.image)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000001U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  auto* released = _impl_.image_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.image_.Set("", GetArena());
+  }
+  return released;
+}
+inline void WindowIconReply::set_allocated_image(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  _impl_.image_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.image_.IsDefault()) {
+    _impl_.image_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:WindowIconReply.image)
 }
 
 // -------------------------------------------------------------------
@@ -7240,6 +7568,88 @@ inline ::LogMessageReply* PROTOBUF_NONNULL DataSegment::mutable_log_message_repl
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::LogMessageReply* _msg = _internal_mutable_log_message_reply();
   // @@protoc_insertion_point(field_mutable:DataSegment.log_message_reply)
+  return _msg;
+}
+
+// .WindowIconReply window_icon_reply = 19;
+inline bool DataSegment::has_window_icon_reply() const {
+  return data_case() == kWindowIconReply;
+}
+inline bool DataSegment::_internal_has_window_icon_reply() const {
+  return data_case() == kWindowIconReply;
+}
+inline void DataSegment::set_has_window_icon_reply() {
+  _impl_._oneof_case_[0] = kWindowIconReply;
+}
+inline void DataSegment::clear_window_icon_reply() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (data_case() == kWindowIconReply) {
+    if (GetArena() == nullptr) {
+      delete _impl_.data_.window_icon_reply_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.data_.window_icon_reply_);
+    }
+    clear_has_data();
+  }
+}
+inline ::WindowIconReply* PROTOBUF_NULLABLE DataSegment::release_window_icon_reply() {
+  // @@protoc_insertion_point(field_release:DataSegment.window_icon_reply)
+  if (data_case() == kWindowIconReply) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::WindowIconReply*>(_impl_.data_.window_icon_reply_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.data_.window_icon_reply_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::WindowIconReply& DataSegment::_internal_window_icon_reply() const {
+  return data_case() == kWindowIconReply ? static_cast<const ::WindowIconReply&>(*reinterpret_cast<::WindowIconReply*>(_impl_.data_.window_icon_reply_))
+                     : reinterpret_cast<const ::WindowIconReply&>(::_WindowIconReply_default_instance_);
+}
+inline const ::WindowIconReply& DataSegment::window_icon_reply() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:DataSegment.window_icon_reply)
+  return _internal_window_icon_reply();
+}
+inline ::WindowIconReply* PROTOBUF_NULLABLE DataSegment::unsafe_arena_release_window_icon_reply() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:DataSegment.window_icon_reply)
+  if (data_case() == kWindowIconReply) {
+    clear_has_data();
+    auto* temp = reinterpret_cast<::WindowIconReply*>(_impl_.data_.window_icon_reply_);
+    _impl_.data_.window_icon_reply_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void DataSegment::unsafe_arena_set_allocated_window_icon_reply(
+    ::WindowIconReply* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_data();
+  if (value) {
+    set_has_window_icon_reply();
+    _impl_.data_.window_icon_reply_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:DataSegment.window_icon_reply)
+}
+inline ::WindowIconReply* PROTOBUF_NONNULL DataSegment::_internal_mutable_window_icon_reply() {
+  if (data_case() != kWindowIconReply) {
+    clear_data();
+    set_has_window_icon_reply();
+    _impl_.data_.window_icon_reply_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::WindowIconReply>(GetArena()));
+  }
+  return reinterpret_cast<::WindowIconReply*>(_impl_.data_.window_icon_reply_);
+}
+inline ::WindowIconReply* PROTOBUF_NONNULL DataSegment::mutable_window_icon_reply()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::WindowIconReply* _msg = _internal_mutable_window_icon_reply();
+  // @@protoc_insertion_point(field_mutable:DataSegment.window_icon_reply)
   return _msg;
 }
 

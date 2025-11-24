@@ -1,5 +1,7 @@
 add_executable(noko
   main.cc
+  lodepng.cpp
+  base64.cpp
   ../protobuf/windowmanager.pb.cc
 )
 

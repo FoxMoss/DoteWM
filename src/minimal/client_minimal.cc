@@ -241,6 +241,15 @@ class MessageHandler : public CefMessageRouterBrowserSide::Handler {
                   {"message", segment.log_message_reply().message()}};
               to_browser.push_back(obj);
             } break;
+
+            case DataSegment::kWindowIconReply: {
+              nlohmann::json obj = {
+                  {"t", "window_icon"},
+                  {"window",
+                   std::to_string(segment.window_icon_reply().window())},
+                  {"image", segment.window_icon_reply().image()}};
+              to_browser.push_back(obj);
+            } break;
             default:
               break;
           }

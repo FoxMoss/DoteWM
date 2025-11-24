@@ -20,6 +20,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <mutex>
+#include <strstream>
 #include <thread>
 #include <unordered_map>
 
@@ -60,6 +61,8 @@ struct NokoWindow {
 
   std::optional<std::string> name;
   WindowType type;
+
+  std::optional<std::string> icon;  // base64 png
 
   int visible;
 

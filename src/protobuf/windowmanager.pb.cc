@@ -169,6 +169,34 @@ struct WindowMapReplyDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 WindowMapReplyDefaultTypeInternal _WindowMapReply_default_instance_;
 
+inline constexpr WindowIconReply::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        image_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        window_{::uint64_t{0u}} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR WindowIconReply::WindowIconReply(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(WindowIconReply_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct WindowIconReplyDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR WindowIconReplyDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~WindowIconReplyDefaultTypeInternal() {}
+  union {
+    WindowIconReply _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 WindowIconReplyDefaultTypeInternal _WindowIconReply_default_instance_;
+
 inline constexpr WindowFocusRequest::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
@@ -608,6 +636,13 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::RunProgramRequest, _impl_.command_),
         0,
         0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::WindowIconReply, _impl_._has_bits_),
+        5, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::WindowIconReply, _impl_.window_),
+        PROTOBUF_FIELD_OFFSET(::WindowIconReply, _impl_.image_),
+        1,
+        0,
+        0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::WindowMapReply, _impl_._has_bits_),
         12, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::WindowMapReply, _impl_.window_),
@@ -685,6 +720,7 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::DataSegment, _impl_.data_),
         PROTOBUF_FIELD_OFFSET(::DataSegment, _impl_.data_),
         PROTOBUF_FIELD_OFFSET(::DataSegment, _impl_.data_),
+        PROTOBUF_FIELD_OFFSET(::DataSegment, _impl_.data_),
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::Packet, _impl_._has_bits_),
         4, // hasbit index offset
@@ -705,15 +741,16 @@ static const ::_pbi::MigrationSchema
         {40, sizeof(::WindowRegisterBorderRequest)},
         {53, sizeof(::RenderRequest)},
         {58, sizeof(::RunProgramRequest)},
-        {63, sizeof(::WindowMapReply)},
-        {84, sizeof(::WindowFocusReply)},
-        {89, sizeof(::MouseMoveReply)},
-        {96, sizeof(::MousePressReply)},
-        {105, sizeof(::RenderReply)},
-        {110, sizeof(::WindowCloseRequest)},
-        {115, sizeof(::WindowCloseReply)},
-        {120, sizeof(::DataSegment)},
-        {141, sizeof(::Packet)},
+        {63, sizeof(::WindowIconReply)},
+        {70, sizeof(::WindowMapReply)},
+        {91, sizeof(::WindowFocusReply)},
+        {96, sizeof(::MouseMoveReply)},
+        {103, sizeof(::MousePressReply)},
+        {112, sizeof(::RenderReply)},
+        {117, sizeof(::WindowCloseRequest)},
+        {122, sizeof(::WindowCloseReply)},
+        {127, sizeof(::DataSegment)},
+        {149, sizeof(::Packet)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::_WindowRequest_default_instance_._instance,
@@ -727,6 +764,7 @@ static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::_WindowRegisterBorderRequest_default_instance_._instance,
     &::_RenderRequest_default_instance_._instance,
     &::_RunProgramRequest_default_instance_._instance,
+    &::_WindowIconReply_default_instance_._instance,
     &::_WindowMapReply_default_instance_._instance,
     &::_WindowFocusReply_default_instance_._instance,
     &::_MouseMoveReply_default_instance_._instance,
@@ -751,66 +789,68 @@ const char descriptor_table_protodef_windowmanager_2eproto[] ABSL_ATTRIBUTE_SECT
     "erRequest\022\016\n\006window\030\001 \001(\004\022\t\n\001x\030\002 \001(\005\022\t\n\001"
     "y\030\003 \001(\005\022\r\n\005width\030\004 \001(\005\022\016\n\006height\030\005 \001(\005\"$"
     "\n\rRenderRequest\022\023\n\013frame_count\030\001 \001(\004\"$\n\021"
-    "RunProgramRequest\022\017\n\007command\030\001 \003(\t\"\243\001\n\016W"
-    "indowMapReply\022\016\n\006window\030\001 \001(\004\022\t\n\001x\030\002 \001(\r"
-    "\022\t\n\001y\030\003 \001(\r\022\r\n\005width\030\004 \001(\r\022\016\n\006height\030\005 \001"
-    "(\r\022\017\n\007visible\030\006 \001(\010\022\014\n\004name\030\007 \001(\t\022\022\n\nhas"
-    "_border\030\010 \001(\010\022\031\n\004type\030\t \001(\0162\013.WindowType"
-    "\"\"\n\020WindowFocusReply\022\016\n\006window\030\001 \001(\004\"&\n\016"
-    "MouseMoveReply\022\t\n\001x\030\001 \001(\r\022\t\n\001y\030\002 \001(\r\"I\n\017"
-    "MousePressReply\022\t\n\001x\030\001 \001(\r\022\t\n\001y\030\002 \001(\r\022 \n"
-    "\005state\030\003 \001(\0162\021.MouseButtonState\",\n\013Rende"
-    "rReply\022\035\n\025last_frame_observered\030\001 \001(\004\"$\n"
-    "\022WindowCloseRequest\022\016\n\006window\030\001 \001(\004\"\"\n\020W"
-    "indowCloseReply\022\016\n\006window\030\001 \001(\004\"\214\007\n\013Data"
-    "Segment\022(\n\016window_request\030\001 \001(\0132\016.Window"
-    "RequestH\000\022+\n\020window_map_reply\030\002 \001(\0132\017.Wi"
-    "ndowMapReplyH\000\022/\n\022window_map_request\030\003 \001"
-    "(\0132\021.WindowMapRequestH\000\022+\n\020mouse_move_re"
-    "ply\030\004 \001(\0132\017.MouseMoveReplyH\000\022-\n\021mouse_pr"
-    "ess_reply\030\005 \001(\0132\020.MousePressReplyH\000\022/\n\022w"
-    "indow_focus_reply\030\006 \001(\0132\021.WindowFocusRep"
-    "lyH\000\0227\n\026window_reorder_request\030\007 \001(\0132\025.W"
-    "indowReorderRequestH\000\0223\n\024window_focus_re"
-    "quest\030\010 \001(\0132\023.WindowFocusRequestH\000\022F\n\036wi"
-    "ndow_register_border_request\030\t \001(\0132\034.Win"
-    "dowRegisterBorderRequestH\000\022(\n\016render_req"
-    "uest\030\n \001(\0132\016.RenderRequestH\000\022$\n\014render_r"
-    "eply\030\013 \001(\0132\014.RenderReplyH\000\0221\n\023run_progra"
-    "m_request\030\014 \001(\0132\022.RunProgramRequestH\000\0223\n"
-    "\024window_close_request\030\r \001(\0132\023.WindowClos"
-    "eRequestH\000\022/\n\022window_close_reply\030\016 \001(\0132\021"
-    ".WindowCloseReplyH\000\0225\n\025file_register_req"
-    "uest\030\017 \001(\0132\024.FileRegisterRequestH\000\022$\n\014re"
-    "load_reply\030\020 \001(\0132\014.ReloadReplyH\000\0225\n\025brow"
-    "ser_start_request\030\021 \001(\0132\024.BrowserStartRe"
-    "questH\000\022-\n\021log_message_reply\030\022 \001(\0132\020.Log"
-    "MessageReplyH\000B\006\n\004data\"(\n\006Packet\022\036\n\010segm"
-    "ents\030\001 \003(\0132\014.DataSegment*d\n\020MouseButtonS"
-    "tate\022\023\n\017MOUSE_LEFT_DOWN\020\000\022\021\n\rMOUSE_LEFT_"
-    "UP\020\001\022\024\n\020MOUSE_RIGHT_DOWN\020\002\022\022\n\016MOUSE_RIGH"
-    "T_UP\020\003*\351\002\n\nWindowType\022\027\n\023WINDOW_TYPE_DES"
-    "KTOP\020\000\022\024\n\020WINDOW_TYPE_DOCK\020\001\022\027\n\023WINDOW_T"
-    "YPE_TOOLBAR\020\002\022\024\n\020WINDOW_TYPE_MENU\020\003\022\027\n\023W"
-    "INDOW_TYPE_UTILITY\020\004\022\026\n\022WINDOW_TYPE_SPLA"
-    "SH\020\005\022\026\n\022WINDOW_TYPE_DIALOG\020\006\022\035\n\031WINDOW_T"
-    "YPE_DROPDOWN_MENU\020\007\022\032\n\026WINDOW_TYPE_POPUP"
-    "_MENU\020\010\022\027\n\023WINDOW_TYPE_TOOLTIP\020\t\022\034\n\030WIND"
-    "OW_TYPE_NOTIFICATION\020\n\022\025\n\021WINDOW_TYPE_CO"
-    "MBO\020\013\022\023\n\017WINDOW_TYPE_DND\020\014\022\026\n\022WINDOW_TYP"
-    "E_NORMAL\020\rb\006proto3"
+    "RunProgramRequest\022\017\n\007command\030\001 \003(\t\"0\n\017Wi"
+    "ndowIconReply\022\016\n\006window\030\001 \001(\004\022\r\n\005image\030\002"
+    " \001(\t\"\243\001\n\016WindowMapReply\022\016\n\006window\030\001 \001(\004\022"
+    "\t\n\001x\030\002 \001(\r\022\t\n\001y\030\003 \001(\r\022\r\n\005width\030\004 \001(\r\022\016\n\006"
+    "height\030\005 \001(\r\022\017\n\007visible\030\006 \001(\010\022\014\n\004name\030\007 "
+    "\001(\t\022\022\n\nhas_border\030\010 \001(\010\022\031\n\004type\030\t \001(\0162\013."
+    "WindowType\"\"\n\020WindowFocusReply\022\016\n\006window"
+    "\030\001 \001(\004\"&\n\016MouseMoveReply\022\t\n\001x\030\001 \001(\r\022\t\n\001y"
+    "\030\002 \001(\r\"I\n\017MousePressReply\022\t\n\001x\030\001 \001(\r\022\t\n\001"
+    "y\030\002 \001(\r\022 \n\005state\030\003 \001(\0162\021.MouseButtonStat"
+    "e\",\n\013RenderReply\022\035\n\025last_frame_observere"
+    "d\030\001 \001(\004\"$\n\022WindowCloseRequest\022\016\n\006window\030"
+    "\001 \001(\004\"\"\n\020WindowCloseReply\022\016\n\006window\030\001 \001("
+    "\004\"\273\007\n\013DataSegment\022(\n\016window_request\030\001 \001("
+    "\0132\016.WindowRequestH\000\022+\n\020window_map_reply\030"
+    "\002 \001(\0132\017.WindowMapReplyH\000\022/\n\022window_map_r"
+    "equest\030\003 \001(\0132\021.WindowMapRequestH\000\022+\n\020mou"
+    "se_move_reply\030\004 \001(\0132\017.MouseMoveReplyH\000\022-"
+    "\n\021mouse_press_reply\030\005 \001(\0132\020.MousePressRe"
+    "plyH\000\022/\n\022window_focus_reply\030\006 \001(\0132\021.Wind"
+    "owFocusReplyH\000\0227\n\026window_reorder_request"
+    "\030\007 \001(\0132\025.WindowReorderRequestH\000\0223\n\024windo"
+    "w_focus_request\030\010 \001(\0132\023.WindowFocusReque"
+    "stH\000\022F\n\036window_register_border_request\030\t"
+    " \001(\0132\034.WindowRegisterBorderRequestH\000\022(\n\016"
+    "render_request\030\n \001(\0132\016.RenderRequestH\000\022$"
+    "\n\014render_reply\030\013 \001(\0132\014.RenderReplyH\000\0221\n\023"
+    "run_program_request\030\014 \001(\0132\022.RunProgramRe"
+    "questH\000\0223\n\024window_close_request\030\r \001(\0132\023."
+    "WindowCloseRequestH\000\022/\n\022window_close_rep"
+    "ly\030\016 \001(\0132\021.WindowCloseReplyH\000\0225\n\025file_re"
+    "gister_request\030\017 \001(\0132\024.FileRegisterReque"
+    "stH\000\022$\n\014reload_reply\030\020 \001(\0132\014.ReloadReply"
+    "H\000\0225\n\025browser_start_request\030\021 \001(\0132\024.Brow"
+    "serStartRequestH\000\022-\n\021log_message_reply\030\022"
+    " \001(\0132\020.LogMessageReplyH\000\022-\n\021window_icon_"
+    "reply\030\023 \001(\0132\020.WindowIconReplyH\000B\006\n\004data\""
+    "(\n\006Packet\022\036\n\010segments\030\001 \003(\0132\014.DataSegmen"
+    "t*d\n\020MouseButtonState\022\023\n\017MOUSE_LEFT_DOWN"
+    "\020\000\022\021\n\rMOUSE_LEFT_UP\020\001\022\024\n\020MOUSE_RIGHT_DOW"
+    "N\020\002\022\022\n\016MOUSE_RIGHT_UP\020\003*\351\002\n\nWindowType\022\027"
+    "\n\023WINDOW_TYPE_DESKTOP\020\000\022\024\n\020WINDOW_TYPE_D"
+    "OCK\020\001\022\027\n\023WINDOW_TYPE_TOOLBAR\020\002\022\024\n\020WINDOW"
+    "_TYPE_MENU\020\003\022\027\n\023WINDOW_TYPE_UTILITY\020\004\022\026\n"
+    "\022WINDOW_TYPE_SPLASH\020\005\022\026\n\022WINDOW_TYPE_DIA"
+    "LOG\020\006\022\035\n\031WINDOW_TYPE_DROPDOWN_MENU\020\007\022\032\n\026"
+    "WINDOW_TYPE_POPUP_MENU\020\010\022\027\n\023WINDOW_TYPE_"
+    "TOOLTIP\020\t\022\034\n\030WINDOW_TYPE_NOTIFICATION\020\n\022"
+    "\025\n\021WINDOW_TYPE_COMBO\020\013\022\023\n\017WINDOW_TYPE_DN"
+    "D\020\014\022\026\n\022WINDOW_TYPE_NORMAL\020\rb\006proto3"
 };
 static ::absl::once_flag descriptor_table_windowmanager_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_windowmanager_2eproto = {
     false,
     false,
-    2378,
+    2475,
     descriptor_table_protodef_windowmanager_2eproto,
     "windowmanager.proto",
     &descriptor_table_windowmanager_2eproto_once,
     nullptr,
     0,
-    20,
+    21,
     schemas,
     file_default_instances,
     TableStruct_windowmanager_2eproto::offsets,
@@ -3660,6 +3700,315 @@ void RunProgramRequest::InternalSwap(RunProgramRequest* PROTOBUF_RESTRICT PROTOB
 }
 // ===================================================================
 
+class WindowIconReply::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<WindowIconReply>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(WindowIconReply, _impl_._has_bits_);
+};
+
+WindowIconReply::WindowIconReply(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, WindowIconReply_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:WindowIconReply)
+}
+PROTOBUF_NDEBUG_INLINE WindowIconReply::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::WindowIconReply& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        image_(arena, from.image_) {}
+
+WindowIconReply::WindowIconReply(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const WindowIconReply& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, WindowIconReply_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  WindowIconReply* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  _impl_.window_ = from._impl_.window_;
+
+  // @@protoc_insertion_point(copy_constructor:WindowIconReply)
+}
+PROTOBUF_NDEBUG_INLINE WindowIconReply::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        image_(arena) {}
+
+inline void WindowIconReply::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.window_ = {};
+}
+WindowIconReply::~WindowIconReply() {
+  // @@protoc_insertion_point(destructor:WindowIconReply)
+  SharedDtor(*this);
+}
+inline void WindowIconReply::SharedDtor(MessageLite& self) {
+  WindowIconReply& this_ = static_cast<WindowIconReply&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.image_.Destroy();
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL WindowIconReply::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) WindowIconReply(arena);
+}
+constexpr auto WindowIconReply::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(WindowIconReply),
+                                            alignof(WindowIconReply));
+}
+constexpr auto WindowIconReply::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_WindowIconReply_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &WindowIconReply::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<WindowIconReply>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &WindowIconReply::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<WindowIconReply>(), &WindowIconReply::ByteSizeLong,
+              &WindowIconReply::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(WindowIconReply, _impl_._cached_size_),
+          false,
+      },
+      &WindowIconReply::kDescriptorMethods,
+      &descriptor_table_windowmanager_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull WindowIconReply_class_data_ =
+        WindowIconReply::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+WindowIconReply::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&WindowIconReply_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(WindowIconReply_class_data_.tc_table);
+  return WindowIconReply_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 2, 0, 29, 2>
+WindowIconReply::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(WindowIconReply, _impl_._has_bits_),
+    0, // no _extensions_
+    2, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    WindowIconReply_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::WindowIconReply>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // string image = 2;
+    {::_pbi::TcParser::FastUS1,
+     {18, 0, 0,
+      PROTOBUF_FIELD_OFFSET(WindowIconReply, _impl_.image_)}},
+    // uint64 window = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(WindowIconReply, _impl_.window_), 1>(),
+     {8, 1, 0,
+      PROTOBUF_FIELD_OFFSET(WindowIconReply, _impl_.window_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // uint64 window = 1;
+    {PROTOBUF_FIELD_OFFSET(WindowIconReply, _impl_.window_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt64)},
+    // string image = 2;
+    {PROTOBUF_FIELD_OFFSET(WindowIconReply, _impl_.image_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  // no aux_entries
+  {{
+    "\17\0\5\0\0\0\0\0"
+    "WindowIconReply"
+    "image"
+  }},
+};
+PROTOBUF_NOINLINE void WindowIconReply::Clear() {
+// @@protoc_insertion_point(message_clear_start:WindowIconReply)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    _impl_.image_.ClearNonDefaultToEmpty();
+  }
+  _impl_.window_ = ::uint64_t{0u};
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL WindowIconReply::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const WindowIconReply& this_ = static_cast<const WindowIconReply&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL WindowIconReply::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const WindowIconReply& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:WindowIconReply)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // uint64 window = 1;
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (this_._internal_window() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteUInt64ToArray(
+          1, this_._internal_window(), target);
+    }
+  }
+
+  // string image = 2;
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (!this_._internal_image().empty()) {
+      const ::std::string& _s = this_._internal_image();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "WindowIconReply.image");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:WindowIconReply)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t WindowIconReply::ByteSizeLong(const MessageLite& base) {
+  const WindowIconReply& this_ = static_cast<const WindowIconReply&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t WindowIconReply::ByteSizeLong() const {
+  const WindowIconReply& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:WindowIconReply)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    // string image = 2;
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!this_._internal_image().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_image());
+      }
+    }
+    // uint64 window = 1;
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (this_._internal_window() != 0) {
+        total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(
+            this_._internal_window());
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void WindowIconReply::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<WindowIconReply*>(&to_msg);
+  auto& from = static_cast<const WindowIconReply&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(class_specific_merge_from_start:WindowIconReply)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!from._internal_image().empty()) {
+        _this->_internal_set_image(from._internal_image());
+      } else {
+        if (_this->_impl_.image_.IsDefault()) {
+          _this->_internal_set_image("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (from._internal_window() != 0) {
+        _this->_impl_.window_ = from._impl_.window_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void WindowIconReply::CopyFrom(const WindowIconReply& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:WindowIconReply)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void WindowIconReply::InternalSwap(WindowIconReply* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.image_, &other->_impl_.image_, arena);
+  swap(_impl_.window_, other->_impl_.window_);
+}
+
+::google::protobuf::Metadata WindowIconReply::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
 class WindowMapReply::_Internal {
  public:
   using HasBits =
@@ -6032,6 +6381,19 @@ void DataSegment::set_allocated_log_message_reply(::LogMessageReply* PROTOBUF_NU
   }
   // @@protoc_insertion_point(field_set_allocated:DataSegment.log_message_reply)
 }
+void DataSegment::set_allocated_window_icon_reply(::WindowIconReply* PROTOBUF_NULLABLE window_icon_reply) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_data();
+  if (window_icon_reply) {
+    ::google::protobuf::Arena* submessage_arena = window_icon_reply->GetArena();
+    if (message_arena != submessage_arena) {
+      window_icon_reply = ::google::protobuf::internal::GetOwnedMessage(message_arena, window_icon_reply, submessage_arena);
+    }
+    set_has_window_icon_reply();
+    _impl_.data_.window_icon_reply_ = window_icon_reply;
+  }
+  // @@protoc_insertion_point(field_set_allocated:DataSegment.window_icon_reply)
+}
 DataSegment::DataSegment(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, DataSegment_class_data_.base()) {
@@ -6118,6 +6480,9 @@ DataSegment::DataSegment(
         break;
       case kLogMessageReply:
         _impl_.data_.log_message_reply_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.data_.log_message_reply_);
+        break;
+      case kWindowIconReply:
+        _impl_.data_.window_icon_reply_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.data_.window_icon_reply_);
         break;
   }
 
@@ -6298,6 +6663,14 @@ void DataSegment::clear_data() {
       }
       break;
     }
+    case kWindowIconReply: {
+      if (GetArena() == nullptr) {
+        delete _impl_.data_.window_icon_reply_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.data_.window_icon_reply_);
+      }
+      break;
+    }
     case DATA_NOT_SET: {
       break;
     }
@@ -6349,17 +6722,17 @@ DataSegment::GetClassData() const {
   return DataSegment_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 18, 18, 0, 2>
+const ::_pbi::TcParseTable<0, 19, 19, 0, 2>
 DataSegment::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    18, 0,  // max_field_number, fast_idx_mask
+    19, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294705152,  // skipmap
+    4294443008,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    18,  // num_field_entries
-    18,  // num_aux_entries
+    19,  // num_field_entries
+    19,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     DataSegment_class_data_.base(),
     nullptr,  // post_loop_handler
@@ -6408,6 +6781,8 @@ DataSegment::_table_ = {
     {PROTOBUF_FIELD_OFFSET(DataSegment, _impl_.data_.browser_start_request_), _Internal::kOneofCaseOffset + 0, 16, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .LogMessageReply log_message_reply = 18;
     {PROTOBUF_FIELD_OFFSET(DataSegment, _impl_.data_.log_message_reply_), _Internal::kOneofCaseOffset + 0, 17, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .WindowIconReply window_icon_reply = 19;
+    {PROTOBUF_FIELD_OFFSET(DataSegment, _impl_.data_.window_icon_reply_), _Internal::kOneofCaseOffset + 0, 18, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::WindowRequest>()},
@@ -6428,6 +6803,7 @@ DataSegment::_table_ = {
       {::_pbi::TcParser::GetTable<::ReloadReply>()},
       {::_pbi::TcParser::GetTable<::BrowserStartRequest>()},
       {::_pbi::TcParser::GetTable<::LogMessageReply>()},
+      {::_pbi::TcParser::GetTable<::WindowIconReply>()},
   }},
   {{
   }},
@@ -6570,6 +6946,12 @@ PROTOBUF_NOINLINE void DataSegment::Clear() {
           stream);
       break;
     }
+    case kWindowIconReply: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          19, *this_._impl_.data_.window_icon_reply_, this_._impl_.data_.window_icon_reply_->GetCachedSize(), target,
+          stream);
+      break;
+    }
     default:
       break;
   }
@@ -6703,6 +7085,12 @@ PROTOBUF_NOINLINE void DataSegment::Clear() {
     case kLogMessageReply: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.data_.log_message_reply_);
+      break;
+    }
+    // .WindowIconReply window_icon_reply = 19;
+    case kWindowIconReply: {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.data_.window_icon_reply_);
       break;
     }
     case DATA_NOT_SET: {
@@ -6880,6 +7268,14 @@ void DataSegment::MergeImpl(::google::protobuf::MessageLite& to_msg,
           _this->_impl_.data_.log_message_reply_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.data_.log_message_reply_);
         } else {
           _this->_impl_.data_.log_message_reply_->MergeFrom(*from._impl_.data_.log_message_reply_);
+        }
+        break;
+      }
+      case kWindowIconReply: {
+        if (oneof_needs_init) {
+          _this->_impl_.data_.window_icon_reply_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.data_.window_icon_reply_);
+        } else {
+          _this->_impl_.data_.window_icon_reply_->MergeFrom(*from._impl_.data_.window_icon_reply_);
         }
         break;
       }

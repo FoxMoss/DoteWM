@@ -15,6 +15,7 @@
 #include <mutex>
 #include <string>
 #include <thread>
+#include "src/window_manager/base64.h"
 
 #define X11_Success 0
 
@@ -35,6 +36,7 @@
 #include <optional>
 #include <unordered_map>
 #include <vector>
+#include "lodepng.h"
 #include "main.hpp"
 #include "src/protobuf/windowmanager.pb.h"
 
@@ -566,6 +568,55 @@ bool NokoWindowManager::process_events() {
           free(buf);
         }
 
+        if (!window->icon.has_value()) {
+          Atom net_wm_icon = XInternAtom(display, "_NET_WM_ICON", false);
+
+          if (XGetWindowProperty(display, window->window, net_wm_icon, 0,
+                                 128 * 128 * 10, false, XA_CARDINAL,
+                                 &actual_type, &actual_format, &nitems,
+                                 &bytes_after, &prop) == X11_Success &&
+              prop) {
+            unsigned long* data = (unsigned long*)prop;
+            if (nitems > 10 && nitems > data[0] * data[1]) {
+              printf("%ix%i icon\n", data[0], data[1]);
+              unsigned long width = data[0];
+              unsigned long height = data[1];
+
+              std::vector<unsigned char> image_data;
+              for (size_t i = 2; i < 2 + (width * height); i++) {
+                unsigned long pixel = data[i];
+                image_data.push_back((pixel >> 16) & 0xFF);
+                image_data.push_back((pixel >> 8) & 0xFF);
+                image_data.push_back(pixel & 0xFF);
+                image_data.push_back((pixel >> 24) & 0xFF);
+              }
+              std::vector<unsigned char> png_data;
+
+              lodepng::encode(png_data, image_data, width, height);
+
+              std::string image_base64 =
+                  "data:image/png;base64," +
+                  base64_encode(png_data.data(), png_data.size());
+
+              window->icon = image_base64;
+
+              Packet packet;
+              auto segment = packet.add_segments();
+              auto reply = segment->mutable_window_icon_reply();
+              reply->set_window(window->window);
+              reply->set_image(image_base64);
+
+              size_t len = packet.ByteSizeLong();
+              char* buf = (char*)malloc(len);
+              packet.SerializeToArray(buf, len);
+
+              nn_send(ipc_sock, buf, len, 0);
+            }
+
+            XFree(prop);
+          }
+        }
+
         // we're updating the pixel coords
         if (window->x_pixmap) {
           XFreePixmap(display, window->x_pixmap);
@@ -999,12 +1050,6 @@ std::optional<NokoWindowManager*> NokoWindowManager::create() {
       "   vec4 colour = texture(texture_sampler, uncroped_position  * "
       "vec2(0.5, -0.5) + vec2(0.5));"
       "   float alpha = opacity * colour.a;"
-      // "   if(local_position.x < cropped_position.x || local_position.y < "
-      // "      cropped_position.y || local_position.x > cropped_position.x + "
-      // "      cropped_size.x || local_position.y > cropped_position.y + "
-      // "      cropped_size.y) {"
-      // "      alpha = 0;"
-      // "   }"
       "   fragment_colour = vec4(colour.rgb, alpha);"
       "}";
 
