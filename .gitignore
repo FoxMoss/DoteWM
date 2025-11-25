@@ -58,3 +58,4 @@ bazel/cef/platform.bzl
 bazel-*
 MODULE.bazel.lock
 out.log
+build-alpine/
