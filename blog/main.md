@@ -54,14 +54,17 @@ the `~/.config/dote/` directory and if there is none return a 404. We also have 
 a quick dirty and flawed file extension based MIME type generator. I won't bore you with the code,
 check out the repo if you want an exact idea of the implementation.
 
-
+Cool a browser window!
+![](cefbase.png)
+Here I just give the `body` tag a `background-image` to act as a wallpaper.
 
 ## The Layer Cake
 
-So now that we can load html and by extension Javascript files we now have a sandbox we need to
-break into. I consider writing a web socket implementation to work over the scheme, but what is much
-easier is to use the CefQuery primitive. I'm unsure what the intended use case was supposed to be
-but on the C++ side we can define the other end of a function.
+So now that we can load HTML and Javascript files we now have a nice neat secure sandbox,
+unfortunately we need to let it control our machine. I consider writing a web socket implementation
+to work over the scheme, but what is much easier is to use the CefQuery primitive. I'm unsure what
+the intended use case was supposed to be, but it just exposes a function to Javascript that calls a
+C++ function:
 
 ```c++
 class MessageHandler : public CefMessageRouterBrowserSide::Handler {
@@ -76,7 +79,7 @@ class MessageHandler : public CefMessageRouterBrowserSide::Handler {
                const CefString& request,
                bool persistent,
                CefRefPtr<Callback> callback) override {
-    // i prefer std::optionals where possible but nlohmann throws exceptions occasionally
+    // i prefer std::optional where possible but nlohmann throws exceptions occasionally
     try {
       nlohmann::json from_browser = nlohmann::json::parse(request.ToString());
 
@@ -145,7 +148,8 @@ component was the window manager. I'm going to need to do some tricks with rende
 line which will get to but the only reasonable choice here was to write a compositing window
 manager. Compositing just means instead of letting the display server do all the work, we get the
 textures from the display sever and render it to the screen ourselves in this case with the 3D
-graphics pipeline OpenGL.
+graphics pipeline OpenGL. We're also doing this in X11 because Xlib is fairly easy to write and lets
+me experiment more quickly.
 
 We now live in a weird world now of vibe coding and the knowledge of the inner workings of
 processes being sprung from the aether, so I want to give credit where credit is due. The window
@@ -159,7 +163,7 @@ a simple rudimentary backup for debugging or rebooting your browser process. The
 implementing it this way is that now we have another event loop. 
 
 ```c++
-void NokoWindowManager::run() {
+void DoteWindowManager::run() {
   glDepthFunc(GL_LESS);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);

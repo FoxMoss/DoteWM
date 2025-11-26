@@ -47,12 +47,12 @@ typedef void (*glXReleaseTexImageEXT_t)(Display*, GLXDrawable, int);
 
 typedef void (*glXSwapIntervalEXT_t)(Display*, GLXDrawable, int);
 
-struct NokoWindowBorder {
+struct DoteWindowBorder {
   int x, y;
   int width, height;
 };
 
-struct NokoWindow {
+struct DoteWindow {
   int exists;
   Window window;
 
@@ -68,7 +68,7 @@ struct NokoWindow {
   int width, height;
   double depth;
 
-  std::optional<NokoWindowBorder> border;
+  std::optional<DoteWindowBorder> border;
 
   Pixmap x_pixmap;
   GLXPixmap pixmap;
@@ -77,9 +77,9 @@ struct NokoWindow {
   GLuint vao, vbo, ibo;
 };
 
-class NokoWindowManager {
+class DoteWindowManager {
  public:
-  static std::optional<NokoWindowManager*> create();
+  static std::optional<DoteWindowManager*> create();
 
   void run();
 
@@ -228,7 +228,7 @@ class NokoWindowManager {
     return count;
   }
 
-  NokoWindowManager() {
+  DoteWindowManager() {
     if ((ipc_sock = nn_socket(AF_SP, NN_PAIR)) < 0) {
       printf("ipc sock failed\n");
     }
@@ -245,7 +245,7 @@ class NokoWindowManager {
 
     inotify_fd = inotify_init1(IN_NONBLOCK);
   }
-  ~NokoWindowManager() { close(inotify_fd); }
+  ~DoteWindowManager() { close(inotify_fd); }
 
  private:
   int ipc_sock;
@@ -265,7 +265,7 @@ class NokoWindowManager {
   Atom client_list_atom;
 
   std::vector<Window> blacklisted_windows;
-  std::unordered_map<Window, NokoWindow> windows;
+  std::unordered_map<Window, DoteWindow> windows;
   std::unordered_map<Window, Window> border_window;
   std::vector<Window> render_order;
 

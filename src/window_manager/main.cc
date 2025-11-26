@@ -147,7 +147,7 @@ int x11_error_handler(Display* display, XErrorEvent* event) {
   return 0;
 }
 
-void NokoWindowManager::configure_window(Window window,
+void DoteWindowManager::configure_window(Window window,
                                          uint32_t x,
                                          uint32_t y,
                                          uint32_t width,
@@ -160,7 +160,7 @@ void NokoWindowManager::configure_window(Window window,
   XConfigureWindow(display, window, CWX | CWY | CWWidth | CWHeight, &changes);
 }
 
-void NokoWindowManager::register_border(Window window,
+void DoteWindowManager::register_border(Window window,
                                         int32_t x,
                                         int32_t y,
                                         int32_t width,
@@ -176,7 +176,7 @@ void NokoWindowManager::register_border(Window window,
   };
 }
 
-void NokoWindowManager::register_base_window(Window base) {
+void DoteWindowManager::register_base_window(Window base) {
   base_window = base;
 
   XWMHints hints;
@@ -195,8 +195,8 @@ void NokoWindowManager::register_base_window(Window base) {
   printf("registering\n");
 }
 
-void NokoWindowManager::bind_window_texture(Window window_index) {
-  NokoWindow* window = &windows[window_index];
+void DoteWindowManager::bind_window_texture(Window window_index) {
+  DoteWindow* window = &windows[window_index];
 
   if (!window->exists)
     return;
@@ -254,7 +254,7 @@ void NokoWindowManager::bind_window_texture(Window window_index) {
   glXBindTexImageEXT(display, window->pixmap, GLX_FRONT_LEFT_EXT, NULL);
 }
 
-void NokoWindowManager::run() {
+void DoteWindowManager::run() {
   glDepthFunc(GL_LESS);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
@@ -276,8 +276,8 @@ void NokoWindowManager::run() {
   }
 }
 
-void NokoWindowManager::render_window(unsigned window_id) {
-  NokoWindow* window = &windows[window_id];
+void DoteWindowManager::render_window(unsigned window_id) {
+  DoteWindow* window = &windows[window_id];
 
   if (!window->exists)
     return;
@@ -366,7 +366,7 @@ void NokoWindowManager::render_window(unsigned window_id) {
   unbind_window_texture(window->window);
 }
 
-bool NokoWindowManager::process_events() {
+bool DoteWindowManager::process_events() {
   int events_left = XPending(display);
 
   if (events_left) {
@@ -384,7 +384,7 @@ bool NokoWindowManager::process_events() {
           goto done;
 
         windows[x_window] = {};
-        NokoWindow* window = &windows[x_window];
+        DoteWindow* window = &windows[x_window];
 
         window->exists = 1;
         window->window = x_window;
@@ -426,7 +426,7 @@ bool NokoWindowManager::process_events() {
         if (windows.find(x_window) == windows.end())
           goto done;
 
-        NokoWindow* window = &windows[x_window];
+        DoteWindow* window = &windows[x_window];
 
         window->window = x_window;
 
@@ -804,7 +804,7 @@ done:
   return events_left;
 }
 
-void NokoWindowManager::update_client_list() {
+void DoteWindowManager::update_client_list() {
   Window* client_list = (Window*)malloc(windows.size() * sizeof(Window));
 
   size_t i = 0;
@@ -818,7 +818,7 @@ void NokoWindowManager::update_client_list() {
   free(client_list);
 }
 
-void NokoWindowManager::focus_window(Window window_id, bool send_event) {
+void DoteWindowManager::focus_window(Window window_id, bool send_event) {
   if (base_window.has_value() && window_id == base_window.value())
     return;
 
@@ -844,8 +844,8 @@ void NokoWindowManager::focus_window(Window window_id, bool send_event) {
   focused_window = window_id;
 }
 
-std::optional<NokoWindowManager*> NokoWindowManager::create() {
-  NokoWindowManager* ret = new NokoWindowManager;
+std::optional<DoteWindowManager*> DoteWindowManager::create() {
+  DoteWindowManager* ret = new DoteWindowManager;
   ret->display = XOpenDisplay(NULL);
   if (ret->display == NULL)
     return {};
@@ -1098,47 +1098,47 @@ std::optional<NokoWindowManager*> NokoWindowManager::create() {
 
   return ret;
 }
-void NokoWindowManager::unbind_window_texture(Window window_index) {
-  NokoWindow* window = &windows[window_index];
+void DoteWindowManager::unbind_window_texture(Window window_index) {
+  DoteWindow* window = &windows[window_index];
 
   glXReleaseTexImageEXT(display, window->pixmap, GLX_FRONT_LEFT_EXT);
   XUngrabServer(display);
 }
 
-float NokoWindowManager::height_dimension_to_float(int pixels) {
+float DoteWindowManager::height_dimension_to_float(int pixels) {
   return (float)pixels / screen_height * 2;
 }
 
-float NokoWindowManager::width_dimension_to_float(int pixels) {
+float DoteWindowManager::width_dimension_to_float(int pixels) {
   return (float)pixels / screen_width * 2;
 }
 
-float NokoWindowManager::x_coordinate_to_float(int pixels) {
+float DoteWindowManager::x_coordinate_to_float(int pixels) {
   return width_dimension_to_float(pixels) - 1;
 }
 
-float NokoWindowManager::y_coordinate_to_float(int pixels) {
+float DoteWindowManager::y_coordinate_to_float(int pixels) {
   return -height_dimension_to_float(pixels) + 1;
 }
 
-int NokoWindowManager::float_to_width_dimension(float x) {
+int DoteWindowManager::float_to_width_dimension(float x) {
   return (int)round(x / 2 * screen_width);
 }
 
-int NokoWindowManager::float_to_height_dimension(float x) {
+int DoteWindowManager::float_to_height_dimension(float x) {
   return (int)round(x / 2 * screen_height);
 }
 
-int NokoWindowManager::float_to_x_coordinate(float x) {
+int DoteWindowManager::float_to_x_coordinate(float x) {
   return float_to_width_dimension(x + 1);
 }
 
-int NokoWindowManager::float_to_y_coordinate(float x) {
+int DoteWindowManager::float_to_y_coordinate(float x) {
   return float_to_height_dimension(-x + 1);
 }
 
 int main(int argc, char* argv[]) {
-  auto wm = NokoWindowManager::create();
+  auto wm = DoteWindowManager::create();
   if (!wm.has_value()) {
     printf("wm initialize fail\n");
     return 1;
