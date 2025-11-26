@@ -185,8 +185,6 @@ void DoteWindowManager::run() {
   }
 }
 ```
-(A note on naming: we're calling the window manager Noko internally because why not, the framework as a
-whole is called Dote.)
 
 So now we need to communicate up the chain from window manager to browser. There's a billion and one
 ways of doing Inter-Process Communication I like `nanomsg`. The interface is going to be very
@@ -213,10 +211,10 @@ configuration (one to one). But it makes some memory management easier especiall
 dealing with variably sized buffers.
 
 Protobuf is another technology that seems to end up in nearly every single one of my projects, but I
-can't help myself writing traditional binary serialization is annoying. Plus we get free type
-annotations which beats using JSON. 
+can't help myself. Writing serialization is annoying. Plus we get free type annotations which beats
+using JSON. 
 
-So combined we end up with a fairly simple Protobuf over nanomsg protocol, with the structure
+So combined we end up with a fairly simple Protobuf over nanomsg protocol, with the .proto
 looking like this.
 
 ```protobuf
@@ -238,8 +236,8 @@ Every time we need to proxy a new event we just add a new segment data type.
 
 Requests are from the browser, replies are from the window manager. We don't have a strict request
 reply structure, with event's being fired at any time but it's useful to frame all action in the
-context of the JS developer. All interactions should be at least initiated by Javascript when it comes to
-managing the state of things.
+context of the JS developer. The philosophy here all interactions should be initiated by
+Javascript. The web dev is the one in control.
  
 ![](completedcommunicationloop.png)
 
@@ -252,16 +250,20 @@ Now just writing some protocol buffers we can now send some X11 events up and do
 the web page do whatever it so chooses with out windows.
 
 So lets make some window decorations! We can quite simply define a window frame in Javscript and let
-the user drag it around to drag the underlying window. Though you might have just thought of a major
-problem with this, what happens if the window overlaps? We can reorder the OpenGL windows quite
-easily just by changing the depth of the vertices we render them at, but the underlying browser
-window can't be both in front of and behind a window. Or can it? 
+the user drag it around to drag the underlying window. Doing it like this cause a major problem with
+this, what happens if the window overlaps? We can reorder the actual OpenGL windows quite easily
+just by changing the depth of the vertices we render them at, but the underlying browser window
+can't be both in front of and behind a window. Or can it? 
 
 This is my reasoning behind making a compositing manager, because when we're really just rendering
 textures to a polygon we can get creative with it. So first we need a quad to work with which we can
-clone from the real windows and apply the browser window's textures to. But like that we get a
-heavily warped view of the actually big browser window. That's because right now we're just trying
-to use the entire texture so we need to apply some cropping.
+clone from the real window rendering and apply the browser window's textures to it. But like that we
+get a heavily warped view of the actually big browser window. 
+
+![](nestingdolls.png)
+
+That's because right now we're just trying to use the entire texture so we need to apply some
+cropping.
 
 Here's how accomplish the task:
 
