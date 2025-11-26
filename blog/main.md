@@ -3,26 +3,28 @@
 This is an image of my window manager with full X11 support as well as border decorations,
 background, and window interactions be handled by a web browser.
 
+![](fastfetch.png)
+
 Let me explain.
 
 ## A Primer
 
-To display program windows an operating system uses a window display server. On Linux this is mainly 
+To display a program window an operating system uses a window display server. On Linux this is mainly 
 X11 written by MIT in 1984, it's old and starting to show it's age and Wayland is taking some of X11
 market share. So you can display a window but to get the nice behavior of movement and resizing
-buttons and keybinds we need a window manager. This is a separate program that the display server
+buttons and keybinds, we need a window manager. This is a separate program that the display server
 consults on how it should render and handle the windows. Then all the windows need to know is how to
 talk to the display server and all the window manager needs to know is how to handle the windows.
 This is a lovely system which allows for window managers to take on all different kinds of shapes
-sizes and appearances.
+sizes and appearances while maintaining compatibility.
 
-The goal of the project was to decrease the skill needed to full customize a desktop environment, in
-a real computing environment. I've been aware of many projects that try to do the very opposite of
-this project for a while, ie. put the desktop environment into the web, with some decent success.
-See [puter](https://puter.com/) and [AnuraOS](https://github.com/MercuryWorkshop/anuraOS) for two great 
-examples of such projects. It's quite a bit easier to tweak CSS constants and JS snipets then it is
-to change style embedded already in a long standing modern desktop/window manager. So lets bring the
-web to the desktop and have a browser control the system.
+The goal of the project was to decrease the skill needed to write a fully customized window manager.
+I've been aware of many projects that try to do the very opposite of this project for a while, i.e.
+put the desktop environment into the web, with some decent success. See [puter](https://puter.com/)
+and [AnuraOS](https://github.com/MercuryWorkshop/anuraOS) for two great examples of such projects.
+It's quite a bit easier to tweak CSS constants and JS snipets then it is to change style embedded
+already in a long standing modern desktop/window manager. So lets bring the web to the desktop and
+have a browser control the system. That's the pitch and that's what we're going to do.
 
 ## The Browser
 

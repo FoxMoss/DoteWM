@@ -55,7 +55,7 @@ typedef void (*glXReleaseTexImageEXT_t)(Display*, GLXDrawable, int);
 
 typedef void (*glXSwapIntervalEXT_t)(Display*, GLXDrawable, int);
 
-#define NAME "noko"
+#define NAME "dotewm"
 
 static void gl_compile_shader_and_check_for_errors /* lmao */ (
     GLuint shader,
