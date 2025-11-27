@@ -1,7 +1,11 @@
-# A Web Browser Controls My X11 Window Manager
+# How My Window Manager Is Google Chrome
 
-This is an image of my window manager with full X11 support as well as border decorations,
-background, and window interactions be handled by a web browser.
+> All code in this blog post is fully open source at
+> [github.com/FoxMoss/DoteWM/](https://github.com/FoxMoss/DoteWM/).
+
+
+This is an image of my window manager with full X11 support but border decorations,
+background, and window interactions are handled by a web browser.
 
 ![](fastfetch.png)
 
@@ -242,7 +246,12 @@ Javascript. The web dev is the one in control.
 
 # A Divergence For A DVD
 
-There's just one problem with this if we have requests constantly streaming out of our browser and
+![](dvdwm.gif)
+
+I thought it would be funny to make a DVD window manager quickly as a demo, in doing so I found a
+critical flaw with the networking scheme.
+
+If we have requests constantly streaming out of our browser and
 our window manager is unable to keep up with the amount of requests. So we get to a point where
 before the window manager can finish processing the old packets even more come in ending up in the
 process freezing. This is very bad! Here we side step the issue with some pretty basic networking
@@ -253,7 +262,7 @@ keeps track of how many it can receive. Once the receive number hits zero the re
 tell the sending end that it can continue sending messages. This way neither end will get swamped
 with message.
 
-## The Protocol in action
+## The Protocol In Action
 
 To initiate, CEF just sends the browser X11 window id down to the window manager and we can place it
 in the back and fullscreen it to make it appear as if the browser is our wallpaper.
@@ -394,6 +403,35 @@ we first need to convert the image to a PNG. Then to send it over Protobuf and s
 put it into data base64 url format for the added benefit of being able to be passed directly into a
 src= attribute of an `img` tag.
 
+## How do I write one?
+
+I leave writting a full tutorial for another time but I have a few demo repos.
+
+Windows 98 styled, written in dreamland
+![](fastfetch.png)
+
+[github.com/FoxMoss/dote-dreamland-win95-example](https://github.com/FoxMoss/dote-dreamland-win95-example)
+
+This is the one I actually developed on and will have the least amount of bugs. `dreamland.js` is a
+great framework, if you're new take a look [at the docs](https://dreamland.js.org/).
+
+
+Windows XP styled, written in React
+![](reactdemo.png)
+
+[github.com/FoxMoss/dote-react-xp-example](https://github.com/FoxMoss/dote-react-xp-example)
+
+A port of the Win 98 one to React and XP.css, a bit more rough.
+
+
+DVD Logo Window Manager, written in vanilla js
+![](dvdwm.gif)
+
+[github.com/FoxMoss/dote-vanilla-dvd-example](https://github.com/FoxMoss/dote-vanilla-dvd-example)
+
+The most rough of the bunch, completely unusable. Many hours will be wasted waiting for your
+terminal to hit the corner.
+
 ## Some Musings
 
 There's two major places I would consider taking the project, you might have noticed how very
@@ -408,9 +446,4 @@ stepped with greater control of the Javascript engine and frame rendering, so po
 Chromium or Ladybird fork may help out.
 
 So that's about it for the technical details. Go try it out, check [the GitHub](https://github.com/FoxMoss/DoteWM)
-for updated install instructions and go forth and write your own window manager.
-
-Shout out to [Midnight by HackClub](https://midnight.hackclub.com/) for encouraging me to make this
-project!
-
-
+for up to date install instructions and go forth and write your own window manager.
