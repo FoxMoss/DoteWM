@@ -1137,6 +1137,40 @@ int DoteWindowManager::float_to_y_coordinate(float x) {
   return float_to_height_dimension(-x + 1);
 }
 
+struct MinimalArgs {
+  std::vector<std::string> storage;
+  std::vector<char*> argv;
+};
+
+MinimalArgs minimal_args() {
+  MinimalArgs out;
+
+  char exe_path[PATH_MAX];
+  ssize_t len = readlink("/proc/self/exe", exe_path, sizeof(exe_path) - 1);
+  if (len == -1) {
+    perror("readlink");
+    exit(1);
+  }
+  exe_path[len] = '\0';
+
+  char* dir = dirname(exe_path);
+  out.storage.emplace_back(std::string(dir) + "/dote-browser/minimal");
+  out.argv.push_back(out.storage.back().data());
+
+  if (const char* env = std::getenv("CEF_ARGS")) {
+    std::string buf = env;
+    char* p = std::strtok(buf.data(), " ");
+    while (p) {
+      out.storage.emplace_back(p);
+      out.argv.push_back(out.storage.back().data());
+      p = std::strtok(NULL, " ");
+    }
+  }
+
+  out.argv.push_back(NULL);
+  return out;
+}
+
 int main(int argc, char* argv[]) {
   auto wm = DoteWindowManager::create();
   if (!wm.has_value()) {
@@ -1146,19 +1180,8 @@ int main(int argc, char* argv[]) {
 
   int pid = fork();
   if (pid == 0) {
-    char exe_path[PATH_MAX];
-    ssize_t len = readlink("/proc/self/exe", exe_path, sizeof(exe_path) - 1);
-    if (len == -1) {
-      perror("readlink failed");
-      exit(1);
-    }
-    exe_path[len] = '\0';
-
-    char* dir = dirname(exe_path);
-    std::string minimal_path = std::string(dir) + "/dote-browser/minimal";
-
-    char* args[] = {(char*)minimal_path.data(), NULL};
-    execv(minimal_path.c_str(), args);
+    auto args = minimal_args();
+    execv(args.argv[0], args.argv.data());
     exit(1);
   }
 
